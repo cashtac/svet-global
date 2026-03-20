@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getMe, logout, setup2FA, verify2FA, SvetrixUser } from '@/lib/auth';
+import { getMe, logout, setup2FA, verify2FA, SvetUser } from '@/lib/auth';
 
 export default function AccountPage() {
   const router = useRouter();
-  const [user, setUser] = useState<SvetrixUser | null>(null);
+  const [user, setUser] = useState<SvetUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   // 2FA
@@ -65,7 +65,7 @@ export default function AccountPage() {
         <div className="auth-page__container">
           <div className="auth-page__header">
             <h1 className="auth-page__title">ACCOUNT</h1>
-            <p className="auth-page__subtitle">Sign in to access your Svetrix account.</p>
+            <p className="auth-page__subtitle">Sign in to access your SVET account.</p>
           </div>
           <Link href="/login" className="add-to-cart" style={{ display: 'block', textAlign: 'center' }}>
             SIGN IN
@@ -133,16 +133,9 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Ecosystem */}
+        {/* Shop link */}
         <div className="account-ecosystem">
-          <div className="account-ecosystem__label">YOUR SVETRIX ECOSYSTEM</div>
           <div className="account-ecosystem__grid">
-            <a href="https://svetrix.com" target="_blank" rel="noopener noreferrer" className="account-ecosystem__item">
-              ⚡ Svetrix OS
-            </a>
-            <a href="https://svetrix.com/maestro" target="_blank" rel="noopener noreferrer" className="account-ecosystem__item">
-              🧠 Svetrix AI
-            </a>
             <Link href="/shop" className="account-ecosystem__item account-ecosystem__item--active">
               ☀ SVET Shop
             </Link>

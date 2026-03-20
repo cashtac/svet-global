@@ -48,7 +48,7 @@ export default function RegisterPage() {
       <div className="auth-page__container">
         <div className="auth-page__header">
           <h1 className="auth-page__title">CREATE ACCOUNT</h1>
-          <p className="auth-page__subtitle">One account for Svetrix OS, Svetrix AI, and SVET.</p>
+          <p className="auth-page__subtitle">Create your SVET account.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">

@@ -43,7 +43,7 @@ function LoginForm() {
       <div className="auth-page__container">
         <div className="auth-page__header">
           <h1 className="auth-page__title">SIGN IN</h1>
-          <p className="auth-page__subtitle">One account. Every Svetrix product.</p>
+          <p className="auth-page__subtitle">Your SVET account.</p>
         </div>
 
         {verified && (

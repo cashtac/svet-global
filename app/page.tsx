@@ -156,35 +156,6 @@ export default async function Home() {
           <div className="philosophy__visual">☀️</div>
         </div>
       </section>
-
-      {/* ═══ SVETRIX ECOSYSTEM ═══ */}
-      <section className="ecosystem-banner">
-        <div className="ecosystem-banner__container">
-          <div className="ecosystem-banner__label">SVETRIX ECOSYSTEM</div>
-          <h2 className="ecosystem-banner__title">ONE ACCOUNT. EVERYTHING.</h2>
-          <p className="ecosystem-banner__desc">
-            Like Google — but Svetrix. One account gives you access to the entire ecosystem.
-            Your platform, your AI, your clothing. All connected.
-          </p>
-          <div className="ecosystem-banner__grid">
-            <a href="https://svetrix.com" target="_blank" rel="noopener noreferrer" className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">⚡</div>
-              <div className="ecosystem-banner__card-name">Svetrix OS</div>
-              <div className="ecosystem-banner__card-desc">Intelligent platform</div>
-            </a>
-            <a href="https://svetrix.com/maestro" target="_blank" rel="noopener noreferrer" className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">🧠</div>
-              <div className="ecosystem-banner__card-name">Svetrix AI</div>
-              <div className="ecosystem-banner__card-desc">AI Maestro assistant</div>
-            </a>
-            <div className="ecosystem-banner__card ecosystem-banner__card--active">
-              <div className="ecosystem-banner__card-icon">☀</div>
-              <div className="ecosystem-banner__card-name">SVET</div>
-              <div className="ecosystem-banner__card-desc">You are here</div>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

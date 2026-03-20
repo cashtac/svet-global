@@ -1,10 +1,10 @@
 /**
- * Auth API client — connects to Svetrix OS auth endpoints
+ * Auth API client — connects to SVET auth endpoints
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
-export interface SvetrixUser {
+export interface SvetUser {
   id: string;
   name: string;
   email: string;
@@ -50,7 +50,7 @@ export async function logout() {
   return authFetch('/auth/logout', { method: 'POST' });
 }
 
-export async function getMe(): Promise<SvetrixUser | null> {
+export async function getMe(): Promise<SvetUser | null> {
   try {
     const data = await authFetch('/auth/me');
     return data.user;

@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useState, useEffect } from 'react';
-import { getMe, SvetrixUser } from '@/lib/auth';
+import { getMe, SvetUser } from '@/lib/auth';
 
 export function Navbar() {
   const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [ecosystemOpen, setEcosystemOpen] = useState(false);
-  const [user, setUser] = useState<SvetrixUser | null>(null);
+  const [user, setUser] = useState<SvetUser | null>(null);
 
   useEffect(() => {
     getMe().then(u => setUser(u));
@@ -19,10 +19,9 @@ export function Navbar() {
     <>
       <nav className="nav">
         <div className="nav__container">
-          {/* Ecosystem indicator + Brand */}
+          {/* Brand */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <Link href="/" className="nav__logo">SVET</Link>
-            <span className="nav__ecosystem-tag">by Svetrix</span>
           </div>
 
           {/* Desktop links */}
@@ -50,60 +49,7 @@ export function Navbar() {
               <Link href="/login" className="nav__link">Sign in</Link>
             )}
 
-            {/* Ecosystem grid button */}
-            <div style={{ position: 'relative' }}>
-              <button
-                className="nav__ecosystem-btn"
-                onClick={() => setEcosystemOpen(!ecosystemOpen)}
-                aria-label="Svetrix Ecosystem"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-                </svg>
-              </button>
 
-              {/* Ecosystem dropdown */}
-              {ecosystemOpen && (
-                <>
-                  <div className="nav__ecosystem-backdrop" onClick={() => setEcosystemOpen(false)} />
-                  <div className="nav__ecosystem-dropdown">
-                    <div className="nav__ecosystem-header">Svetrix Ecosystem</div>
-                    <a href="https://svetrix.com" target="_blank" rel="noopener noreferrer" className="nav__ecosystem-item">
-                      <span className="nav__ecosystem-icon">⚡</span>
-                      <div>
-                        <div className="nav__ecosystem-name">Svetrix OS</div>
-                        <div className="nav__ecosystem-desc">Intelligent platform</div>
-                      </div>
-                    </a>
-                    <a href="https://svetrix.com/maestro" target="_blank" rel="noopener noreferrer" className="nav__ecosystem-item">
-                      <span className="nav__ecosystem-icon">🧠</span>
-                      <div>
-                        <div className="nav__ecosystem-name">Svetrix AI</div>
-                        <div className="nav__ecosystem-desc">AI Maestro assistant</div>
-                      </div>
-                    </a>
-                    <div className="nav__ecosystem-item nav__ecosystem-item--active">
-                      <span className="nav__ecosystem-icon">☀</span>
-                      <div>
-                        <div className="nav__ecosystem-name">SVET</div>
-                        <div className="nav__ecosystem-desc">You are here</div>
-                      </div>
-                    </div>
-                    <div className="nav__ecosystem-divider" />
-                    {user ? (
-                      <Link href="/account" className="nav__ecosystem-signin" onClick={() => setEcosystemOpen(false)}>
-                        My Account
-                      </Link>
-                    ) : (
-                      <Link href="/login" className="nav__ecosystem-signin" onClick={() => setEcosystemOpen(false)}>
-                        Sign in with Svetrix
-                      </Link>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -133,7 +79,7 @@ export function Navbar() {
               </Link>
             ) : (
               <Link href="/login" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-muted)', letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>
-                Sign in with Svetrix →
+                Sign in →
               </Link>
             )}
           </div>
