@@ -156,6 +156,46 @@ export default async function Home() {
           <div className="philosophy__visual">☀️</div>
         </div>
       </section>
+
+      {/* ═══ COMMUNITY ═══ */}
+      <section className="ecosystem-banner">
+        <div className="ecosystem-banner__container">
+          <div className="ecosystem-banner__label">☀ CONNECTION TOKENS</div>
+          <h2 className="ecosystem-banner__title">JOIN THE CONNECTION</h2>
+          <p className="ecosystem-banner__desc">
+            SVET is more than clothing — it&apos;s a community. Earn ☀ Connection Tokens
+            by buying, sharing, and connecting. Be part of something real.
+          </p>
+          <div className="ecosystem-banner__grid">
+            <div className="ecosystem-banner__card">
+              <div className="ecosystem-banner__card-icon">🛒</div>
+              <div className="ecosystem-banner__card-name">Buy</div>
+              <div className="ecosystem-banner__card-desc">1 ☀ per $1 spent</div>
+            </div>
+            <div className="ecosystem-banner__card">
+              <div className="ecosystem-banner__card-icon">📸</div>
+              <div className="ecosystem-banner__card-name">Share</div>
+              <div className="ecosystem-banner__card-desc">Post &amp; tag us</div>
+            </div>
+            <div className="ecosystem-banner__card">
+              <div className="ecosystem-banner__card-icon">👋</div>
+              <div className="ecosystem-banner__card-name">Refer</div>
+              <div className="ecosystem-banner__card-desc">Bring a friend</div>
+            </div>
+            <div className="ecosystem-banner__card">
+              <div className="ecosystem-banner__card-icon">💬</div>
+              <div className="ecosystem-banner__card-name">Engage</div>
+              <div className="ecosystem-banner__card-desc">Join Discord</div>
+            </div>
+          </div>
+          <div style={{ marginTop: 40, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/community" className="hero__cta" style={{ marginTop: 0 }}>
+              Learn More
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

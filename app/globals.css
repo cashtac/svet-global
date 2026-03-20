@@ -826,3 +826,44 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   cursor: pointer; transition: all var(--duration) var(--ease-out);
 }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ==========================================
+   COMMUNITY PERKS
+   ========================================== */
+
+.community-perk {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 32px 24px; text-align: center;
+  transition: all var(--duration) var(--ease-out);
+}
+.community-perk:hover {
+  border-color: var(--border-hover); transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.community-perk__icon { font-size: 32px; margin-bottom: 16px; }
+.community-perk__title {
+  font-family: var(--font-heading); font-size: 18px;
+  font-weight: 700; margin-bottom: 8px;
+}
+.community-perk__desc {
+  font-size: 14px; color: var(--text-muted); line-height: 1.6;
+}
+
+/* ==========================================
+   FOOTER SOCIALS
+   ========================================== */
+
+.footer__socials {
+  display: flex; gap: 16px; justify-content: center;
+  margin-bottom: 32px;
+}
+.footer__social {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border); color: var(--text-muted);
+  transition: all var(--duration) var(--ease-out);
+}
+.footer__social:hover {
+  border-color: var(--accent); color: var(--accent);
+  transform: translateY(-2px);
+}

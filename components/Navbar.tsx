@@ -27,6 +27,7 @@ export function Navbar() {
           {/* Desktop links */}
           <div className="nav__links">
             <Link href="/shop" className="nav__link">Shop</Link>
+            <Link href="/community" className="nav__link">Community</Link>
             <Link href="/about" className="nav__link">Philosophy</Link>
             <Link href="/cart" className="nav__cart">
               Cart
@@ -68,6 +69,7 @@ export function Navbar() {
         }} onClick={() => setMenuOpen(false)}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
             <Link href="/shop" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>SHOP</Link>
+            <Link href="/community" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>COMMUNITY</Link>
             <Link href="/about" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>PHILOSOPHY</Link>
             <Link href="/cart" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>
               CART {count > 0 && `(${count})`}
