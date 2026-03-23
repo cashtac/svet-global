@@ -1513,3 +1513,448 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================
+   HIDE SECONDARY NAV ITEMS ON SMALL SCREENS
+   ========================================== */
+
+@media (max-width: 1100px) {
+  .nav__link--hide-sm { display: none; }
+}
+
+/* ==========================================
+   SHARED — FADE IN ANIMATION
+   ========================================== */
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================
+   /symbols — THE 9 SYMBOLS
+   ========================================== */
+
+.symbols-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding-bottom: 100px;
+}
+
+.symbols-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 0 24px;
+}
+
+.symbol-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 16px;
+  padding: 40px 28px 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.symbol-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  background: rgba(201,168,76,0.04);
+  transform: translateY(-4px);
+}
+
+.symbol-card__icon-wrap {
+  position: relative;
+  width: 72px; height: 72px;
+  margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.symbol-card__svg {
+  width: 48px; height: 48px;
+  opacity: 0.7;
+}
+
+.symbol-card__emoji {
+  position: absolute;
+  top: -8px; right: -8px;
+  font-size: 20px;
+}
+
+.symbol-card__name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.symbol-card__meaning {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: #C9A84C;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.symbol-card__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.symbols-bottom {
+  text-align: center;
+  margin-top: 80px;
+  padding: 0 24px;
+}
+
+.symbols-bottom__text {
+  font-size: 18px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.symbols-bottom__cta {
+  display: inline-block;
+  padding: 16px 48px;
+  background: linear-gradient(135deg, #C9A84C, #a8893e);
+  color: #0a0a0a;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.symbols-bottom__cta:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+}
+
+@media (max-width: 768px) {
+  .symbols-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+@media (max-width: 480px) {
+  .symbols-grid { grid-template-columns: 1fr; gap: 12px; }
+  .symbol-card { padding: 28px 20px 24px; }
+}
+
+/* ==========================================
+   /chain — ENGAGEMENT CHAIN
+   ========================================== */
+
+.chain-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding-bottom: 100px;
+}
+
+/* Visual Chain Track */
+.chain-visual {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.chain-visual__track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 20px 0;
+}
+
+.chain-visual__track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: rgba(201,168,76,0.15);
+  transform: translateY(-50%);
+}
+
+.chain-visual__node {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(201,168,76,0.2);
+  background: rgba(10,10,10,0.9);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s ease;
+  filter: grayscale(80%);
+}
+
+.chain-visual__node--active {
+  border-color: #C9A84C;
+  background: rgba(201,168,76,0.1);
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  filter: grayscale(0%);
+  animation: chainPulse 2s ease-in-out infinite;
+}
+
+@keyframes chainPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+  50% { box-shadow: 0 0 35px rgba(201,168,76,0.5); }
+}
+
+/* Chain List */
+.chain-list {
+  max-width: 700px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+}
+
+.chain-slot {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 0;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.chain-slot__number {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(201,168,76,0.4);
+  letter-spacing: 0.1em;
+  min-width: 28px;
+  padding-top: 10px;
+}
+
+.chain-slot__circle {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+  filter: grayscale(70%);
+}
+
+.chain-slot__circle--filled {
+  border-color: #C9A84C;
+  background: rgba(201,168,76,0.08);
+  filter: grayscale(0%);
+}
+
+.chain-slot__glow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.3);
+  animation: chainPulse 2s ease-in-out infinite;
+}
+
+.chain-slot__info { flex: 1; }
+
+.chain-slot__name {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.chain-slot--filled .chain-slot__name { color: #C9A84C; }
+
+.chain-slot__desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* SVET COMPLETE */
+.chain-complete {
+  max-width: 600px;
+  margin: 80px auto 0;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.chain-complete__badge {
+  display: inline-block;
+  padding: 8px 24px;
+  border: 2px solid #C9A84C;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #C9A84C;
+  margin-bottom: 20px;
+  background: rgba(201,168,76,0.06);
+}
+
+.chain-complete__title {
+  font-size: 32px; font-weight: 900; color: #fff;
+  letter-spacing: 0.1em; margin-bottom: 12px;
+}
+
+.chain-complete__desc {
+  font-size: 15px; color: var(--text-secondary); margin-bottom: 32px;
+}
+
+.chain-complete__rewards {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 32px;
+}
+
+.chain-complete__reward {
+  font-size: 14px; color: var(--text-muted);
+  padding: 12px 20px;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 10px;
+}
+
+.chain-complete__cta {
+  display: inline-block;
+  padding: 16px 48px;
+  background: linear-gradient(135deg, #C9A84C, #a8893e);
+  color: #0a0a0a;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.chain-complete__cta:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+}
+
+@media (max-width: 480px) {
+  .chain-visual__node { width: 36px; height: 36px; font-size: 14px; }
+  .chain-slot { gap: 12px; padding: 18px 0; }
+  .chain-slot__circle { width: 40px; height: 40px; font-size: 18px; }
+  .chain-complete__title { font-size: 24px; }
+}
+
+/* ==========================================
+   /sustainability — MISSION
+   ========================================== */
+
+.sust-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  padding-bottom: 100px;
+}
+
+.sust-manifesto {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.sust-manifesto__text {
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.sust-section-title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #C9A84C;
+  margin-top: 60px;
+  margin-bottom: 32px;
+}
+
+.sust-commitments {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+.sust-commit-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.sust-commit-card:hover {
+  border-color: rgba(201,168,76,0.3);
+  background: rgba(201,168,76,0.03);
+}
+
+.sust-commit-card__emoji {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.sust-commit-card__text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.sust-animals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.sust-animal-tag {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 50px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.sust-animal-tag__name {
+  color: #fff; font-weight: 700;
+}
+.sust-animal-tag__dash {
+  color: #C9A84C;
+}
+.sust-animal-tag__meaning {
+  font-style: italic; color: var(--text-muted);
+}
+
+.sust-quote {
+  text-align: center;
+  font-size: 22px;
+  font-style: italic;
+  color: #C9A84C;
+  max-width: 600px;
+  margin: 60px auto 0;
+  padding: 0 24px;
+  line-height: 1.5;
+}
+
+/* RTL support for new pages */
+[dir="rtl"] .chain-slot { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .sust-commit-card { flex-direction: row-reverse; text-align: right; }
