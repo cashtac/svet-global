@@ -67,7 +67,7 @@ export default function ProductPage() {
       name: product!.name,
       price: product!.price_preorder * 100,
       size: selectedSize || product!.sizes[0],
-      image: product!.image,
+      image: product!.image_main,
       slug: productSlug,
     });
     setAdded(true);
@@ -97,7 +97,7 @@ export default function ProductPage() {
             {product.badge && <span className="pdp__best-value">{product.badge}</span>}
             {product.preorder && <span className="pdp__preorder-tag">PRE-ORDER</span>}
             <img
-              src={product.image}
+              src={product.image_main}
               alt={product.name}
               className="pdp__img pdp__img--float"
             />
@@ -211,7 +211,7 @@ export default function ProductPage() {
             {related.map(rp => (
               <Link href={`/product/svet-${rp.id}`} key={rp.id} className="pdp__related-card">
                 <div className="pdp__related-img-wrap">
-                  <img src={rp.image} alt={rp.name} loading="lazy" />
+                  <img src={rp.image_main} alt={rp.name} loading="lazy" />
                 </div>
                 <div className="pdp__related-info">
                   <h4>{rp.name}</h4>

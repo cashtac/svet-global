@@ -8,11 +8,12 @@
       "price_preorder": 69,
       "price_retail": 95,
       "currency": "USD",
-      "image": "/images/products/hoodie-vintage.jpg",
+      "image_main": "/images/products/hoodie-vintage.jpg",
       "images": ["/images/products/hoodie-vintage.jpg"],
       "description": "Distressed washed hoodie, vintage aged look, bubble logo",
       "details": "Vintage wash finish. Bubble sVet™ embroidery. Two-tone color options (Butter Yellow / Black). Heavyweight 400gsm. Distressed detailing.",
       "color": "Butter Yellow / Black",
+      "colors": ["yellow", "black"],
       "material": "100% Cotton French Terry, 400gsm",
       "tags": ["streetwear", "vintage", "oversized", "hoodie", "distressed"],
       "sizes": ["S/M", "L/XL"],
@@ -20,7 +21,8 @@
       "preorder": true,
       "featured": true,
       "new": true,
-      "badge": "NEW"
+      "badge": "NEW",
+      "created_at": "2026-03-23"
     },
     {
       "id": "hoodie-bubble",
@@ -30,11 +32,12 @@
       "price_preorder": 69,
       "price_retail": 95,
       "currency": "USD",
-      "image": "/images/products/hoodie-bubble.jpg",
+      "image_main": "/images/products/hoodie-bubble.jpg",
       "images": ["/images/products/hoodie-bubble.jpg"],
       "description": "Dark navy, red bubble \"sVet™\" logo, kangaroo pocket",
       "details": "Red sVet™ bubble embroidery. Heavyweight 400gsm. Grey contrast lining. Kangaroo pocket. Drawstring hood.",
       "color": "Dark Navy",
+      "colors": ["navy"],
       "material": "100% Cotton French Terry, 400gsm",
       "tags": ["streetwear", "navy", "oversized", "hoodie", "bubble"],
       "sizes": ["S/M", "L/XL"],
@@ -42,7 +45,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "hoodie-serif",
@@ -52,11 +56,12 @@
       "price_preorder": 69,
       "price_retail": 95,
       "currency": "USD",
-      "image": "/images/products/hoodie-serif.jpg",
+      "image_main": "/images/products/hoodie-serif.jpg",
       "images": ["/images/products/hoodie-serif.jpg"],
       "description": "Dark navy, clean elegant serif SVET logo",
       "details": "Minimal SVET serif logo. Circle emblem detail. Heavyweight 400gsm. Cream contrast cuffs. Clean elegant design.",
       "color": "Dark Navy",
+      "colors": ["navy"],
       "material": "100% Cotton French Terry, 400gsm",
       "tags": ["streetwear", "navy", "minimal", "hoodie", "serif"],
       "sizes": ["S/M", "L/XL"],
@@ -64,7 +69,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "pants-jogger-navy",
@@ -74,11 +80,12 @@
       "price_preorder": 55,
       "price_retail": 75,
       "currency": "USD",
-      "image": "/images/products/pants-jogger-navy.jpg",
+      "image_main": "/images/products/pants-jogger-navy.jpg",
       "images": ["/images/products/pants-jogger-navy.jpg"],
       "description": "Dark navy jogger cut, small SVET logo, comfortable fit",
       "details": "White sVet™ outline bubble logo. Elastic cuffs jogger style. White drawstrings. Back pocket. Comfortable everyday fit.",
       "color": "Dark Navy",
+      "colors": ["navy"],
       "material": "100% Cotton French Terry, 380gsm",
       "tags": ["streetwear", "navy", "jogger", "pants", "comfortable"],
       "sizes": ["S/M", "L/XL"],
@@ -86,7 +93,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "pants-bubble",
@@ -96,11 +104,12 @@
       "price_preorder": 59,
       "price_retail": 85,
       "currency": "USD",
-      "image": "/images/products/pants-bubble.jpg",
+      "image_main": "/images/products/pants-bubble.jpg",
       "images": ["/images/products/pants-bubble.jpg"],
       "description": "Wide leg, bubble logo left thigh",
       "details": "Red sVet™ bubble embroidery. Wide-leg relaxed fit. Grey drawstrings. Elastic waistband. Side pockets.",
       "color": "Dark Navy",
+      "colors": ["navy"],
       "material": "100% Cotton French Terry, 380gsm",
       "tags": ["streetwear", "navy", "wide-leg", "pants", "bubble"],
       "sizes": ["S/M", "L/XL"],
@@ -108,7 +117,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "pants-green",
@@ -118,11 +128,12 @@
       "price_preorder": 59,
       "price_retail": 85,
       "currency": "USD",
-      "image": "/images/products/pants-green.jpg",
+      "image_main": "/images/products/pants-green.jpg",
       "images": ["/images/products/pants-green.jpg"],
       "description": "Olive/army green wide-leg, minimal serif logo",
       "details": "Small SVET serif logo. Elastic cuffs jogger style. Back pocket. Suede-touch finish. Relaxed fit.",
       "color": "Olive Green",
+      "colors": ["green", "olive"],
       "material": "100% Cotton French Terry, 380gsm",
       "tags": ["streetwear", "green", "olive", "pants", "serif"],
       "sizes": ["S/M", "L/XL"],
@@ -130,7 +141,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "tshirt-black",
@@ -140,11 +152,12 @@
       "price_preorder": 25,
       "price_retail": 35,
       "currency": "USD",
-      "image": "/images/products/tshirt-black.jpg",
+      "image_main": "/images/products/tshirt-black.jpg",
       "images": ["/images/products/tshirt-black.jpg"],
       "description": "Oversized fit, bubble sVet™ logo",
       "details": "Gold/orange sVet™ bubble logo. Oversized fit. Ribbed crew neck. Pre-shrunk.",
       "color": "Black",
+      "colors": ["black"],
       "material": "100% Cotton, 180gsm",
       "tags": ["streetwear", "black", "oversized", "tshirt", "bubble"],
       "sizes": ["S/M", "L/XL"],
@@ -152,7 +165,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "tshirt-black-glow",
@@ -162,11 +176,12 @@
       "price_preorder": 25,
       "price_retail": 35,
       "currency": "USD",
-      "image": "/images/products/tshirt-black-glow.jpg",
+      "image_main": "/images/products/tshirt-black-glow.jpg",
       "images": ["/images/products/tshirt-black-glow.jpg"],
       "description": "Oversized fit, glowing SVET text front + back",
       "details": "Glowing SVET text logo. Front + back views. Oversized fit. Pre-shrunk.",
       "color": "Black",
+      "colors": ["black"],
       "material": "100% Cotton, 180gsm",
       "tags": ["streetwear", "black", "glow", "tshirt", "minimal"],
       "sizes": ["S/M", "L/XL"],
@@ -174,7 +189,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "tshirt-yellow",
@@ -184,11 +200,12 @@
       "price_preorder": 25,
       "price_retail": 35,
       "currency": "USD",
-      "image": "/images/products/tshirt-yellow.jpg",
+      "image_main": "/images/products/tshirt-yellow.jpg",
       "images": ["/images/products/tshirt-yellow.jpg"],
       "description": "Color-block mustard/cream, serif logo",
       "details": "Color-block design. SVET serif logo. Contrast cream sleeves. Relaxed fit.",
       "color": "Yellow / Cream",
+      "colors": ["yellow", "cream"],
       "material": "100% Cotton, 180gsm",
       "tags": ["streetwear", "yellow", "color-block", "tshirt", "serif"],
       "sizes": ["S/M", "L/XL"],
@@ -196,7 +213,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "tshirt-white",
@@ -206,11 +224,12 @@
       "price_preorder": 25,
       "price_retail": 35,
       "currency": "USD",
-      "image": "/images/products/tshirt-white.jpg",
+      "image_main": "/images/products/tshirt-white.jpg",
       "images": ["/images/products/tshirt-white.jpg"],
       "description": "Oversized white, minimal coral SVET logo",
       "details": "Small coral SVET serif logo. Clean minimal design. Oversized fit. Soft-touch finish.",
       "color": "White",
+      "colors": ["white"],
       "material": "100% Cotton, 180gsm",
       "tags": ["streetwear", "white", "minimal", "tshirt", "serif"],
       "sizes": ["S/M", "L/XL"],
@@ -218,7 +237,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "longsleeve-yellow",
@@ -228,11 +248,12 @@
       "price_preorder": 45,
       "price_retail": 60,
       "currency": "USD",
-      "image": "/images/products/longsleeve-yellow.png",
+      "image_main": "/images/products/longsleeve-yellow.png",
       "images": ["/images/products/longsleeve-yellow.png"],
       "description": "Butter yellow, red logo, sleeve stripes",
       "details": "Red SVET serif chest logo. Red accent sleeve stripes. Ribbed cuffs. Heavyweight cotton.",
       "color": "Butter Yellow",
+      "colors": ["yellow"],
       "material": "100% Heavy Cotton, 220gsm",
       "tags": ["streetwear", "yellow", "longsleeve", "red-accent"],
       "sizes": ["S/M", "L/XL"],
@@ -240,7 +261,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     },
     {
       "id": "cap",
@@ -250,11 +272,12 @@
       "price_preorder": 25,
       "price_retail": 35,
       "currency": "USD",
-      "image": "/images/products/cap.png",
+      "image_main": "/images/products/cap.png",
       "images": ["/images/products/cap.png"],
       "description": "Dark navy, 3D rubber bubble logo patch",
       "details": "Bubble sVet™ embroidered. Structured 6-panel. Adjustable brass buckle. One size fits all.",
       "color": "Dark Navy",
+      "colors": ["navy"],
       "material": "Cotton Twill, Brass Buckle",
       "tags": ["accessories", "navy", "cap", "structured"],
       "sizes": ["ONE SIZE"],
@@ -262,7 +285,8 @@
       "preorder": true,
       "featured": false,
       "new": true,
-      "badge": null
+      "badge": null,
+      "created_at": "2026-03-23"
     }
   ],
   "categories": [

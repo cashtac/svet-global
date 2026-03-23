@@ -34,7 +34,7 @@ function ProductCard({ product }: { product: Product }) {
       name: product.name,
       price: product.price_preorder * 100,
       size: selectedSize || product.sizes[0],
-      image: product.image,
+      image: product.image_main,
       slug: product.id,
     });
     setAdded(true);
@@ -49,7 +49,7 @@ function ProductCard({ product }: { product: Product }) {
       {product.preorder && <span className="shop-card__preorder-label">PRE-ORDER</span>}
 
       <Link href={`/product/${slug}`} className="shop-card__image-wrap">
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img src={product.image_main} alt={product.name} loading="lazy" />
       </Link>
 
       <div className="shop-card__info">
