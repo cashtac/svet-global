@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useI18n } from '@/lib/i18n-provider';
-import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
    SVET — FIRST DROP PRODUCT PAGE
@@ -14,8 +13,8 @@ import type { TranslationKey } from '@/lib/i18n';
 
 interface FullProduct {
   id: string;
-  nameKey: TranslationKey;
-  descKey: TranslationKey;
+  name: string;
+  desc: string;
   slug: string;
   preOrderPrice: number;
   retailPrice: number;
@@ -30,7 +29,9 @@ interface FullProduct {
 
 const ALL_PRODUCTS: FullProduct[] = [
   {
-    id: 'hoodie-vintage', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-vintage',
+    name: 'SVET Hoodie Vintage',
+    desc: 'Distressed washed hoodie, vintage aged look, bubble logo',
     slug: 'svet-hoodie-vintage', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-vintage.jpg',
@@ -38,7 +39,9 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Vintage wash finish', 'Bubble sVet™ embroidery', 'Two-tone color options', 'Heavyweight 400gsm', 'Distressed detailing'],
   },
   {
-    id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-bubble',
+    name: 'SVET Hoodie Bubble',
+    desc: 'Dark navy, red bubble "sVet™" logo, kangaroo pocket',
     slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-bubble.jpg',
@@ -46,23 +49,29 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Red sVet™ bubble embroidery', 'Heavyweight 400gsm', 'Grey contrast lining', 'Kangaroo pocket', 'Drawstring hood'],
   },
   {
-    id: 'hoodie-serif', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-serif',
+    name: 'SVET Hoodie Serif',
+    desc: 'Dark navy, clean elegant serif SVET logo',
     slug: 'svet-hoodie-serif', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-serif.jpg',
     color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
-    details: ['Minimal SVET serif logo', 'Circle emblem detail', 'Heavyweight 400gsm', 'Cream contrast cuffs', 'Front + back views'],
+    details: ['Minimal SVET serif logo', 'Circle emblem detail', 'Heavyweight 400gsm', 'Cream contrast cuffs', 'Clean elegant design'],
   },
   {
-    id: 'pants-jogger-navy', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
-    slug: 'svet-pants-jogger-navy', preOrderPrice: 59, retailPrice: 85,
+    id: 'pants-jogger-navy',
+    name: 'SVET Jogger Pants',
+    desc: 'Dark navy jogger cut, small SVET logo, comfortable fit',
+    slug: 'svet-pants-jogger-navy', preOrderPrice: 55, retailPrice: 75,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-jogger-navy.jpg',
     color: 'Dark Navy', material: '100% Cotton French Terry, 380gsm',
-    details: ['White sVet™ outline bubble logo', 'Elastic cuffs jogger style', 'White drawstrings', 'Back pocket', 'Front + back views'],
+    details: ['White sVet™ outline bubble logo', 'Elastic cuffs jogger style', 'White drawstrings', 'Back pocket', 'Comfortable everyday fit'],
   },
   {
-    id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    id: 'pants-bubble',
+    name: 'SVET Wide-Leg Pants Bubble',
+    desc: 'Wide leg, bubble logo left thigh',
     slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-bubble.jpg',
@@ -70,15 +79,19 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Red sVet™ bubble embroidery', 'Wide-leg relaxed fit', 'Grey drawstrings', 'Elastic waistband', 'Side pockets'],
   },
   {
-    id: 'pants-green', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    id: 'pants-green',
+    name: 'SVET Pants Olive',
+    desc: 'Olive/army green wide-leg, minimal serif logo',
     slug: 'svet-pants-green', preOrderPrice: 59, retailPrice: 85,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-green.jpg',
     color: 'Olive Green', material: '100% Cotton French Terry, 380gsm',
-    details: ['Small SVET serif logo', 'Elastic cuffs jogger style', 'Back pocket', 'Front + back views', 'Suede-touch finish'],
+    details: ['Small SVET serif logo', 'Elastic cuffs jogger style', 'Back pocket', 'Suede-touch finish', 'Relaxed fit'],
   },
   {
-    id: 'tshirt-black', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    id: 'tshirt-black',
+    name: 'SVET T-Shirt Black',
+    desc: 'Oversized fit, bubble sVet™ logo',
     slug: 'svet-tshirt-black', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-black.jpg',
@@ -86,7 +99,9 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Gold/orange sVet™ bubble logo', 'Oversized fit', 'Ribbed crew neck', 'Pre-shrunk'],
   },
   {
-    id: 'tshirt-black-glow', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    id: 'tshirt-black-glow',
+    name: 'SVET T-Shirt Black Glow',
+    desc: 'Oversized fit, glowing SVET text front + back',
     slug: 'svet-tshirt-black-glow', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-black-glow.jpg',
@@ -94,7 +109,9 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Glowing SVET text logo', 'Front + back views', 'Oversized fit', 'Pre-shrunk'],
   },
   {
-    id: 'tshirt-yellow', nameKey: 'product.tshirt-yellow', descKey: 'product.tshirt-yellow.desc',
+    id: 'tshirt-yellow',
+    name: 'SVET T-Shirt Yellow',
+    desc: 'Color-block mustard/cream, serif logo',
     slug: 'svet-tshirt-yellow', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-yellow.jpg',
@@ -102,23 +119,29 @@ const ALL_PRODUCTS: FullProduct[] = [
     details: ['Color-block design', 'SVET serif logo', 'Contrast cream sleeves', 'Relaxed fit'],
   },
   {
-    id: 'tshirt-white', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
+    id: 'tshirt-white',
+    name: 'SVET T-Shirt White',
+    desc: 'Oversized white, minimal coral SVET logo',
     slug: 'svet-tshirt-white', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-white.jpg',
     color: 'White', material: '100% Cotton, 180gsm',
-    details: ['Small orange SVET serif logo', 'Clean minimal design', 'Classic fit', 'Soft-touch finish'],
+    details: ['Small coral SVET serif logo', 'Clean minimal design', 'Oversized fit', 'Soft-touch finish'],
   },
   {
-    id: 'longsleeve-yellow', nameKey: 'product.longsleeve-yellow', descKey: 'product.longsleeve-yellow.desc',
+    id: 'longsleeve-yellow',
+    name: 'SVET Long Sleeve Yellow',
+    desc: 'Butter yellow, red logo, sleeve stripes',
     slug: 'svet-longsleeve-yellow', preOrderPrice: 45, retailPrice: 60,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/longsleeve-yellow.png',
     color: 'Butter Yellow', material: '100% Heavy Cotton, 220gsm',
-    details: ['Red SVET serif chest logo', 'Red accent sleeve details', 'Ribbed cuffs', 'Heavyweight cotton'],
+    details: ['Red SVET serif chest logo', 'Red accent sleeve stripes', 'Ribbed cuffs', 'Heavyweight cotton'],
   },
   {
-    id: 'cap', nameKey: 'product.cap', descKey: 'product.cap.desc',
+    id: 'cap',
+    name: 'SVET Cap',
+    desc: 'Dark navy, 3D rubber bubble logo patch',
     slug: 'svet-cap', preOrderPrice: 25, retailPrice: 35,
     sizes: ['ONE SIZE'], category: 'ACCESSORIES',
     image: '/images/products/cap.png',
@@ -164,7 +187,7 @@ export default function ProductPage() {
     if (!selectedSize && product!.sizes.length > 1) return;
     addItem({
       productId: product!.id,
-      name: t(product!.nameKey),
+      name: product!.name,
       price: product!.preOrderPrice * 100,
       size: selectedSize || product!.sizes[0],
       image: product!.image,
@@ -182,7 +205,7 @@ export default function ProductPage() {
         <span>/</span>
         <Link href="/shop">Shop</Link>
         <span>/</span>
-        <span className="pdp__breadcrumb-current">{t(product.nameKey)}</span>
+        <span className="pdp__breadcrumb-current">{product.name}</span>
       </div>
 
       <div className="pdp__grid">
@@ -193,7 +216,7 @@ export default function ProductPage() {
             <span className="pdp__preorder-tag">{t('shop.preorder')}</span>
             <img
               src={product.image}
-              alt={t(product.nameKey)}
+              alt={product.name}
               className="pdp__img pdp__img--float"
             />
           </div>
@@ -202,8 +225,8 @@ export default function ProductPage() {
         {/* Right: Product Info — clean & minimal */}
         <div className="pdp__info">
           <div className="pdp__category">{product.category}</div>
-          <h1 className="pdp__name">{t(product.nameKey)}</h1>
-          <p className="pdp__desc">{t(product.descKey)}</p>
+          <h1 className="pdp__name">{product.name}</h1>
+          <p className="pdp__desc">{product.desc}</p>
 
           {/* Price block */}
           <div className="pdp__price-block">
@@ -299,10 +322,10 @@ export default function ProductPage() {
             {related.map(rp => (
               <Link href={`/product/${rp.slug}`} key={rp.id} className="pdp__related-card">
                 <div className="pdp__related-img-wrap">
-                  <img src={rp.image} alt={t(rp.nameKey)} loading="lazy" />
+                  <img src={rp.image} alt={rp.name} loading="lazy" />
                 </div>
                 <div className="pdp__related-info">
-                  <h4>{t(rp.nameKey)}</h4>
+                  <h4>{rp.name}</h4>
                   <div className="pdp__related-price">
                     <span className="pdp__related-preorder">${rp.preOrderPrice}</span>
                     <span className="pdp__related-retail">${rp.retailPrice}</span>

@@ -4,7 +4,6 @@ import { useCart } from '@/lib/cart';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n-provider';
-import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
    SVET SHOP — FIRST DROP COLLECTION
@@ -13,8 +12,8 @@ import type { TranslationKey } from '@/lib/i18n';
 
 interface ShopProduct {
   id: string;
-  nameKey: TranslationKey;
-  descKey: TranslationKey;
+  name: string;
+  desc: string;
   slug: string;
   preOrderPrice: number;
   retailPrice: number;
@@ -26,73 +25,97 @@ interface ShopProduct {
 
 const PRODUCTS: ShopProduct[] = [
   {
-    id: 'hoodie-vintage', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-vintage',
+    name: 'SVET Hoodie Vintage',
+    desc: 'Distressed washed hoodie, vintage aged look, bubble logo',
     slug: 'svet-hoodie-vintage', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-vintage.jpg',
   },
   {
-    id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-bubble',
+    name: 'SVET Hoodie Bubble',
+    desc: 'Dark navy, red bubble "sVet™" logo, kangaroo pocket',
     slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-bubble.jpg',
   },
   {
-    id: 'hoodie-serif', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    id: 'hoodie-serif',
+    name: 'SVET Hoodie Serif',
+    desc: 'Dark navy, clean elegant serif SVET logo',
     slug: 'svet-hoodie-serif', preOrderPrice: 69, retailPrice: 95,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/hoodie-serif.jpg',
   },
   {
-    id: 'pants-jogger-navy', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
-    slug: 'svet-pants-jogger-navy', preOrderPrice: 59, retailPrice: 85,
+    id: 'pants-jogger-navy',
+    name: 'SVET Jogger Pants',
+    desc: 'Dark navy jogger cut, small SVET logo, comfortable fit',
+    slug: 'svet-pants-jogger-navy', preOrderPrice: 55, retailPrice: 75,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-jogger-navy.jpg',
   },
   {
-    id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    id: 'pants-bubble',
+    name: 'SVET Wide-Leg Pants Bubble',
+    desc: 'Wide leg, bubble logo left thigh',
     slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-bubble.jpg',
   },
   {
-    id: 'pants-green', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    id: 'pants-green',
+    name: 'SVET Pants Olive',
+    desc: 'Olive/army green wide-leg, minimal serif logo',
     slug: 'svet-pants-green', preOrderPrice: 59, retailPrice: 85,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/pants-green.jpg',
   },
   {
-    id: 'tshirt-black', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    id: 'tshirt-black',
+    name: 'SVET T-Shirt Black',
+    desc: 'Oversized fit, bubble sVet™ logo',
     slug: 'svet-tshirt-black', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-black.jpg',
   },
   {
-    id: 'tshirt-black-glow', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    id: 'tshirt-black-glow',
+    name: 'SVET T-Shirt Black Glow',
+    desc: 'Oversized fit, glowing SVET text front + back',
     slug: 'svet-tshirt-black-glow', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-black-glow.jpg',
   },
   {
-    id: 'tshirt-yellow', nameKey: 'product.tshirt-yellow', descKey: 'product.tshirt-yellow.desc',
+    id: 'tshirt-yellow',
+    name: 'SVET T-Shirt Yellow',
+    desc: 'Color-block mustard/cream, serif logo',
     slug: 'svet-tshirt-yellow', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-yellow.jpg',
   },
   {
-    id: 'tshirt-white', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
+    id: 'tshirt-white',
+    name: 'SVET T-Shirt White',
+    desc: 'Oversized white, minimal coral SVET logo',
     slug: 'svet-tshirt-white', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tshirt-white.jpg',
   },
   {
-    id: 'longsleeve-yellow', nameKey: 'product.longsleeve-yellow', descKey: 'product.longsleeve-yellow.desc',
+    id: 'longsleeve-yellow',
+    name: 'SVET Long Sleeve Yellow',
+    desc: 'Butter yellow, red logo, sleeve stripes',
     slug: 'svet-longsleeve-yellow', preOrderPrice: 45, retailPrice: 60,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/longsleeve-yellow.png',
   },
   {
-    id: 'cap', nameKey: 'product.cap', descKey: 'product.cap.desc',
+    id: 'cap',
+    name: 'SVET Cap',
+    desc: 'Dark navy, 3D rubber bubble logo patch',
     slug: 'svet-cap', preOrderPrice: 25, retailPrice: 35,
     sizes: ['ONE SIZE'], category: 'ACCESSORIES',
     image: '/images/products/cap.png',
@@ -109,7 +132,7 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
     if (!selectedSize) return;
     addItem({
       productId: product.id,
-      name: t(product.nameKey),
+      name: product.name,
       price: product.preOrderPrice * 100,
       size: selectedSize,
       image: product.image,
@@ -128,7 +151,7 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
       <Link href={`/product/${product.slug}`} className="shop-card__image-wrap">
         <img
           src={product.image}
-          alt={t(product.nameKey)}
+          alt={product.name}
           loading="lazy"
         />
       </Link>
@@ -136,9 +159,9 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
       {/* Info */}
       <div className="shop-card__info">
         <Link href={`/product/${product.slug}`} className="shop-card__name-link">
-          <h3 className="shop-card__name">{t(product.nameKey)}</h3>
+          <h3 className="shop-card__name">{product.name}</h3>
         </Link>
-        <p className="shop-card__desc">{t(product.descKey)}</p>
+        <p className="shop-card__desc">{product.desc}</p>
 
         {/* Price */}
         <div className="shop-card__pricing">
