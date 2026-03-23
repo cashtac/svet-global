@@ -1174,8 +1174,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .pricing-payment__status { font-size: 14px; }
 
 /* ==========================================
-   LANGUAGE SWITCHER
+   LANGUAGE SWITCHER — DROPDOWN
    ========================================== */
+
+.nav__lang-wrap {
+  position: relative;
+}
 
 .nav__lang-btn {
   display: flex; align-items: center; gap: 4px;
@@ -1188,6 +1192,126 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .nav__lang-btn:hover {
   border-color: var(--accent); color: var(--accent);
   transform: scale(1.02);
+}
+
+.nav__lang-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  min-width: 160px; padding: 6px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px; z-index: 200;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  animation: langDropIn 0.2s ease-out;
+}
+
+@keyframes langDropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav__lang-option {
+  display: block; width: 100%;
+  text-align: left; padding: 10px 14px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); background: transparent;
+  border: none; border-radius: 6px; cursor: pointer;
+  transition: all 0.15s ease;
+}
+.nav__lang-option:hover {
+  background: rgba(255,255,255,0.06); color: var(--text-primary);
+}
+.nav__lang-option.active {
+  color: var(--accent); font-weight: 700;
+  background: var(--accent-soft);
+}
+
+/* RTL dropdown */
+[dir="rtl"] .nav__lang-dropdown {
+  right: auto; left: 0;
+}
+[dir="rtl"] .nav__lang-option {
+  text-align: right;
+}
+
+/* ==========================================
+   MOBILE LANGUAGE GRID
+   ========================================== */
+
+.mobile-menu__lang-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; width: 100%; max-width: 320px;
+}
+
+.mobile-menu__lang-option {
+  padding: 10px 8px; font-size: 13px; font-weight: 600;
+  color: var(--text-muted); background: transparent;
+  border: 1px solid var(--border); border-radius: 8px;
+  cursor: pointer; white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+}
+.mobile-menu__lang-option:active {
+  transform: scale(0.95);
+}
+.mobile-menu__lang-option.active {
+  border-color: var(--accent); color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ==========================================
+   RTL — ARABIC LAYOUT SUPPORT
+   ========================================== */
+
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .nav__container {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .nav__links {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .footer__links {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .shop-card__preorder-label {
+  left: auto; right: 12px;
+}
+
+[dir="rtl"] .shop-card__badge {
+  right: auto; left: 12px;
+}
+
+[dir="rtl"] .shop-card__sizes-options {
+  direction: rtl;
+}
+
+[dir="rtl"] .pricing-card__feature {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+[dir="rtl"] .pricing-card__feature svg {
+  margin-left: 10px; margin-right: 0;
+}
+
+[dir="rtl"] .pricing-free-promo {
+  flex-direction: row-reverse; text-align: right;
+}
+
+[dir="rtl"] .pricing-payment {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .section-header {
+  text-align: center; /* keep centered */
+}
+
+[dir="rtl"] .mobile-menu__inner {
+  direction: rtl;
 }
 
 /* ==========================================

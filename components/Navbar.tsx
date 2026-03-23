@@ -2,19 +2,38 @@
 
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getMe, SvetUser } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n-provider';
+import { LOCALE_LABELS, LOCALE_LIST, type Locale } from '@/lib/i18n';
 
 export function Navbar() {
   const { count } = useCart();
   const { t, locale, setLocale } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [user, setUser] = useState<SvetUser | null>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getMe().then(u => setUser(u));
   }, []);
+
+  // Close lang dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const nextLocale = (current: Locale): Locale => {
+    const idx = LOCALE_LIST.indexOf(current);
+    return LOCALE_LIST[(idx + 1) % LOCALE_LIST.length];
+  };
 
   return (
     <>
@@ -36,14 +55,29 @@ export function Navbar() {
               {count > 0 && <span className="nav__cart-count">{count}</span>}
             </Link>
 
-            {/* Language switcher */}
-            <button
-              className="nav__lang-btn"
-              onClick={() => setLocale(locale === 'en' ? 'ru' : 'en')}
-              aria-label="Switch language"
-            >
-              {locale === 'en' ? '🇷🇺 RU' : '🇬🇧 EN'}
-            </button>
+            {/* Language dropdown */}
+            <div className="nav__lang-wrap" ref={langRef}>
+              <button
+                className="nav__lang-btn"
+                onClick={() => setLangOpen(!langOpen)}
+                aria-label="Switch language"
+              >
+                {LOCALE_LABELS[locale].split(' ')[0]} {locale.toUpperCase()}
+              </button>
+              {langOpen && (
+                <div className="nav__lang-dropdown">
+                  {LOCALE_LIST.map(l => (
+                    <button
+                      key={l}
+                      className={`nav__lang-option ${l === locale ? 'active' : ''}`}
+                      onClick={() => { setLocale(l); setLangOpen(false); }}
+                    >
+                      {LOCALE_LABELS[l]}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Account / Login */}
             {user ? (
@@ -72,7 +106,7 @@ export function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-          <div className="mobile-menu__inner">
+          <div className="mobile-menu__inner" onClick={e => e.stopPropagation()}>
             <Link href="/shop" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.shop').toUpperCase()}</Link>
             <Link href="/pricing" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.pricing').toUpperCase()}</Link>
             <Link href="/community" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.community').toUpperCase()}</Link>
@@ -83,16 +117,20 @@ export function Navbar() {
 
             <div className="mobile-menu__divider" />
 
-            {/* Language switcher in mobile */}
-            <button
-              className="mobile-menu__lang-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLocale(locale === 'en' ? 'ru' : 'en');
-              }}
-            >
-              {locale === 'en' ? '🇷🇺 Русский' : '🇬🇧 English'}
-            </button>
+            {/* Language grid in mobile */}
+            <div className="mobile-menu__lang-grid">
+              {LOCALE_LIST.map(l => (
+                <button
+                  key={l}
+                  className={`mobile-menu__lang-option ${l === locale ? 'active' : ''}`}
+                  onClick={() => setLocale(l)}
+                >
+                  {LOCALE_LABELS[l]}
+                </button>
+              ))}
+            </div>
+
+            <div className="mobile-menu__divider" />
 
             {user ? (
               <Link href="/account" className="mobile-menu__account" onClick={() => setMenuOpen(false)}>
