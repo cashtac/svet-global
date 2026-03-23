@@ -1,10 +1,9 @@
 /* ════════════════════════════════════════════════
-   SVET i18n — 5 Languages with Auto-Detection
-   EN (default) | RU (Russia/CIS) | PT (Portuguese)
-   DE (German) | AR-EG (Egyptian Arabic w/ slang)
+   SVET i18n — 7 Languages with Auto-Detection
+   EN | RU | PT-BR | DE | AR-EG | TR | ZH
    ════════════════════════════════════════════════ */
 
-export type Locale = 'en' | 'ru' | 'pt' | 'de' | 'ar';
+export type Locale = 'en' | 'ru' | 'pt' | 'de' | 'ar' | 'tr' | 'zh';
 
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: '🇬🇧 English',
@@ -12,9 +11,11 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   pt: '🇧🇷 Português',
   de: '🇩🇪 Deutsch',
   ar: '🇪🇬 عربي',
+  tr: '🇹🇷 Türkçe',
+  zh: '🇨🇳 中文',
 };
 
-export const LOCALE_LIST: Locale[] = ['en', 'ru', 'pt', 'de', 'ar'];
+export const LOCALE_LIST: Locale[] = ['en', 'ru', 'pt', 'de', 'ar', 'tr', 'zh'];
 
 /** RTL locales */
 export function isRTL(locale: Locale): boolean {
@@ -37,6 +38,10 @@ export function detectLocale(): Locale {
   if (lang.startsWith('pt')) return 'pt';
   // German
   if (lang.startsWith('de')) return 'de';
+  // Turkish
+  if (lang.startsWith('tr')) return 'tr';
+  // Chinese
+  if (lang.startsWith('zh')) return 'zh';
 
   // Timezone fallback
   try {
@@ -72,6 +77,13 @@ export function detectLocale(): Locale {
     if (tz.includes('Berlin') || tz.includes('Vienna') ||
         tz.includes('Zurich')) return 'de';
 
+    // Turkey
+    if (tz.includes('Istanbul')) return 'tr';
+
+    // China
+    if (tz.includes('Shanghai') || tz.includes('Chongqing') ||
+        tz.includes('Urumqi') || tz.includes('Hong_Kong')) return 'zh';
+
   } catch { /* ignore */ }
 
   return 'en';
@@ -90,6 +102,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.symbols': 'Symbols',
     'nav.chain': 'Your Chain',
     'nav.sustainability': 'Sustainability',
+    'nav.insight': 'Insight',
+    'nav.profile': 'Profile',
     'nav.cart': 'Cart',
     'nav.signin': 'Sign in',
     'nav.myaccount': 'MY ACCOUNT →',
@@ -256,6 +270,24 @@ const translations: Record<Locale, Record<string, string>> = {
     'sust.c5': 'Production — pre-order model = zero waste, zero unsold inventory.',
     'sust.animalsTitle': 'THE ANIMALS',
     'sust.quote': '"We are not separate from nature. We are part of it."',
+
+    // Insight
+    'insight.title': 'DID YOU KNOW?', 'insight.label': 'Daily Insight',
+    'insight.subtitle': 'One true insight. Not a fact. A shift in how you see the world.',
+    'insight.locked': '☀️ Unlock with 1 Connection Token or $0.99',
+    'insight.unlock': 'UNLOCK INSIGHT', 'insight.yesterday': 'Yesterday\'s insight (free):',
+    'insight.categories': 'Categories',
+    'insight.subscriberNote': 'Subscribers: unlimited daily insights included',
+
+    // Profile
+    'profile.title': 'PROFILE', 'profile.level': 'Level',
+    'profile.chain': 'Chain Progress', 'profile.nextUnlock': 'Next unlock:',
+    'profile.tokens': 'Connection Tokens', 'profile.orders': 'Order History',
+    'profile.subscription': 'Subscription Status',
+
+    // Registration
+    'reg.welcome': 'Welcome to SVET. Your chain begins now. 🪲',
+    'reg.firstSymbol': '🪲 PRECISION symbol earned!',
   },
 
   /* ═══════════════════════════════ RUSSIAN ═══════════════════════════════ */
@@ -267,6 +299,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.symbols': 'Символы',
     'nav.chain': 'Твоя Цепь',
     'nav.sustainability': 'Миссия',
+    'nav.insight': 'Инсайт',
+    'nav.profile': 'Профиль',
     'nav.cart': 'Корзина',
     'nav.signin': 'Войти',
     'nav.myaccount': 'МОЙ АККАУНТ →',
@@ -424,6 +458,17 @@ const translations: Record<Locale, Record<string, string>> = {
     'sust.c5': 'Производство — модель предзаказа = ноль отходов, ноль нераспроданного.',
     'sust.animalsTitle': 'ЖИВОТНЫЕ',
     'sust.quote': '«Мы не отделены от природы. Мы — часть неё.»',
+    'insight.title': 'А ТЫ ЗНАЛ?', 'insight.label': 'Ежедневный инсайт',
+    'insight.subtitle': 'Один настоящий инсайт. Не факт. Сдвиг в том, как ты видишь мир.',
+    'insight.locked': '☀️ Открой за 1 Токен Связи или $0.99',
+    'insight.unlock': 'ОТКРЫТЬ ИНСАЙТ', 'insight.yesterday': 'Вчерашний инсайт (бесплатно):',
+    'insight.categories': 'Категории', 'insight.subscriberNote': 'Подписчики: безлимитные инсайты',
+    'profile.title': 'ПРОФИЛЬ', 'profile.level': 'Уровень',
+    'profile.chain': 'Прогресс цепи', 'profile.nextUnlock': 'Следующий символ:',
+    'profile.tokens': 'Токены Связи', 'profile.orders': 'История заказов',
+    'profile.subscription': 'Статус подписки',
+    'reg.welcome': 'Добро пожаловать в SVET. Твоя цепь начинается. 🪲',
+    'reg.firstSymbol': '🪲 Символ ТОЧНОСТЬ заработан!',
   },
 
   /* ═══════════════════════════════ PORTUGUESE ═══════════════════════════════ */
@@ -435,6 +480,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.symbols': 'Símbolos',
     'nav.chain': 'Sua Corrente',
     'nav.sustainability': 'Sustentabilidade',
+    'nav.insight': 'Descoberta',
+    'nav.profile': 'Perfil',
     'nav.cart': 'Carrinho',
     'nav.signin': 'Entrar',
     'nav.myaccount': 'MINHA CONTA →',
@@ -557,6 +604,17 @@ const translations: Record<Locale, Record<string, string>> = {
     'sust.c5': 'Produção — modelo pré-venda = zero desperdício, zero estoque não vendido.',
     'sust.animalsTitle': 'OS ANIMAIS',
     'sust.quote': '"Não estamos separados da natureza. Somos parte dela."',
+    'insight.title': 'VOCÊ SABIA?', 'insight.label': 'Descoberta Diária',
+    'insight.subtitle': 'Um verdadeiro insight. Não é um fato. É uma mudança na forma como você vê o mundo.',
+    'insight.locked': '☀️ Desbloqueie com 1 Token de Conexão ou $0.99',
+    'insight.unlock': 'DESBLOQUEAR', 'insight.yesterday': 'Descoberta de ontem (grátis):',
+    'insight.categories': 'Categorias', 'insight.subscriberNote': 'Assinantes: descobertas diárias ilimitadas',
+    'profile.title': 'PERFIL', 'profile.level': 'Nível',
+    'profile.chain': 'Progresso da Corrente', 'profile.nextUnlock': 'Próximo desbloqueio:',
+    'profile.tokens': 'Tokens de Conexão', 'profile.orders': 'Histórico de Pedidos',
+    'profile.subscription': 'Status da Assinatura',
+    'reg.welcome': 'Bem-vindo ao SVET. Sua corrente começa agora. 🪲',
+    'reg.firstSymbol': '🪲 Símbolo PRECISÃO conquistado!',
   },
 
   /* ═══════════════════════════════ GERMAN ═══════════════════════════════ */
@@ -568,6 +626,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.symbols': 'Symbole',
     'nav.chain': 'Deine Kette',
     'nav.sustainability': 'Nachhaltigkeit',
+    'nav.insight': 'Entdeckung',
+    'nav.profile': 'Profil',
     'nav.cart': 'Warenkorb',
     'nav.signin': 'Anmelden',
     'nav.myaccount': 'MEIN KONTO →',
@@ -688,6 +748,17 @@ const translations: Record<Locale, Record<string, string>> = {
     'sust.c5': 'Produktion — Vorbestellungsmodell = null Verschwendung, null unverkaufter Bestand.',
     'sust.animalsTitle': 'DIE TIERE',
     'sust.quote': '"Wir sind nicht getrennt von der Natur. Wir sind Teil davon."',
+    'insight.title': 'WUSSTEST DU?', 'insight.label': 'Tägliche Entdeckung',
+    'insight.subtitle': 'Eine wahre Erkenntnis. Kein Fakt. Ein Wandel in deiner Weltsicht.',
+    'insight.locked': '☀️ Mit 1 Verbindungs-Token oder $0.99 freischalten',
+    'insight.unlock': 'FREISCHALTEN', 'insight.yesterday': 'Gestrige Entdeckung (kostenlos):',
+    'insight.categories': 'Kategorien', 'insight.subscriberNote': 'Abonnenten: unbegrenzte tägliche Entdeckungen',
+    'profile.title': 'PROFIL', 'profile.level': 'Stufe',
+    'profile.chain': 'Kettenfortschritt', 'profile.nextUnlock': 'Nächste Freischaltung:',
+    'profile.tokens': 'Verbindungs-Token', 'profile.orders': 'Bestellhistorie',
+    'profile.subscription': 'Abonnement-Status',
+    'reg.welcome': 'Willkommen bei SVET. Deine Kette beginnt jetzt. 🪲',
+    'reg.firstSymbol': '🪲 PRÄZISION Symbol verdient!',
   },
 
   /* ════════════════════════ EGYPTIAN ARABIC (عامية مصرية) ════════════════════════ */
@@ -699,6 +770,8 @@ const translations: Record<Locale, Record<string, string>> = {
     'nav.symbols': 'الرموز',
     'nav.chain': 'سلسلتك',
     'nav.sustainability': 'الرسالة',
+    'nav.insight': 'اكتشاف',
+    'nav.profile': 'بروفايل',
     'nav.cart': 'السلة',
     'nav.signin': 'سجّل دخولك',
     'nav.myaccount': 'حسابي ←',
@@ -818,7 +891,224 @@ const translations: Record<Locale, Record<string, string>> = {
     'sust.c4': 'مجتمع — 1% من كل عملية بيع بيروح لإعادة التشجير العالمي.',
     'sust.c5': 'إنتاج — نظام الطلب المسبق = صفر هدر، صفر مخزون مش متباع.',
     'sust.animalsTitle': 'الحيوانات',
-    'sust.quote': '"إحنا مش منفصلين عن الطبيعة. إحنا جزء منها."',
+    'sust.quote': '\"إحنا مش منفصلين عن الطبيعة. إحنا جزء منها.\"',
+    'insight.title': 'كنت تعرف؟', 'insight.label': 'اكتشاف يومي',
+    'insight.subtitle': 'بصيرة حقيقية واحدة. مش حقيقة. تحول في طريقة شوفك للعالم.',
+    'insight.locked': '☀️ افتح بـ1 توكن اتصال أو $0.99',
+    'insight.unlock': 'افتح الاكتشاف', 'insight.yesterday': 'اكتشاف إمبارح (ببلاش):',
+    'insight.categories': 'الفئات', 'insight.subscriberNote': 'المشتركين: اكتشافات يومية بلا حدود',
+    'profile.title': 'بروفايل', 'profile.level': 'المستوى',
+    'profile.chain': 'تقدم السلسلة', 'profile.nextUnlock': 'اللي بعده:',
+    'profile.tokens': 'توكنز اتصال', 'profile.orders': 'تاريخ الطلبات',
+    'profile.subscription': 'حالة الاشتراك',
+    'reg.welcome': 'مرحباً بيك في SVET. سلسلتك بدأت دلوقتي. 🪲',
+    'reg.firstSymbol': '🪲 رمز الدقة اتحصل عليه!',
+  },
+
+  /* ═══════════════════════════════ TURKISH ═══════════════════════════════ */
+  tr: {
+    'nav.shop': 'Mağaza', 'nav.pricing': 'Fiyatlar', 'nav.community': 'Topluluk', 'nav.philosophy': 'Felsefe',
+    'nav.symbols': 'Semboller', 'nav.chain': 'Zincirin', 'nav.sustainability': 'Sürdürülebilirlik',
+    'nav.cart': 'Sepet', 'nav.signin': 'Giriş Yap', 'nav.myaccount': 'HESABIM →',
+    'nav.insight': 'Keşfet', 'nav.profile': 'Profil',
+
+    'shop.title': 'MAĞAZA', 'shop.label': 'Ön Sipariş Koleksiyonu',
+    'shop.desc': 'Her parça bir mesaj taşır. Özel fiyatlarla şimdi sipariş ver.',
+    'shop.banner': '🔥 ÖN SİPARİŞ — Şimdi sipariş ver, 1 ay içinde kargoda. $100+ siparişlerde ücretsiz kargo',
+    'shop.size': 'Beden', 'shop.addToCart': 'Sepete Ekle', 'shop.added': '✓ Eklendi!',
+    'shop.preorder': 'ÖN SİPARİŞ', 'shop.shipping': '🌍 Dünya Çapında Kargo', 'shop.bestValue': 'EN İYİ DEĞER',
+
+    'pricing.title': 'PLANINI SEÇ', 'pricing.label': 'AI Abonelikleri',
+    'pricing.desc': 'AI destekli kişisel asistan. SVET ile inşa et, yarat, başlat.',
+    'pricing.banner': '🎁 $100+ SVET kıyafet al → 24 saat Starter ÜCRETSİZ',
+    'pricing.popular': 'EN POPÜLER', 'pricing.get': 'Seç',
+    'pricing.freeTitle': 'ÜCRETSİZ 24 Saat Starter', 'pricing.freeDesc': '$100+ SVET kıyafet harcayarak 24 saat Starter AI ücretsiz aç. Kart gerekmez.',
+    'pricing.shopNow': 'Mağazaya Git →', 'pricing.paymentTitle': 'Ödeme Yöntemleri',
+
+    'plan.starter.f1': 'Kişisel AI asistan', 'plan.starter.f2': 'Sohbet & görev yönetimi',
+    'plan.starter.f3': 'Temel entegrasyonlar', 'plan.starter.f4': '$100+ siparişte 24 saat ÜCRETSİZ',
+    'plan.builder.f1': 'Tam AI yetenekleri', 'plan.builder.f2': 'Projeler oluştur ve başlat',
+    'plan.builder.f3': 'Gelişmiş entegrasyonlar', 'plan.builder.f4': 'Öncelikli destek', 'plan.builder.f5': 'Özel iş akışları',
+    'plan.ultra.f1': 'Kişisel AI + kendi sunucun', 'plan.ultra.f2': 'Kendi sunucuna aktar',
+    'plan.ultra.f3': 'Tam kaynak kod erişimi', 'plan.ultra.f4': 'Sınırsız kullanım', 'plan.ultra.f5': 'White-label hazır',
+    'plan.business.f1': 'Kurumsal AI', 'plan.business.f2': 'Takım çalışması',
+    'plan.business.f3': 'Özel entegrasyonlar', 'plan.business.f4': 'Ayrılmış destek',
+    'plan.business.f5': 'SSO & yönetici kontrolleri', 'plan.business.f6': 'SLA garantisi',
+
+    'product.tshirt-black': 'SVET Tişört Siyah', 'product.tshirt-black.desc': 'Oversize kutu kesim, kabartma "sVet™" logo kırmızı/turuncu, %100 pamuk',
+    'product.tshirt-yellow': 'SVET Tişört Sarı', 'product.tshirt-yellow.desc': 'Renk bloklu hardal/krem, serif logo, kırmızı dikiş',
+    'product.tshirt-grey': 'SVET Tişört Gri', 'product.tshirt-grey.desc': 'Melanj gri, minimal kırmızı logo',
+    'product.longsleeve-yellow': 'SVET Uzun Kollu Sarı', 'product.longsleeve-yellow.desc': 'Tereyağı sarısı, göğüste kırmızı logo',
+    'product.sweatshirt-cropped': 'SVET Sweatshirt Crop', 'product.sweatshirt-cropped.desc': 'Tereyağı sarısı, kısa kesim, ribana manşetler',
+    'product.sweatshirt-relaxed': 'SVET Sweatshirt Rahat', 'product.sweatshirt-relaxed.desc': 'Tereyağı sarısı, oversize, V yaka',
+    'product.sweatshirt-vintage': 'SVET Sweatshirt Vintage', 'product.sweatshirt-vintage.desc': 'Eskitme altın yıkama, vintage his',
+    'product.hoodie-bubble': 'SVET Hoodie Bubble', 'product.hoodie-bubble.desc': 'Koyu lacivert, kabartma logo, kanguru cep',
+    'product.hoodie-serif': 'SVET Hoodie Serif', 'product.hoodie-serif.desc': 'Koyu lacivert, temiz serif logo, minimal',
+    'product.pants-bubble': 'SVET Geniş Paça Pantolon Bubble', 'product.pants-bubble.desc': 'Koyu lacivert, uylukta kabartma logo',
+    'product.pants-serif': 'SVET Geniş Paça Pantolon Serif', 'product.pants-serif.desc': 'Koyu lacivert, serif logo',
+    'product.set-hoodie-pants': 'SVET Set (Hoodie + Pantolon)', 'product.set-hoodie-pants.desc': 'Tam uyumlu set, logo stili seçilebilir',
+    'product.cap': 'SVET Şapka', 'product.cap.desc': 'Koyu lacivert, 3D kauçuk kabartma logo',
+
+    'footer.tagline': 'Bir Güneş · Bir Enerji · Bir Gezegen · Herkes İçin',
+    'footer.oneAccount': 'Bir hesap. Tüm SVET.', 'footer.rights': 'Tüm hakları saklıdır.',
+
+    'home.badge': 'BİR GÜNEŞ · BİR ENERJİ · BİR GEZEGEN',
+    'home.tagline': 'Moda değil. Bir yaşam biçimi.', 'home.tagline2': 'Hepimizi birleştiren kıyafetler.',
+    'home.cta': "SVET'i Keşfet", 'home.scroll': 'KAYDIRIN',
+
+    'symbols.title': '9 SEMBOL', 'symbols.label': "SVET'in Dili", 'symbols.desc': 'Dokuz hayvan. Dokuz anlam. Bir felsefe.',
+    'symbols.question': 'Sen hangi hayvansın? Zincirin SVET\'e katıldıkça büyür.',
+    'symbols.cta': "SVET'e Katıl",
+    'symbols.scarab': 'ATIN BÖCEĞİ', 'symbols.scarab.meaning': 'IŞIK', 'symbols.scarab.desc': 'Yeniden doğuş. Güneşin sonsuz döngüsü — her gün yeniden başlarsın.',
+    'symbols.eagle': 'KARTAL', 'symbols.eagle.meaning': 'VİZYON', 'symbols.eagle.desc': 'Yukarıdan gör. Büyük resmi görenler dünyayı değiştirir.',
+    'symbols.bear': 'AYI', 'symbols.bear.meaning': 'DAYANIKLILIK', 'symbols.bear.desc': 'Kışı atlatmak. Sessiz güç.',
+    'symbols.snowleopard': 'KAR LEOPARI', 'symbols.snowleopard.meaning': 'ZARAFET', 'symbols.snowleopard.desc': 'Sessizce hareket et. Çabasız hassasiyet.',
+    'symbols.jaguar': 'JAGUAR', 'symbols.jaguar.meaning': 'GÜÇ', 'symbols.jaguar.desc': 'Kökler derine iner. İçindeki vahşi güç.',
+    'symbols.whale': 'BALİNA', 'symbols.whale.meaning': 'HAFIZA', 'symbols.whale.desc': 'Yolunu tut. Kıyıları birleştir.',
+    'symbols.bee': 'ARI', 'symbols.bee.meaning': 'YARATIM', 'symbols.bee.desc': 'Birlikte inşa et. Her eylem bütünün parçası.',
+    'symbols.wasp': 'EŞEK ARISI', 'symbols.wasp.meaning': 'HASSASİYET', 'symbols.wasp.desc': 'Mimari. Yapı. Saf niyet.',
+    'symbols.lion': 'ASLAN', 'symbols.lion.meaning': 'SONSUZLUK', 'symbols.lion.desc': 'Roma. Afrika. Güneş. Geriye kalan.',
+    'chain.title': 'SVET ZİNCİRİN', 'chain.label': 'Etkileşim Sistemi', 'chain.desc': 'Her eylem bir sembol kazandırır. 9\'unu topla ve SVET COMPLETE ol.',
+    'chain.slot.precision': 'HASSASİYET', 'chain.slot.precision.desc': 'İlk mesaj veya svet.global\'e ilk ziyaret',
+    'chain.slot.creation': 'YARATIM', 'chain.slot.creation.desc': 'İlk ürününü satın al',
+    'chain.slot.light': 'IŞIK', 'chain.slot.light.desc': 'SVET ürünlerine $100+ harca (24 saat AI ücretsiz)',
+    'chain.slot.vision': 'VİZYON', 'chain.slot.vision.desc': 'Instagram/Twitter\'da @svet etiketiyle paylaş',
+    'chain.slot.memory': 'HAFIZA', 'chain.slot.memory.desc': 'Alışveriş yapan bir arkadaş öner',
+    'chain.slot.grace': 'ZARAFET', 'chain.slot.grace.desc': '3 aydır aktif abone',
+    'chain.slot.endurance': 'DAYANIKLILIK', 'chain.slot.endurance.desc': '12 aydır aktif abone',
+    'chain.slot.power': 'GÜÇ', 'chain.slot.power.desc': 'Rusya/BDT dışı bir ülkeden sipariş',
+    'chain.slot.eternity': 'SONSUZLUK', 'chain.slot.eternity.desc': 'Discord\'da aktif (30+ mesaj)',
+    'chain.complete.title': 'SVET COMPLETE', 'chain.complete.desc': '9 sembol toplandı. SVET tarihinin bir parçasısın.',
+    'chain.complete.r1': 'Sana özel fiziksel ürün gönderilir', 'chain.complete.r2': 'SVET tarihinde adın', 'chain.complete.r3': 'Ömür boyu topluluk statüsü',
+    'chain.complete.cta': 'Zincirini Başlat →',
+    'sust.title': 'NEDEN VARIZ', 'sust.label': 'Misyon',
+    'sust.manifesto1': 'SVET ışık demek. Moda değil. Hype üzerine kurulu bir marka değil.',
+    'sust.manifesto2': 'Bir güneş hepimizi eşit ısıtır — Kahire, Moskova, Tokyo, São Paulo, New York. Aynı havayı soluyoruz. Aynı gökyüzünü paylaşıyoruz.',
+    'sust.commitTitle': 'TAAHHÜTLER', 'sust.c1': 'Malzemeler — yalnızca sertifikalı sürdürülebilir pamuk. Türkiye\'deki ortak fabrika.',
+    'sust.c2': 'Ambalaj — %100 geri dönüştürülmüş, sıfır plastik, sanat eseri ambalaj.',
+    'sust.c3': 'Kargo — her uluslararası gönderide karbon telafisi.',
+    'sust.c4': 'Topluluk — her satışın %1\'i küresel ağaçlandırmaya gider.',
+    'sust.c5': 'Üretim — ön sipariş modeli = sıfır atık, sıfır satılmamış envanter.',
+    'sust.animalsTitle': 'HAYVANLAR',
+    'sust.quote': '"Doğadan ayrı değiliz. Onun bir parçasıyız."',
+
+    'insight.title': 'BİLİYOR MUYDUN?', 'insight.label': 'Günlük Keşif',
+    'insight.subtitle': 'Tek bir gerçek bakış açısı. Dünyayı görme şeklini değiştiren.',
+    'insight.locked': '☀️ 1 Bağlantı Token\'ı veya $0.99 ile aç',
+    'insight.unlock': 'KEŞFİ AÇ', 'insight.yesterday': 'Dünkü keşif (ücretsiz):',
+    'insight.categories': 'Kategoriler',
+    'insight.subscriberNote': 'Aboneler: sınırsız günlük keşif dahil',
+
+    'profile.title': 'PROFİL', 'profile.level': 'Seviye',
+    'profile.chain': 'Zincir İlerlemesi', 'profile.nextUnlock': 'Sonraki kilit açma:',
+    'profile.tokens': 'Bağlantı Token\'ları', 'profile.orders': 'Sipariş Geçmişi',
+    'profile.subscription': 'Abonelik Durumu',
+
+    'reg.welcome': "SVET'e hoş geldin. Zincirin şimdi başlıyor. 🪲",
+    'reg.firstSymbol': '🪲 HASSASİYET sembolün kazanıldı!',
+  },
+
+  /* ═══════════════════════════════ CHINESE SIMPLIFIED ═══════════════════════════════ */
+  zh: {
+    'nav.shop': '商店', 'nav.pricing': '价格', 'nav.community': '社区', 'nav.philosophy': '理念',
+    'nav.symbols': '符号', 'nav.chain': '你的链条', 'nav.sustainability': '可持续',
+    'nav.cart': '购物车', 'nav.signin': '登录', 'nav.myaccount': '我的账户 →',
+    'nav.insight': '发现', 'nav.profile': '个人资料',
+
+    'shop.title': '商店', 'shop.label': '预购系列',
+    'shop.desc': '每件作品都承载一个信息。以独家价格立即预购。',
+    'shop.banner': '🔥 预购 — 立即下单，1个月内发货。$100+订单全球免邮',
+    'shop.size': '尺码', 'shop.addToCart': '加入购物车', 'shop.added': '✓ 已添加！',
+    'shop.preorder': '预购', 'shop.shipping': '🌍 全球配送', 'shop.bestValue': '最佳价值',
+
+    'pricing.title': '选择你的计划', 'pricing.label': 'AI订阅',
+    'pricing.desc': 'AI驱动的个人助手。与SVET一起构建、创造、启动。',
+    'pricing.banner': '🎁 购买$100+ SVET服装 → 免费获得24小时Starter',
+    'pricing.popular': '最受欢迎', 'pricing.get': '选择',
+    'pricing.freeTitle': '免费24小时Starter访问', 'pricing.freeDesc': '在SVET服装上消费$100+即可解锁24小时免费Starter AI。无需信用卡。',
+    'pricing.shopNow': '去商店 →', 'pricing.paymentTitle': '支付方式',
+
+    'plan.starter.f1': '个人AI助手', 'plan.starter.f2': '聊天和任务管理',
+    'plan.starter.f3': '基础集成', 'plan.starter.f4': '$100+订单免费24小时',
+    'plan.builder.f1': '完整AI功能', 'plan.builder.f2': '创建和启动项目',
+    'plan.builder.f3': '高级集成', 'plan.builder.f4': '优先支持', 'plan.builder.f5': '自定义工作流',
+    'plan.ultra.f1': '个人AI + 自托管', 'plan.ultra.f2': '转移到自己的服务器',
+    'plan.ultra.f3': '完整源码访问', 'plan.ultra.f4': '无限使用', 'plan.ultra.f5': '白标准备',
+    'plan.business.f1': '企业级AI', 'plan.business.f2': '团队协作',
+    'plan.business.f3': '自定义集成', 'plan.business.f4': '专属支持',
+    'plan.business.f5': 'SSO和管理控制', 'plan.business.f6': 'SLA保证',
+
+    'product.tshirt-black': 'SVET T恤 黑色', 'product.tshirt-black.desc': '宽松方形剪裁，气泡"sVet™"logo红/橙色，100%纯棉',
+    'product.tshirt-yellow': 'SVET T恤 黄色', 'product.tshirt-yellow.desc': '色块拼接芥末/奶油色，衬线logo，红色缝线',
+    'product.tshirt-grey': 'SVET T恤 灰色', 'product.tshirt-grey.desc': '灰色混纺，极简红色logo',
+    'product.longsleeve-yellow': 'SVET 长袖 黄色', 'product.longsleeve-yellow.desc': '黄油黄，胸前红色logo',
+    'product.sweatshirt-cropped': 'SVET 短款卫衣', 'product.sweatshirt-cropped.desc': '黄油黄，短款剪裁，罗纹袖口',
+    'product.sweatshirt-relaxed': 'SVET 宽松卫衣', 'product.sweatshirt-relaxed.desc': '黄油黄，oversized，V领',
+    'product.sweatshirt-vintage': 'SVET 复古卫衣', 'product.sweatshirt-vintage.desc': '做旧金色水洗，复古质感',
+    'product.hoodie-bubble': 'SVET 气泡连帽衫', 'product.hoodie-bubble.desc': '深藏青，气泡logo，袋鼠口袋',
+    'product.hoodie-serif': 'SVET 衬线连帽衫', 'product.hoodie-serif.desc': '深藏青，简洁衬线logo，极简',
+    'product.pants-bubble': 'SVET 阔腿裤 气泡', 'product.pants-bubble.desc': '深藏青，大腿气泡logo',
+    'product.pants-serif': 'SVET 阔腿裤 衬线', 'product.pants-serif.desc': '深藏青，衬线logo',
+    'product.set-hoodie-pants': 'SVET 套装（连帽衫+裤子）', 'product.set-hoodie-pants.desc': '完整搭配套装，可选logo风格',
+    'product.cap': 'SVET 帽子', 'product.cap.desc': '深藏青，3D橡胶气泡logo贴片',
+
+    'footer.tagline': '一个太阳 · 一份能量 · 一个星球 · 为了每个人',
+    'footer.oneAccount': '一个账户。全部SVET。', 'footer.rights': '版权所有。',
+
+    'home.badge': '一个太阳 · 一份能量 · 一个星球',
+    'home.tagline': '不是潮流。是一种生活方式。', 'home.tagline2': '连接我们所有人的服装。',
+    'home.cta': '探索SVET', 'home.scroll': '滑动',
+
+    'symbols.title': '9个符号', 'symbols.label': 'SVET的语言', 'symbols.desc': '九种动物。九个含义。一种哲学。',
+    'symbols.question': '你是哪种动物？随着参与SVET，你的链条会不断成长。',
+    'symbols.cta': '加入SVET',
+    'symbols.scarab': '圣甲虫', 'symbols.scarab.meaning': '光', 'symbols.scarab.desc': '重生。太阳的永恒循环——你每天都重新开始。',
+    'symbols.eagle': '鹰', 'symbols.eagle.meaning': '远见', 'symbols.eagle.desc': '从上方观察。看到全貌的人推动世界。',
+    'symbols.bear': '熊', 'symbols.bear.meaning': '耐力', 'symbols.bear.desc': '熬过寒冬。无声的力量。',
+    'symbols.snowleopard': '雪豹', 'symbols.snowleopard.meaning': '优雅', 'symbols.snowleopard.desc': '无声移动。不费力的精准。',
+    'symbols.jaguar': '美洲豹', 'symbols.jaguar.meaning': '力量', 'symbols.jaguar.desc': '根系深植。内在的野性力量。',
+    'symbols.whale': '鲸', 'symbols.whale.meaning': '记忆', 'symbols.whale.desc': '坚持方向。连接彼岸。',
+    'symbols.bee': '蜜蜂', 'symbols.bee.meaning': '创造', 'symbols.bee.desc': '共同建造。每一个行动都是整体的一部分。',
+    'symbols.wasp': '黄蜂', 'symbols.wasp.meaning': '精准', 'symbols.wasp.desc': '建筑。结构。纯粹的意图。',
+    'symbols.lion': '狮子', 'symbols.lion.meaning': '永恒', 'symbols.lion.desc': '罗马。非洲。太阳。留下来的。',
+    'chain.title': '你的SVET链条', 'chain.label': '参与系统', 'chain.desc': '每个行动获得一个符号。收集全部9个，成为SVET COMPLETE。',
+    'chain.slot.precision': '精准', 'chain.slot.precision.desc': '首次消息或首次访问svet.global',
+    'chain.slot.creation': '创造', 'chain.slot.creation.desc': '购买你的第一件商品',
+    'chain.slot.light': '光', 'chain.slot.light.desc': '在SVET产品上消费$100+（解锁24h AI免费）',
+    'chain.slot.vision': '远见', 'chain.slot.vision.desc': '在Instagram/Twitter上带@svet标签发帖',
+    'chain.slot.memory': '记忆', 'chain.slot.memory.desc': '推荐一位购买的朋友',
+    'chain.slot.grace': '优雅', 'chain.slot.grace.desc': '活跃订阅3个月',
+    'chain.slot.endurance': '耐力', 'chain.slot.endurance.desc': '活跃订阅12个月',
+    'chain.slot.power': '力量', 'chain.slot.power.desc': '从俄罗斯/独联体以外的国家下单',
+    'chain.slot.eternity': '永恒', 'chain.slot.eternity.desc': '在Discord社区活跃（30+消息）',
+    'chain.complete.title': 'SVET COMPLETE', 'chain.complete.desc': '全部9个符号已收集。你是SVET历史的一部分。',
+    'chain.complete.r1': '独家实物物品寄送给你', 'chain.complete.r2': '你的名字写入SVET历史', 'chain.complete.r3': '终身社区地位',
+    'chain.complete.cta': '开始你的链条 →',
+    'sust.title': '我们为何存在', 'sust.label': '使命',
+    'sust.manifesto1': 'SVET意味着光。不是潮流。不是建立在炒作上的品牌。',
+    'sust.manifesto2': '一个太阳平等地温暖我们所有人——开罗、莫斯科、东京、圣保罗、纽约。我们呼吸同样的空气。我们共享同一片天空。',
+    'sust.commitTitle': '我们的承诺', 'sust.c1': '材料——仅使用认证可持续棉花。土耳其合作工厂，严格环保标准。',
+    'sust.c2': '包装——100%回收，零塑料，包装作为艺术品。',
+    'sust.c3': '物流——每次国际发货都进行碳补偿。',
+    'sust.c4': '社区——每笔销售的1%用于全球植树造林。',
+    'sust.c5': '生产——预购模式=零浪费，零未售库存。',
+    'sust.animalsTitle': '动物们',
+    'sust.quote': '"我们与自然并不分离。我们是它的一部分。"',
+
+    'insight.title': '你知道吗？', 'insight.label': '每日发现',
+    'insight.subtitle': '一个真正的洞察。不是事实。是改变你看世界方式的转变。',
+    'insight.locked': '☀️ 用1个连接代币或$0.99解锁',
+    'insight.unlock': '解锁洞察', 'insight.yesterday': '昨天的洞察（免费）：',
+    'insight.categories': '分类',
+    'insight.subscriberNote': '订阅者：包含无限每日洞察',
+
+    'profile.title': '个人资料', 'profile.level': '等级',
+    'profile.chain': '链条进度', 'profile.nextUnlock': '下一个解锁：',
+    'profile.tokens': '连接代币', 'profile.orders': '订单历史',
+    'profile.subscription': '订阅状态',
+
+    'reg.welcome': '欢迎来到SVET。你的链条现在开始。🪲',
+    'reg.firstSymbol': '🪲 精准符号已获得！',
   },
 };
 

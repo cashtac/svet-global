@@ -49,9 +49,9 @@ export function Navbar() {
             <Link href="/shop" className="nav__link">{t('nav.shop')}</Link>
             <Link href="/pricing" className="nav__link">{t('nav.pricing')}</Link>
             <Link href="/symbols" className="nav__link">{t('nav.symbols' as any)}</Link>
-            <Link href="/chain" className="nav__link">{t('nav.chain' as any)}</Link>
+            <Link href="/chain" className="nav__link nav__link--hide-sm">{t('nav.chain' as any)}</Link>
+            <Link href="/insight" className="nav__link nav__link--hide-sm">{t('nav.insight' as any)}</Link>
             <Link href="/sustainability" className="nav__link nav__link--hide-sm">{t('nav.sustainability' as any)}</Link>
-            <Link href="/community" className="nav__link nav__link--hide-sm">{t('nav.community')}</Link>
             <Link href="/cart" className="nav__cart">
               {t('nav.cart')}
               {count > 0 && <span className="nav__cart-count">{count}</span>}
@@ -113,8 +113,9 @@ export function Navbar() {
             <Link href="/pricing" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.pricing').toUpperCase()}</Link>
             <Link href="/symbols" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.symbols' as any).toUpperCase()}</Link>
             <Link href="/chain" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.chain' as any).toUpperCase()}</Link>
+            <Link href="/insight" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.insight' as any).toUpperCase()}</Link>
             <Link href="/sustainability" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.sustainability' as any).toUpperCase()}</Link>
-            <Link href="/community" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.community').toUpperCase()}</Link>
+            <Link href="/profile" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.profile' as any).toUpperCase()}</Link>
             <Link href="/cart" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>
               {t('nav.cart').toUpperCase()} {count > 0 && `(${count})`}
             </Link>
