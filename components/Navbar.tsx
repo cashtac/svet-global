@@ -4,11 +4,12 @@ import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useState, useEffect } from 'react';
 import { getMe, SvetUser } from '@/lib/auth';
+import { useI18n } from '@/lib/i18n-provider';
 
 export function Navbar() {
   const { count } = useCart();
+  const { t, locale, setLocale } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [ecosystemOpen, setEcosystemOpen] = useState(false);
   const [user, setUser] = useState<SvetUser | null>(null);
 
   useEffect(() => {
@@ -26,14 +27,23 @@ export function Navbar() {
 
           {/* Desktop links */}
           <div className="nav__links">
-            <Link href="/shop" className="nav__link">Shop</Link>
-            <Link href="/pricing" className="nav__link">Pricing</Link>
-            <Link href="/community" className="nav__link">Community</Link>
-            <Link href="/about" className="nav__link">Philosophy</Link>
+            <Link href="/shop" className="nav__link">{t('nav.shop')}</Link>
+            <Link href="/pricing" className="nav__link">{t('nav.pricing')}</Link>
+            <Link href="/community" className="nav__link">{t('nav.community')}</Link>
+            <Link href="/about" className="nav__link">{t('nav.philosophy')}</Link>
             <Link href="/cart" className="nav__cart">
-              Cart
+              {t('nav.cart')}
               {count > 0 && <span className="nav__cart-count">{count}</span>}
             </Link>
+
+            {/* Language switcher */}
+            <button
+              className="nav__lang-btn"
+              onClick={() => setLocale(locale === 'en' ? 'ru' : 'en')}
+              aria-label="Switch language"
+            >
+              {locale === 'en' ? '🇷🇺 RU' : '🇬🇧 EN'}
+            </button>
 
             {/* Account / Login */}
             {user ? (
@@ -48,10 +58,8 @@ export function Navbar() {
                 {user.name.split(' ')[0]}
               </Link>
             ) : (
-              <Link href="/login" className="nav__link">Sign in</Link>
+              <Link href="/login" className="nav__link">{t('nav.signin')}</Link>
             )}
-
-
           </div>
 
           {/* Mobile hamburger */}
@@ -63,27 +71,36 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 105,
-          background: 'rgba(10,10,10,0.97)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }} onClick={() => setMenuOpen(false)}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
-            <Link href="/shop" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>SHOP</Link>
-            <Link href="/pricing" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>PRICING</Link>
-            <Link href="/community" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>COMMUNITY</Link>
-            <Link href="/about" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>PHILOSOPHY</Link>
-            <Link href="/cart" style={{ fontFamily: 'var(--font-heading)', fontSize: 36, fontWeight: 700, letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>
-              CART {count > 0 && `(${count})`}
+        <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+          <div className="mobile-menu__inner">
+            <Link href="/shop" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.shop').toUpperCase()}</Link>
+            <Link href="/pricing" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.pricing').toUpperCase()}</Link>
+            <Link href="/community" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.community').toUpperCase()}</Link>
+            <Link href="/about" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.philosophy').toUpperCase()}</Link>
+            <Link href="/cart" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>
+              {t('nav.cart').toUpperCase()} {count > 0 && `(${count})`}
             </Link>
-            <div style={{ width: 40, height: 1, background: 'var(--border)', margin: '8px 0' }} />
+
+            <div className="mobile-menu__divider" />
+
+            {/* Language switcher in mobile */}
+            <button
+              className="mobile-menu__lang-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLocale(locale === 'en' ? 'ru' : 'en');
+              }}
+            >
+              {locale === 'en' ? '🇷🇺 Русский' : '🇬🇧 English'}
+            </button>
+
             {user ? (
-              <Link href="/account" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--accent)', letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>
-                MY ACCOUNT →
+              <Link href="/account" className="mobile-menu__account" onClick={() => setMenuOpen(false)}>
+                {t('nav.myaccount')}
               </Link>
             ) : (
-              <Link href="/login" style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-muted)', letterSpacing: '0.1em' }} onClick={() => setMenuOpen(false)}>
-                Sign in →
+              <Link href="/login" className="mobile-menu__signin" onClick={() => setMenuOpen(false)}>
+                {t('nav.signin')} →
               </Link>
             )}
           </div>

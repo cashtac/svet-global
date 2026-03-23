@@ -1,67 +1,37 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Pricing — SVET AI',
-  description: 'AI-powered personal assistant plans. From Starter to Business — choose the plan that fits.',
-};
+import Link from 'next/link';
+import { useI18n } from '@/lib/i18n-provider';
+import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
    SVET AI — SUBSCRIPTION PRICING
    ════════════════════════════════════════════════ */
 
-const PLANS = [
+interface Plan {
+  name: string;
+  price: number;
+  period: string;
+  highlight: boolean;
+  featureKeys: TranslationKey[];
+}
+
+const PLANS: Plan[] = [
   {
-    name: 'Starter',
-    price: 23,
-    period: '/mo',
-    highlight: false,
-    features: [
-      'Personal AI assistant',
-      'Chat & task management',
-      'Basic integrations',
-      '24h FREE with $100+ clothing order',
-    ],
+    name: 'Starter', price: 23, period: '/mo', highlight: false,
+    featureKeys: ['plan.starter.f1', 'plan.starter.f2', 'plan.starter.f3', 'plan.starter.f4'],
   },
   {
-    name: 'Builder',
-    price: 69,
-    period: '/mo',
-    highlight: true,
-    features: [
-      'Full AI capabilities',
-      'Build, create, launch projects',
-      'Advanced integrations',
-      'Priority support',
-      'Custom workflows',
-    ],
+    name: 'Builder', price: 69, period: '/mo', highlight: true,
+    featureKeys: ['plan.builder.f1', 'plan.builder.f2', 'plan.builder.f3', 'plan.builder.f4', 'plan.builder.f5'],
   },
   {
-    name: 'Ultra',
-    price: 99,
-    period: '/mo',
-    highlight: false,
-    features: [
-      'Personal AI + self-hostable',
-      'Transfer to your own server',
-      'Full source access',
-      'Unlimited usage',
-      'White-label ready',
-    ],
+    name: 'Ultra', price: 99, period: '/mo', highlight: false,
+    featureKeys: ['plan.ultra.f1', 'plan.ultra.f2', 'plan.ultra.f3', 'plan.ultra.f4', 'plan.ultra.f5'],
   },
   {
-    name: 'Business',
-    price: 299,
-    period: '/mo',
-    highlight: false,
-    features: [
-      'Enterprise-grade AI',
-      'Team collaboration',
-      'Custom integrations',
-      'Dedicated support',
-      'SSO & admin controls',
-      'SLA guarantee',
-    ],
+    name: 'Business', price: 299, period: '/mo', highlight: false,
+    featureKeys: ['plan.business.f1', 'plan.business.f2', 'plan.business.f3', 'plan.business.f4', 'plan.business.f5', 'plan.business.f6'],
   },
 ];
 
@@ -74,20 +44,22 @@ const PAYMENT_METHODS = [
 ];
 
 export default function PricingPage() {
+  const { t } = useI18n();
+
   return (
     <>
       {/* Promo banner */}
       <div className="pricing-promo-banner">
-        🎁 Buy $100+ of SVET clothing → get 24h Starter FREE
+        {t('pricing.banner')}
       </div>
 
       <section className="section" style={{ paddingTop: 140 }}>
         <div className="section__container">
           <div className="section-header">
-            <span className="section-header__label">AI Subscriptions</span>
-            <h1 className="section-header__title">CHOOSE YOUR PLAN</h1>
+            <span className="section-header__label">{t('pricing.label')}</span>
+            <h1 className="section-header__title">{t('pricing.title')}</h1>
             <p className="section-header__desc">
-              AI-powered personal assistant. Build, create, and launch with SVET.
+              {t('pricing.desc')}
             </p>
           </div>
 
@@ -95,24 +67,24 @@ export default function PricingPage() {
           <div className="pricing-grid">
             {PLANS.map(plan => (
               <div key={plan.name} className={`pricing-card ${plan.highlight ? 'pricing-card--popular' : ''}`}>
-                {plan.highlight && <div className="pricing-card__popular-tag">MOST POPULAR</div>}
+                {plan.highlight && <div className="pricing-card__popular-tag">{t('pricing.popular')}</div>}
                 <h3 className="pricing-card__name">{plan.name}</h3>
                 <div className="pricing-card__price">
                   <span className="pricing-card__amount">${plan.price}</span>
                   <span className="pricing-card__period">{plan.period}</span>
                 </div>
                 <ul className="pricing-card__features">
-                  {plan.features.map((f, i) => (
+                  {plan.featureKeys.map((fk, i) => (
                     <li key={i} className="pricing-card__feature">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      {f}
+                      {t(fk)}
                     </li>
                   ))}
                 </ul>
                 <button className={`pricing-card__cta ${plan.highlight ? 'pricing-card__cta--highlight' : ''}`}>
-                  Get {plan.name}
+                  {t('pricing.get')} {plan.name}
                 </button>
               </div>
             ))}
@@ -122,19 +94,19 @@ export default function PricingPage() {
           <div className="pricing-free-promo">
             <div className="pricing-free-promo__icon">🎁</div>
             <div>
-              <h3 className="pricing-free-promo__title">FREE 24h Starter Access</h3>
+              <h3 className="pricing-free-promo__title">{t('pricing.freeTitle')}</h3>
               <p className="pricing-free-promo__desc">
-                Spend $100+ on SVET clothing and unlock 24 hours of Starter AI for free. No credit card needed for the trial.
+                {t('pricing.freeDesc')}
               </p>
             </div>
             <Link href="/shop" className="pricing-free-promo__link">
-              Shop Now →
+              {t('pricing.shopNow')}
             </Link>
           </div>
 
           {/* Payment methods */}
           <div className="pricing-payments">
-            <h3 className="pricing-payments__title">Payment Methods</h3>
+            <h3 className="pricing-payments__title">{t('pricing.paymentTitle')}</h3>
             <div className="pricing-payments__grid">
               {PAYMENT_METHODS.map(pm => (
                 <div key={pm.name} className={`pricing-payment ${pm.status === 'soon' ? 'pricing-payment--soon' : ''}`}>

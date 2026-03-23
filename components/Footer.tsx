@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n-provider';
 
 export function Footer() {
+  const { t } = useI18n();
   const year = new Date().getFullYear();
 
   return (
@@ -8,15 +12,15 @@ export function Footer() {
       <div className="footer__container">
         {/* Brand */}
         <div className="footer__brand">SVET</div>
-        <p className="footer__tagline">One Sun · One Energy · One Planet · For Everyone</p>
+        <p className="footer__tagline">{t('footer.tagline')}</p>
 
         {/* Store links */}
         <div className="footer__links">
-          <Link href="/shop" className="footer__link">Shop</Link>
-          <Link href="/pricing" className="footer__link">Pricing</Link>
-          <Link href="/community" className="footer__link">Community</Link>
-          <Link href="/about" className="footer__link">Philosophy</Link>
-          <Link href="/cart" className="footer__link">Cart</Link>
+          <Link href="/shop" className="footer__link">{t('nav.shop')}</Link>
+          <Link href="/pricing" className="footer__link">{t('nav.pricing')}</Link>
+          <Link href="/community" className="footer__link">{t('nav.community')}</Link>
+          <Link href="/about" className="footer__link">{t('nav.philosophy')}</Link>
+          <Link href="/cart" className="footer__link">{t('nav.cart')}</Link>
         </div>
 
         {/* Socials */}
@@ -38,12 +42,12 @@ export function Footer() {
         {/* Account */}
         <div className="footer__account">
           <Link href="/login" className="footer__signin">
-            Sign in
+            {t('nav.signin')}
           </Link>
-          <span className="footer__account-desc">One account. All of SVET.</span>
+          <span className="footer__account-desc">{t('footer.oneAccount')}</span>
         </div>
 
-        <p className="footer__copy">© {year} SVET. All rights reserved.</p>
+        <p className="footer__copy">© {year} SVET. {t('footer.rights')}</p>
       </div>
     </footer>
   );

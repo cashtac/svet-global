@@ -1174,6 +1174,125 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .pricing-payment__status { font-size: 14px; }
 
 /* ==========================================
+   LANGUAGE SWITCHER
+   ========================================== */
+
+.nav__lang-btn {
+  display: flex; align-items: center; gap: 4px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; padding: 6px 12px; border-radius: 6px;
+  cursor: pointer; transition: all var(--duration) var(--ease-out);
+  white-space: nowrap;
+}
+.nav__lang-btn:hover {
+  border-color: var(--accent); color: var(--accent);
+  transform: scale(1.02);
+}
+
+/* ==========================================
+   MOBILE MENU — BEM CLASSES
+   ========================================== */
+
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 105;
+  background: rgba(10,10,10,0.97);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: mobileMenuIn 0.25s ease-out;
+}
+
+@keyframes mobileMenuIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-menu__inner {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 28px; padding: 0 24px;
+}
+
+.mobile-menu__link {
+  font-family: var(--font-heading);
+  font-size: 28px; font-weight: 700;
+  letter-spacing: 0.12em; color: var(--text-primary);
+  padding: 8px 0; /* better tap target */
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s ease;
+}
+.mobile-menu__link:active {
+  color: var(--accent);
+}
+
+.mobile-menu__divider {
+  width: 40px; height: 1px;
+  background: var(--border); margin: 4px 0;
+}
+
+.mobile-menu__lang-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.08em; padding: 10px 24px; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-menu__lang-btn:active {
+  border-color: var(--accent); color: var(--accent);
+  transform: scale(0.96);
+}
+
+.mobile-menu__account {
+  font-family: var(--font-body); font-size: 14px;
+  color: var(--accent); letter-spacing: 0.1em;
+}
+
+.mobile-menu__signin {
+  font-family: var(--font-body); font-size: 14px;
+  color: var(--text-muted); letter-spacing: 0.1em;
+}
+
+/* ==========================================
+   PWA & MOBILE GLOBAL OPTIMIZATIONS
+   ========================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior-y: contain;
+}
+
+/* Allow text selection on content */
+main, article, p, h1, h2, h3, h4, h5, h6, span, li {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Tap highlight removal */
+a, button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth button interactions */
+button {
+  touch-action: manipulation;
+}
+
+/* Image optimization */
+img {
+  content-visibility: auto;
+}
+
+/* ==========================================
    SHOP + PRICING RESPONSIVE
    ========================================== */
 
@@ -1186,9 +1305,87 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   }
   .pricing-payments__grid { gap: 10px; }
   .pricing-payment { padding: 10px 16px; font-size: 13px; }
+
+  /* Better nav spacing */
+  .nav { padding-left: env(safe-area-inset-left, 0); padding-right: env(safe-area-inset-right, 0); }
+
+  /* Bigger touch targets */
+  .shop-card__size-btn {
+    min-width: 44px; height: 44px;
+    font-size: 13px;
+  }
+  .shop-card__add-btn {
+    padding: 16px; font-size: 14px;
+    min-height: 48px;
+  }
+  .pricing-card__cta {
+    padding: 16px; font-size: 14px;
+    min-height: 48px;
+  }
+
+  /* Banner readability */
+  .preorder-banner, .pricing-promo-banner {
+    font-size: 12px; padding: 14px 16px; line-height: 1.5;
+    top: 64px;
+  }
+
+  /* Nav language button */
+  .nav__lang-btn { display: none; }
+
+  /* Card padding */
+  .shop-card__info { padding: 16px; }
+  .shop-card__name { font-size: 16px; }
+
+  /* Pricing card mobile */
+  .pricing-card { padding: 24px 20px; }
+  .pricing-card__amount { font-size: 36px; }
 }
 
 @media (max-width: 480px) {
-  .preorder-banner, .pricing-promo-banner { font-size: 11px; padding: 10px 12px; }
-  .shop-grid { grid-template-columns: 1fr; }
+  .preorder-banner, .pricing-promo-banner {
+    font-size: 11px; padding: 12px 12px; line-height: 1.5;
+  }
+
+  /* Ensure single column */
+  .shop-grid { grid-template-columns: 1fr; gap: 16px; }
+  .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Footer safe area */
+  .footer { padding-bottom: calc(40px + env(safe-area-inset-bottom, 0)); }
+
+  /* Section padding tighter */
+  .section { padding: 60px 0; }
+  .section__container { padding: 0 16px; }
+
+  /* Touch-friendly payment methods */
+  .pricing-payment { padding: 12px 14px; min-height: 44px; }
+}
+
+/* ==========================================
+   iOS STANDALONE PWA ADJUSTMENTS
+   ========================================== */
+
+@media (display-mode: standalone) {
+  .nav {
+    padding-top: env(safe-area-inset-top, 20px);
+  }
+  .preorder-banner, .pricing-promo-banner {
+    top: calc(72px + env(safe-area-inset-top, 20px));
+  }
+  .footer {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

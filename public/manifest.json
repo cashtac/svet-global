@@ -1,0 +1,18 @@
+{
+  "name": "SVET — One Sun. One Energy. One Planet.",
+  "short_name": "SVET",
+  "description": "Clothing that connects us all. SVET means light — not a trend, a way of life.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["shopping", "fashion", "lifestyle"],
+  "lang": "en",
+  "icons": [
+    { "src": "/images/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/images/logo.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/images/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+  ]
+}
