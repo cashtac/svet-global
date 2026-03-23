@@ -8,8 +8,8 @@ import { useI18n } from '@/lib/i18n-provider';
 import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
-   SVET PRODUCT DETAIL PAGE
-   Premium single-product view with promotions
+   SVET — FIRST DROP PRODUCT PAGE
+   Clean, minimal, floating animation
    ════════════════════════════════════════════════ */
 
 interface FullProduct {
@@ -32,99 +32,59 @@ const ALL_PRODUCTS: FullProduct[] = [
   {
     id: 'tshirt-black', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
     slug: 'svet-tshirt-black', preOrderPrice: 25, retailPrice: 35,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tee-pack.png',
-    color: 'Black', material: '100% Ring-Spun Cotton, 180gsm',
-    details: ['Relaxed oversized fit', 'Bubble SVET™ logo embroidery', 'Ribbed crew neck', 'Pre-shrunk fabric', 'Machine washable'],
+    color: 'Black', material: '100% Cotton, 180gsm',
+    details: ['Oversized fit', 'Bubble sVet™ logo', 'Ribbed crew neck', 'Pre-shrunk'],
   },
   {
     id: 'tshirt-yellow', nameKey: 'product.tshirt-yellow', descKey: 'product.tshirt-yellow.desc',
     slug: 'svet-tshirt-yellow', preOrderPrice: 25, retailPrice: 35,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tee-pack.png',
-    color: 'Yellow / Cream Sleeves', material: '100% Ring-Spun Cotton, 180gsm',
-    details: ['Color-block design', 'Serif SVET™ chest logo', 'Contrast panel sleeves', 'Relaxed fit', 'Machine washable'],
+    color: 'Yellow / Cream', material: '100% Cotton, 180gsm',
+    details: ['Color-block design', 'Serif SVET™ logo', 'Contrast sleeves', 'Relaxed fit'],
   },
   {
-    id: 'tshirt-grey', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
-    slug: 'svet-tshirt-grey', preOrderPrice: 25, retailPrice: 35,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    id: 'tshirt-white', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
+    slug: 'svet-tshirt-white', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/tee-pack.png',
-    color: 'Light Grey / White', material: '100% Ring-Spun Cotton, 180gsm',
-    details: ['Minimalist design', 'Small orange SVET™ logo', 'Classic fit', 'Soft-touch finish', 'Machine washable'],
+    color: 'White', material: '100% Cotton, 180gsm',
+    details: ['Clean minimal design', 'Small SVET™ logo', 'Classic fit', 'Soft-touch finish'],
   },
   {
     id: 'longsleeve-yellow', nameKey: 'product.longsleeve-yellow', descKey: 'product.longsleeve-yellow.desc',
     slug: 'svet-longsleeve-yellow', preOrderPrice: 45, retailPrice: 60,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/longsleeve-yellow.png',
     color: 'Butter Yellow', material: '100% Heavy Cotton, 220gsm',
-    details: ['Red SVET™ chest logo', 'Red accent sleeve graphics', 'Ribbed cuffs', 'Relaxed oversized fit', 'Premium heavyweight cotton'],
-  },
-  {
-    id: 'sweatshirt-cropped', nameKey: 'product.sweatshirt-cropped', descKey: 'product.sweatshirt-cropped.desc',
-    slug: 'svet-sweatshirt-cropped', preOrderPrice: 55, retailPrice: 75,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-    color: 'Navy / Forest', material: '80% Cotton, 20% Polyester, 350gsm',
-    details: ['Cropped length', 'French terry interior', 'Ribbed hem and cuffs', 'Relaxed silhouette', 'Enzyme-washed finish'],
-  },
-  {
-    id: 'sweatshirt-relaxed', nameKey: 'product.sweatshirt-relaxed', descKey: 'product.sweatshirt-relaxed.desc',
-    slug: 'svet-sweatshirt-relaxed', preOrderPrice: 55, retailPrice: 75,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-    color: 'Navy / Forest', material: '80% Cotton, 20% Polyester, 350gsm',
-    details: ['Relaxed oversized fit', 'French terry interior', 'Drop shoulders', 'Kangaroo pocket', 'Enzyme-washed finish'],
-  },
-  {
-    id: 'sweatshirt-vintage', nameKey: 'product.sweatshirt-vintage', descKey: 'product.sweatshirt-vintage.desc',
-    slug: 'svet-sweatshirt-vintage', preOrderPrice: 55, retailPrice: 75,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-    color: 'Vintage Gold', material: '80% Cotton, 20% Polyester, 350gsm',
-    details: ['Vintage wash treatment', 'V-neck detail', 'French terry interior', 'Oversized silhouette', 'Pre-washed softness'],
+    details: ['Red SVET™ chest logo', 'Red accent details', 'Ribbed cuffs', 'Heavyweight cotton'],
   },
   {
     id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
     slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/set-hoodie-pants.png',
     color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
-    details: ['Bubble SVET™ embroidery', 'Heavyweight 400gsm', 'Kangaroo pocket', 'Adjustable drawstring hood', 'Reinforced stitching'],
-  },
-  {
-    id: 'hoodie-serif', nameKey: 'product.hoodie-serif', descKey: 'product.hoodie-serif.desc',
-    slug: 'svet-hoodie-serif', preOrderPrice: 69, retailPrice: 95,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-    color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
-    details: ['Serif SVET™ logo', 'Heavyweight 400gsm', 'Minimal clean design', 'Adjustable drawstring hood', 'Reinforced stitching'],
+    details: ['Bubble sVet™ embroidery', 'Heavyweight 400gsm', 'Kangaroo pocket', 'Drawstring hood'],
   },
   {
     id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
     slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/set-hoodie-pants.png',
     color: 'Dark Navy', material: '100% Cotton French Terry, 380gsm',
-    details: ['Bubble SVET™ embroidery', 'Wide-leg relaxed fit', 'Elastic waistband + drawstring', 'Side pockets', 'Heavyweight cotton'],
-  },
-  {
-    id: 'pants-serif', nameKey: 'product.pants-serif', descKey: 'product.pants-serif.desc',
-    slug: 'svet-pants-serif', preOrderPrice: 59, retailPrice: 85,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-    color: 'Dark Navy', material: '100% Cotton French Terry, 380gsm',
-    details: ['Serif SVET™ logo', 'Wide-leg relaxed fit', 'Elastic waistband + drawstring', 'Side pockets', 'Minimal refined design'],
+    details: ['Bubble sVet™ embroidery', 'Wide-leg relaxed fit', 'Elastic waistband + drawstring', 'Side pockets'],
   },
   {
     id: 'set-hoodie-pants', nameKey: 'product.set-hoodie-pants', descKey: 'product.set-hoodie-pants.desc',
     slug: 'svet-set-hoodie-pants', preOrderPrice: 99, retailPrice: 149,
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     badge: 'bestValue',
     image: '/images/products/set-hoodie-pants.png',
     color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
-    details: ['Hoodie + Pants full set', 'Save $29 vs buying separately', 'Bubble SVET™ embroidery', 'Heavyweight 400gsm', 'Complete matching look'],
+    details: ['Hoodie + Pants full set', 'Save $29 vs buying separately', 'Bubble sVet™ embroidery', 'Complete matching look'],
   },
   {
     id: 'cap', nameKey: 'product.cap', descKey: 'product.cap.desc',
@@ -132,15 +92,12 @@ const ALL_PRODUCTS: FullProduct[] = [
     sizes: ['ONE SIZE'], category: 'ACCESSORIES',
     image: '/images/products/cap.png',
     color: 'Dark Navy', material: 'Cotton Twill, Brass Buckle',
-    details: ['Bubble SVET™ embroidered logo', 'Structured 6-panel cap', 'Adjustable brass buckle strap', 'One size fits all', 'Cotton twill fabric'],
+    details: ['Bubble sVet™ embroidered', 'Structured 6-panel', 'Adjustable brass buckle', 'One size fits all'],
   },
 ];
 
-// Cross-sell suggestions
 function getRelated(currentSlug: string): FullProduct[] {
-  const current = ALL_PRODUCTS.find(p => p.slug === currentSlug);
-  if (!current) return ALL_PRODUCTS.slice(0, 3);
-  return ALL_PRODUCTS.filter(p => p.slug !== currentSlug && p.category === current.category).slice(0, 3);
+  return ALL_PRODUCTS.filter(p => p.slug !== currentSlug).slice(0, 3);
 }
 
 export default function ProductPage() {
@@ -153,14 +110,13 @@ export default function ProductPage() {
   const product = ALL_PRODUCTS.find(p => p.slug === slug);
   const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
 
   if (!product) {
     return (
       <section className="section" style={{ paddingTop: 160, minHeight: '80vh', textAlign: 'center' }}>
         <h1 style={{ fontSize: 32, marginBottom: 16 }}>Product Not Found</h1>
-        <p style={{ color: '#888', marginBottom: 32 }}>This product doesn't exist or has been removed.</p>
-        <Link href="/shop" className="pdp-btn pdp-btn--primary" style={{ display: 'inline-block' }}>
+        <p style={{ color: '#888', marginBottom: 32 }}>This item is not available.</p>
+        <Link href="/shop" className="pdp-btn pdp-btn--primary" style={{ display: 'inline-block', maxWidth: 300 }}>
           ← Back to Shop
         </Link>
       </section>
@@ -199,27 +155,20 @@ export default function ProductPage() {
       </div>
 
       <div className="pdp__grid">
-        {/* Left: Product Image */}
+        {/* Left: Product Image — clean, floating */}
         <div className="pdp__gallery">
           <div className="pdp__image-main">
             {product.badge && <span className="pdp__best-value">{t('shop.bestValue')}</span>}
             <span className="pdp__preorder-tag">{t('shop.preorder')}</span>
-            {!imgLoaded && (
-              <div className="pdp__image-skeleton">
-                <div className="pdp__skeleton-pulse" />
-              </div>
-            )}
             <img
               src={product.image}
               alt={t(product.nameKey)}
-              className="pdp__img"
-              onLoad={() => setImgLoaded(true)}
-              style={{ opacity: imgLoaded ? 1 : 0 }}
+              className="pdp__img pdp__img--float"
             />
           </div>
         </div>
 
-        {/* Right: Product Info */}
+        {/* Right: Product Info — clean & minimal */}
         <div className="pdp__info">
           <div className="pdp__category">{product.category}</div>
           <h1 className="pdp__name">{t(product.nameKey)}</h1>
@@ -250,7 +199,7 @@ export default function ProductPage() {
           <div className="pdp__sizes">
             <div className="pdp__sizes-label">
               SIZE
-              {selectedSize && <span className="pdp__sizes-selected">— {selectedSize}</span>}
+              {selectedSize && <span className="pdp__sizes-selected"> — {selectedSize}</span>}
             </div>
             <div className="pdp__sizes-grid">
               {product.sizes.map(size => (
@@ -271,7 +220,7 @@ export default function ProductPage() {
             onClick={handleAddToCart}
             disabled={(product.sizes.length > 1 && !selectedSize) || added}
           >
-            {added ? '✓ ADDED TO CART' : `ADD TO CART — $${product.preOrderPrice}`}
+            {added ? '✓ ADDED' : `PRE-ORDER — $${product.preOrderPrice}`}
           </button>
 
           {added && (
@@ -285,36 +234,27 @@ export default function ProductPage() {
             <div className="pdp__promo-icon">{qualifiesForFreeAI ? '✅' : '🎁'}</div>
             <div className="pdp__promo-text">
               {qualifiesForFreeAI ? (
-                <>
-                  <strong>You qualify!</strong> 24h SVET AI Starter access unlocked FREE with your order.
-                </>
+                <><strong>You qualify!</strong> 24h AI Starter FREE with your order.</>
               ) : (
-                <>
-                  <strong>Spend $100+ → Get 24h AI Starter FREE</strong>
-                  <br />
-                  <span className="pdp__promo-remaining">
-                    Add ${Math.ceil(100 - cartTotal)} more to qualify
-                  </span>
-                </>
+                <><strong>Spend $100+ → 24h AI Starter FREE</strong><br />
+                <span className="pdp__promo-remaining">Add ${Math.ceil(100 - cartTotal)} more</span></>
               )}
             </div>
           </div>
 
-          {/* Shipping info */}
+          {/* Shipping */}
           <div className="pdp__shipping">
             <div className="pdp__shipping-item">🌍 Worldwide Shipping</div>
-            <div className="pdp__shipping-item">📦 Ships within 1 month (pre-order)</div>
-            <div className="pdp__shipping-item">🚚 Free shipping on orders $100+</div>
-            <div className="pdp__shipping-item">🔒 Secure checkout via Stripe</div>
+            <div className="pdp__shipping-item">📦 Ships in ~1 month</div>
+            <div className="pdp__shipping-item">🚚 Free on $100+</div>
+            <div className="pdp__shipping-item">🔒 Stripe Secure</div>
           </div>
 
           {/* Product details */}
           <details className="pdp__details">
             <summary>Product Details</summary>
             <ul className="pdp__details-list">
-              {product.details.map((d, i) => (
-                <li key={i}>{d}</li>
-              ))}
+              {product.details.map((d, i) => <li key={i}>{d}</li>)}
             </ul>
           </details>
         </div>
