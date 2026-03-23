@@ -2,6 +2,7 @@
 
 import { useCart } from '@/lib/cart';
 import { useState } from 'react';
+import Link from 'next/link';
 import { useI18n } from '@/lib/i18n-provider';
 import type { TranslationKey } from '@/lib/i18n';
 
@@ -127,8 +128,8 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
       {product.badge && <span className="shop-card__badge">{t('shop.bestValue')}</span>}
       <span className="shop-card__preorder-label">{t('shop.preorder')}</span>
 
-      {/* Product image */}
-      <div className="shop-card__image-wrap">
+      {/* Product image — links to detail page */}
+      <Link href={`/product/${product.slug}`} className="shop-card__image-wrap">
         {product.image ? (
           <img
             src={product.image}
@@ -140,11 +141,13 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
             <span>SVET</span>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Info */}
       <div className="shop-card__info">
-        <h3 className="shop-card__name">{t(product.nameKey)}</h3>
+        <Link href={`/product/${product.slug}`} className="shop-card__name-link">
+          <h3 className="shop-card__name">{t(product.nameKey)}</h3>
+        </Link>
         <p className="shop-card__desc">{t(product.descKey)}</p>
 
         {/* Price */}

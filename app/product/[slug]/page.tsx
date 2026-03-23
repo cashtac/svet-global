@@ -1,152 +1,347 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Product, formatPrice } from '@/lib/api';
+import Link from 'next/link';
 import { useCart } from '@/lib/cart';
+import { useI18n } from '@/lib/i18n-provider';
+import type { TranslationKey } from '@/lib/i18n';
 
-const MOCK_PRODUCTS: Record<string, Product> = {
-  'svet-logo-long-sleeve': {
-    id: '1', name: 'SVET Logo Long Sleeve', slug: 'svet-logo-long-sleeve',
-    shortDescription: 'Wear light. Spread warmth. One Sun connects us all.',
-    description: 'Premium long-sleeve tee with the SVET logo. Made from 100% organic cotton with a soft-touch finish. The design features our signature sun motif — a reminder that the same light warms us all.\n\nRelaxed fit, ribbed cuffs, and reinforced stitching for everyday wear.',
-    price: 8500, currency: 'USD', images: ['/images/long-sleeve.png'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'], badge: 'SVET', color: 'Yellow / Red Print',
-    category: 'TOPS', status: 'ACTIVE',
+/* ════════════════════════════════════════════════
+   SVET PRODUCT DETAIL PAGE
+   Premium single-product view with promotions
+   ════════════════════════════════════════════════ */
+
+interface FullProduct {
+  id: string;
+  nameKey: TranslationKey;
+  descKey: TranslationKey;
+  slug: string;
+  preOrderPrice: number;
+  retailPrice: number;
+  sizes: string[];
+  image: string;
+  color: string;
+  material: string;
+  category: 'CLOTHING' | 'ACCESSORIES';
+  badge?: 'bestValue';
+  details: string[];
+}
+
+const ALL_PRODUCTS: FullProduct[] = [
+  {
+    id: 'tshirt-black', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    slug: 'svet-tshirt-black', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/tee-pack.png',
+    color: 'Black', material: '100% Ring-Spun Cotton, 180gsm',
+    details: ['Relaxed oversized fit', 'Bubble SVET™ logo embroidery', 'Ribbed crew neck', 'Pre-shrunk fabric', 'Machine washable'],
   },
-  'svet-hoodie-pants-set': {
-    id: '2', name: 'SVET Hoodie & Pants Set', slug: 'svet-hoodie-pants-set',
-    shortDescription: 'Top and bottom, moving as one. One Energy in every fiber.',
-    description: 'The complete SVET set — hoodie and matching pants in forest green. Heavyweight 400gsm French terry cotton. Kangaroo pocket, drawstring hood, elastic waistband.\n\nDesigned to move as one — just like us.',
-    price: 18000, currency: 'USD', images: ['/images/hoodie-set.png'],
-    sizes: ['S', 'M', 'L', 'XL'], badge: '3 WAYS', color: 'Forest Green',
-    category: 'SETS', status: 'ACTIVE',
+  {
+    id: 'tshirt-yellow', nameKey: 'product.tshirt-yellow', descKey: 'product.tshirt-yellow.desc',
+    slug: 'svet-tshirt-yellow', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/tee-pack.png',
+    color: 'Yellow / Cream Sleeves', material: '100% Ring-Spun Cotton, 180gsm',
+    details: ['Color-block design', 'Serif SVET™ chest logo', 'Contrast panel sleeves', 'Relaxed fit', 'Machine washable'],
   },
-  'svet-logo-tee-3pack': {
-    id: '3', name: 'SVET Logo Tee 3-Pack', slug: 'svet-logo-tee-3pack',
-    shortDescription: 'Three tees, one message. One Planet, many ways to share.',
-    description: 'Three essential tees in Black, White, and Red. Each features the SVET logo and our philosophy woven into the tag. 100% ring-spun cotton, 180gsm.\n\nThree colors, one message — for everyone.',
-    price: 6500, currency: 'USD', images: ['/images/tee-pack.png'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'], badge: 'SVET', color: 'Black / White / Red',
-    category: 'TOPS', status: 'ACTIVE',
+  {
+    id: 'tshirt-grey', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
+    slug: 'svet-tshirt-grey', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/tee-pack.png',
+    color: 'Light Grey / White', material: '100% Ring-Spun Cotton, 180gsm',
+    details: ['Minimalist design', 'Small orange SVET™ logo', 'Classic fit', 'Soft-touch finish', 'Machine washable'],
   },
-  'svet-embroidered-cap': {
-    id: '4', name: 'SVET Embroidered Cap', slug: 'svet-embroidered-cap',
-    shortDescription: 'Crown yourself in light. For everyone, everywhere.',
-    description: 'Structured 6-panel cap with embroidered SVET logo. Adjustable strap and brass buckle. One size fits all — because SVET is for everyone.\n\nBlack cotton twill with tone-on-tone embroidery.',
-    price: 4500, currency: 'USD', images: ['/images/cap.png'],
-    sizes: ['ONE SIZE'], badge: 'SVET', color: 'Black',
-    category: 'ACCESSORIES', status: 'ACTIVE',
+  {
+    id: 'longsleeve-yellow', nameKey: 'product.longsleeve-yellow', descKey: 'product.longsleeve-yellow.desc',
+    slug: 'svet-longsleeve-yellow', preOrderPrice: 45, retailPrice: 60,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/longsleeve-yellow.png',
+    color: 'Butter Yellow', material: '100% Heavy Cotton, 220gsm',
+    details: ['Red SVET™ chest logo', 'Red accent sleeve graphics', 'Ribbed cuffs', 'Relaxed oversized fit', 'Premium heavyweight cotton'],
   },
-};
+  {
+    id: 'sweatshirt-cropped', nameKey: 'product.sweatshirt-cropped', descKey: 'product.sweatshirt-cropped.desc',
+    slug: 'svet-sweatshirt-cropped', preOrderPrice: 55, retailPrice: 75,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Navy / Forest', material: '80% Cotton, 20% Polyester, 350gsm',
+    details: ['Cropped length', 'French terry interior', 'Ribbed hem and cuffs', 'Relaxed silhouette', 'Enzyme-washed finish'],
+  },
+  {
+    id: 'sweatshirt-relaxed', nameKey: 'product.sweatshirt-relaxed', descKey: 'product.sweatshirt-relaxed.desc',
+    slug: 'svet-sweatshirt-relaxed', preOrderPrice: 55, retailPrice: 75,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Navy / Forest', material: '80% Cotton, 20% Polyester, 350gsm',
+    details: ['Relaxed oversized fit', 'French terry interior', 'Drop shoulders', 'Kangaroo pocket', 'Enzyme-washed finish'],
+  },
+  {
+    id: 'sweatshirt-vintage', nameKey: 'product.sweatshirt-vintage', descKey: 'product.sweatshirt-vintage.desc',
+    slug: 'svet-sweatshirt-vintage', preOrderPrice: 55, retailPrice: 75,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Vintage Gold', material: '80% Cotton, 20% Polyester, 350gsm',
+    details: ['Vintage wash treatment', 'V-neck detail', 'French terry interior', 'Oversized silhouette', 'Pre-washed softness'],
+  },
+  {
+    id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
+    details: ['Bubble SVET™ embroidery', 'Heavyweight 400gsm', 'Kangaroo pocket', 'Adjustable drawstring hood', 'Reinforced stitching'],
+  },
+  {
+    id: 'hoodie-serif', nameKey: 'product.hoodie-serif', descKey: 'product.hoodie-serif.desc',
+    slug: 'svet-hoodie-serif', preOrderPrice: 69, retailPrice: 95,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
+    details: ['Serif SVET™ logo', 'Heavyweight 400gsm', 'Minimal clean design', 'Adjustable drawstring hood', 'Reinforced stitching'],
+  },
+  {
+    id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Dark Navy', material: '100% Cotton French Terry, 380gsm',
+    details: ['Bubble SVET™ embroidery', 'Wide-leg relaxed fit', 'Elastic waistband + drawstring', 'Side pockets', 'Heavyweight cotton'],
+  },
+  {
+    id: 'pants-serif', nameKey: 'product.pants-serif', descKey: 'product.pants-serif.desc',
+    slug: 'svet-pants-serif', preOrderPrice: 59, retailPrice: 85,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Dark Navy', material: '100% Cotton French Terry, 380gsm',
+    details: ['Serif SVET™ logo', 'Wide-leg relaxed fit', 'Elastic waistband + drawstring', 'Side pockets', 'Minimal refined design'],
+  },
+  {
+    id: 'set-hoodie-pants', nameKey: 'product.set-hoodie-pants', descKey: 'product.set-hoodie-pants.desc',
+    slug: 'svet-set-hoodie-pants', preOrderPrice: 99, retailPrice: 149,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], category: 'CLOTHING',
+    badge: 'bestValue',
+    image: '/images/products/set-hoodie-pants.png',
+    color: 'Dark Navy', material: '100% Cotton French Terry, 400gsm',
+    details: ['Hoodie + Pants full set', 'Save $29 vs buying separately', 'Bubble SVET™ embroidery', 'Heavyweight 400gsm', 'Complete matching look'],
+  },
+  {
+    id: 'cap', nameKey: 'product.cap', descKey: 'product.cap.desc',
+    slug: 'svet-cap', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['ONE SIZE'], category: 'ACCESSORIES',
+    image: '/images/products/cap.png',
+    color: 'Dark Navy', material: 'Cotton Twill, Brass Buckle',
+    details: ['Bubble SVET™ embroidered logo', 'Structured 6-panel cap', 'Adjustable brass buckle strap', 'One size fits all', 'Cotton twill fabric'],
+  },
+];
+
+// Cross-sell suggestions
+function getRelated(currentSlug: string): FullProduct[] {
+  const current = ALL_PRODUCTS.find(p => p.slug === currentSlug);
+  if (!current) return ALL_PRODUCTS.slice(0, 3);
+  return ALL_PRODUCTS.filter(p => p.slug !== currentSlug && p.category === current.category).slice(0, 3);
+}
 
 export default function ProductPage() {
   const params = useParams();
   const router = useRouter();
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
+  const { t } = useI18n();
   const slug = params.slug as string;
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string>('');
+  const product = ALL_PRODUCTS.find(p => p.slug === slug);
+  const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-        const res = await fetch(`${API_BASE}/store/products/${slug}`);
-        const json = await res.json();
-        if (json.ok) { setProduct(json.data); return; }
-      } catch { /* fallback */ }
-      setProduct(MOCK_PRODUCTS[slug] || null);
-    }
-    load();
-  }, [slug]);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   if (!product) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: 'var(--text-muted)' }}>Loading...</p>
-      </div>
+      <section className="section" style={{ paddingTop: 160, minHeight: '80vh', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 32, marginBottom: 16 }}>Product Not Found</h1>
+        <p style={{ color: '#888', marginBottom: 32 }}>This product doesn't exist or has been removed.</p>
+        <Link href="/shop" className="pdp-btn pdp-btn--primary" style={{ display: 'inline-block' }}>
+          ← Back to Shop
+        </Link>
+      </section>
     );
   }
 
-  const mainImage = product.images?.[0] || '/images/placeholder.jpg';
+  const savings = product.retailPrice - product.preOrderPrice;
+  const savingsPercent = Math.round((savings / product.retailPrice) * 100);
+  const cartTotal = items.reduce((sum, i) => sum + i.price / 100, 0) + product.preOrderPrice;
+  const qualifiesForFreeAI = cartTotal >= 100;
+  const related = getRelated(slug);
 
   function handleAddToCart() {
-    if (!selectedSize && product!.sizes.length > 0) return;
+    if (!selectedSize && product!.sizes.length > 1) return;
     addItem({
       productId: product!.id,
-      name: product!.name,
-      price: product!.price,
-      size: selectedSize || 'ONE SIZE',
-      image: mainImage,
+      name: t(product!.nameKey),
+      price: product!.preOrderPrice * 100,
+      size: selectedSize || product!.sizes[0],
+      image: product!.image,
       slug: product!.slug,
     });
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    setTimeout(() => setAdded(false), 2500);
   }
 
   return (
-    <section className="product-detail">
-      <div className="product-detail__container">
-        <div className="product-detail__gallery">
-          <img src={mainImage} alt={product.name} className="product-detail__image" />
-        </div>
-        <div className="product-detail__info">
-          {product.badge && <span className="product-detail__badge">{product.badge}</span>}
-          <h1 className="product-detail__name">{product.name}</h1>
-          {product.color && <p className="product-detail__color">{product.color}</p>}
-          <div className="product-detail__price">{formatPrice(product.price)}</div>
-          {product.description && (
-            <p className="product-detail__desc">
-              {product.description.split('\n').map((line, i) => (
-                <span key={i}>{line}<br /></span>
-              ))}
-            </p>
-          )}
+    <section className="pdp">
+      {/* Breadcrumb */}
+      <div className="pdp__breadcrumb">
+        <Link href="/">Home</Link>
+        <span>/</span>
+        <Link href="/shop">Shop</Link>
+        <span>/</span>
+        <span className="pdp__breadcrumb-current">{t(product.nameKey)}</span>
+      </div>
 
-          {product.sizes.length > 0 && (
-            <div className="size-selector">
-              <div className="size-selector__label">Size</div>
-              <div className="size-selector__options">
-                {product.sizes.map(size => (
-                  <button
-                    key={size}
-                    className={`size-selector__btn ${selectedSize === size ? 'active' : ''}`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+      <div className="pdp__grid">
+        {/* Left: Product Image */}
+        <div className="pdp__gallery">
+          <div className="pdp__image-main">
+            {product.badge && <span className="pdp__best-value">{t('shop.bestValue')}</span>}
+            <span className="pdp__preorder-tag">{t('shop.preorder')}</span>
+            {!imgLoaded && (
+              <div className="pdp__image-skeleton">
+                <div className="pdp__skeleton-pulse" />
               </div>
-            </div>
-          )}
+            )}
+            <img
+              src={product.image}
+              alt={t(product.nameKey)}
+              className="pdp__img"
+              onLoad={() => setImgLoaded(true)}
+              style={{ opacity: imgLoaded ? 1 : 0 }}
+            />
+          </div>
+        </div>
 
+        {/* Right: Product Info */}
+        <div className="pdp__info">
+          <div className="pdp__category">{product.category}</div>
+          <h1 className="pdp__name">{t(product.nameKey)}</h1>
+          <p className="pdp__desc">{t(product.descKey)}</p>
+
+          {/* Price block */}
+          <div className="pdp__price-block">
+            <div className="pdp__prices">
+              <span className="pdp__price">${product.preOrderPrice}</span>
+              <span className="pdp__retail">${product.retailPrice}</span>
+            </div>
+            <div className="pdp__save-badge">SAVE {savingsPercent}%</div>
+          </div>
+
+          {/* Color + Material */}
+          <div className="pdp__meta">
+            <div className="pdp__meta-item">
+              <span className="pdp__meta-label">Color</span>
+              <span className="pdp__meta-value">{product.color}</span>
+            </div>
+            <div className="pdp__meta-item">
+              <span className="pdp__meta-label">Material</span>
+              <span className="pdp__meta-value">{product.material}</span>
+            </div>
+          </div>
+
+          {/* Size selector */}
+          <div className="pdp__sizes">
+            <div className="pdp__sizes-label">
+              SIZE
+              {selectedSize && <span className="pdp__sizes-selected">— {selectedSize}</span>}
+            </div>
+            <div className="pdp__sizes-grid">
+              {product.sizes.map(size => (
+                <button
+                  key={size}
+                  className={`pdp__size-btn ${selectedSize === size ? 'active' : ''}`}
+                  onClick={() => setSelectedSize(size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Add to Cart */}
           <button
-            className="add-to-cart"
+            className={`pdp-btn pdp-btn--primary ${added ? 'pdp-btn--added' : ''}`}
             onClick={handleAddToCart}
-            disabled={product.sizes.length > 0 && !selectedSize}
+            disabled={(product.sizes.length > 1 && !selectedSize) || added}
           >
-            {added ? '✓ ADDED TO CART' : 'ADD TO CART'}
+            {added ? '✓ ADDED TO CART' : `ADD TO CART — $${product.preOrderPrice}`}
           </button>
 
           {added && (
-            <button
-              onClick={() => router.push('/cart')}
-              style={{
-                marginTop: 16, width: '100%', padding: '14px 36px',
-                fontSize: 13, fontWeight: 700, letterSpacing: '0.15em',
-                textTransform: 'uppercase' as const,
-                background: 'transparent', border: '1px solid var(--border)',
-                color: 'var(--text-secondary)', cursor: 'pointer',
-              }}
-            >
+            <button className="pdp-btn pdp-btn--secondary" onClick={() => router.push('/cart')}>
               VIEW CART →
             </button>
           )}
+
+          {/* Promotion: Free AI Access */}
+          <div className={`pdp__promo ${qualifiesForFreeAI ? 'pdp__promo--active' : ''}`}>
+            <div className="pdp__promo-icon">{qualifiesForFreeAI ? '✅' : '🎁'}</div>
+            <div className="pdp__promo-text">
+              {qualifiesForFreeAI ? (
+                <>
+                  <strong>You qualify!</strong> 24h SVET AI Starter access unlocked FREE with your order.
+                </>
+              ) : (
+                <>
+                  <strong>Spend $100+ → Get 24h AI Starter FREE</strong>
+                  <br />
+                  <span className="pdp__promo-remaining">
+                    Add ${Math.ceil(100 - cartTotal)} more to qualify
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Shipping info */}
+          <div className="pdp__shipping">
+            <div className="pdp__shipping-item">🌍 Worldwide Shipping</div>
+            <div className="pdp__shipping-item">📦 Ships within 1 month (pre-order)</div>
+            <div className="pdp__shipping-item">🚚 Free shipping on orders $100+</div>
+            <div className="pdp__shipping-item">🔒 Secure checkout via Stripe</div>
+          </div>
+
+          {/* Product details */}
+          <details className="pdp__details">
+            <summary>Product Details</summary>
+            <ul className="pdp__details-list">
+              {product.details.map((d, i) => (
+                <li key={i}>{d}</li>
+              ))}
+            </ul>
+          </details>
         </div>
       </div>
+
+      {/* Related Products */}
+      {related.length > 0 && (
+        <div className="pdp__related">
+          <h2 className="pdp__related-title">You May Also Like</h2>
+          <div className="pdp__related-grid">
+            {related.map(rp => (
+              <Link href={`/product/${rp.slug}`} key={rp.id} className="pdp__related-card">
+                <div className="pdp__related-img-wrap">
+                  <img src={rp.image} alt={t(rp.nameKey)} loading="lazy" />
+                </div>
+                <div className="pdp__related-info">
+                  <h4>{t(rp.nameKey)}</h4>
+                  <div className="pdp__related-price">
+                    <span className="pdp__related-preorder">${rp.preOrderPrice}</span>
+                    <span className="pdp__related-retail">${rp.retailPrice}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
