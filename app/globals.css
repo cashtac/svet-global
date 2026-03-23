@@ -892,36 +892,40 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .shop-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: linear-gradient(145deg, #1a1a1a 0%, #111111 100%);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
-  transition: all var(--duration) var(--ease-out);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .shop-card:hover {
-  border-color: var(--border-hover);
+  border-color: rgba(201, 168, 76, 0.6);
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(201, 168, 76, 0.08);
 }
 
 .shop-card__badge {
   position: absolute; top: 12px; right: 12px; z-index: 2;
   font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
-  background: #FFD700; color: #0a0a0a; padding: 5px 12px; border-radius: 4px;
+  background: #C9A84C; color: #0a0a0a; padding: 5px 12px; border-radius: 4px;
 }
 
 .shop-card__preorder-label {
   position: absolute; top: 12px; left: 12px; z-index: 2;
   font-size: 9px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  background: var(--accent); color: white; padding: 4px 10px; border-radius: 3px;
+  background: #FF2D2D; color: white; padding: 4px 10px; border-radius: 3px;
 }
 
 .shop-card__image-wrap {
   aspect-ratio: 1 / 1;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #141414 50%, #111 100%);
   overflow: hidden;
+}
+.shop-card__image-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  mix-blend-mode: multiply;
 }
 
 .shop-card__image-placeholder {
@@ -929,7 +933,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, #1a1a1a 0%, #161616 50%, #111 100%);
   font-family: var(--font-heading); font-size: 28px; font-weight: 700;
-  color: rgba(255,255,255,0.06); letter-spacing: 0.3em;
+  color: rgba(201, 168, 76, 0.08); letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
@@ -940,12 +944,13 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .shop-card__name {
   font-family: var(--font-heading);
   font-size: 17px; font-weight: 700;
+  color: #ffffff;
   margin-bottom: 6px;
   line-height: 1.3;
 }
 
 .shop-card__desc {
-  font-size: 13px; color: var(--text-muted);
+  font-size: 13px; color: #888;
   line-height: 1.5; margin-bottom: 12px;
 }
 
@@ -957,18 +962,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .shop-card__price {
   font-family: var(--font-heading);
   font-size: 24px; font-weight: 700;
-  color: #FFD700;
+  color: #C9A84C;
 }
 
 .shop-card__retail-price {
   font-size: 15px;
-  color: var(--text-muted);
+  color: #666;
   text-decoration: line-through;
 }
 
 .shop-card__shipping {
-  font-size: 11px; color: var(--text-secondary);
-  margin-bottom: 14px; letter-spacing: 0.03em;
+  font-size: 11px; color: #C9A84C;
+  margin-bottom: 14px; letter-spacing: 0.05em;
+  text-transform: uppercase; font-weight: 600;
 }
 
 .shop-card__sizes {
@@ -977,7 +983,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .shop-card__sizes-label {
   font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--text-secondary);
+  text-transform: uppercase; color: #777;
   margin-bottom: 8px;
 }
 
@@ -988,36 +994,37 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .shop-card__size-btn {
   min-width: 38px; height: 34px;
   display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--border); background: transparent;
-  color: var(--text-secondary); font-size: 11px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+  color: #999; font-size: 11px; font-weight: 600;
   letter-spacing: 0.03em; border-radius: 4px; padding: 0 8px;
-  transition: all var(--duration) var(--ease-out); cursor: pointer;
+  transition: all 0.2s ease; cursor: pointer;
 }
 .shop-card__size-btn:hover {
-  border-color: var(--text-secondary); color: var(--text-primary);
+  border-color: rgba(201, 168, 76, 0.4); color: #ddd;
+  background: rgba(201, 168, 76, 0.05);
 }
 .shop-card__size-btn.active {
-  border-color: var(--accent); color: var(--accent);
-  background: var(--accent-soft);
+  border-color: #C9A84C; color: #C9A84C;
+  background: rgba(201, 168, 76, 0.1);
 }
 
 .shop-card__add-btn {
   width: 100%; padding: 14px;
   font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
   text-transform: uppercase;
-  background: var(--text-primary); color: var(--bg-primary);
-  border: none; border-radius: 4px; cursor: pointer;
-  transition: all var(--duration) var(--ease-out);
+  background: #FF2D2D; color: white;
+  border: none; border-radius: 6px; cursor: pointer;
+  transition: all 0.2s ease;
 }
 .shop-card__add-btn:hover {
-  background: var(--accent); color: white;
-  box-shadow: 0 8px 30px rgba(233, 51, 35, 0.3);
+  background: #cc0000; color: white;
+  box-shadow: 0 8px 30px rgba(255, 45, 45, 0.25);
 }
 .shop-card__add-btn:disabled {
-  opacity: 0.35; cursor: not-allowed;
+  opacity: 0.3; cursor: not-allowed;
 }
 .shop-card__add-btn:disabled:hover {
-  background: var(--text-primary); color: var(--bg-primary);
+  background: #FF2D2D; color: white;
   box-shadow: none;
 }
 .shop-card__add-btn.added {
