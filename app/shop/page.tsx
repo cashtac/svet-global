@@ -7,8 +7,8 @@ import { useI18n } from '@/lib/i18n-provider';
 import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
-   SVET SHOP — FULL PRE-ORDER CATALOG
-   Real product images + dark graphite cards
+   SVET SHOP — FIRST DROP COLLECTION
+   Individual product photos · S/M + L/XL
    ════════════════════════════════════════════════ */
 
 interface ShopProduct {
@@ -21,52 +21,75 @@ interface ShopProduct {
   sizes: string[];
   badge?: 'bestValue';
   category: 'CLOTHING' | 'ACCESSORIES';
-  image?: string; // path to product image
+  image: string;
 }
 
 const PRODUCTS: ShopProduct[] = [
   {
+    id: 'hoodie-vintage', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    slug: 'svet-hoodie-vintage', preOrderPrice: 69, retailPrice: 95,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/hoodie-vintage.jpg',
+  },
+  {
+    id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/hoodie-bubble.jpg',
+  },
+  {
+    id: 'hoodie-serif', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
+    slug: 'svet-hoodie-serif', preOrderPrice: 69, retailPrice: 95,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/hoodie-serif.jpg',
+  },
+  {
+    id: 'pants-jogger-navy', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    slug: 'svet-pants-jogger-navy', preOrderPrice: 59, retailPrice: 85,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/pants-jogger-navy.jpg',
+  },
+  {
+    id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/pants-bubble.jpg',
+  },
+  {
+    id: 'pants-green', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
+    slug: 'svet-pants-green', preOrderPrice: 59, retailPrice: 85,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/pants-green.jpg',
+  },
+  {
     id: 'tshirt-black', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
     slug: 'svet-tshirt-black', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    image: '/images/products/tee-pack.png',
+    image: '/images/products/tshirt-black.jpg',
+  },
+  {
+    id: 'tshirt-black-glow', nameKey: 'product.tshirt-black', descKey: 'product.tshirt-black.desc',
+    slug: 'svet-tshirt-black-glow', preOrderPrice: 25, retailPrice: 35,
+    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
+    image: '/images/products/tshirt-black-glow.jpg',
   },
   {
     id: 'tshirt-yellow', nameKey: 'product.tshirt-yellow', descKey: 'product.tshirt-yellow.desc',
     slug: 'svet-tshirt-yellow', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    image: '/images/products/tee-pack.png',
+    image: '/images/products/tshirt-yellow.jpg',
   },
   {
     id: 'tshirt-white', nameKey: 'product.tshirt-grey', descKey: 'product.tshirt-grey.desc',
     slug: 'svet-tshirt-white', preOrderPrice: 25, retailPrice: 35,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    image: '/images/products/tee-pack.png',
+    image: '/images/products/tshirt-white.jpg',
   },
   {
     id: 'longsleeve-yellow', nameKey: 'product.longsleeve-yellow', descKey: 'product.longsleeve-yellow.desc',
     slug: 'svet-longsleeve-yellow', preOrderPrice: 45, retailPrice: 60,
     sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
     image: '/images/products/longsleeve-yellow.png',
-  },
-  {
-    id: 'hoodie-bubble', nameKey: 'product.hoodie-bubble', descKey: 'product.hoodie-bubble.desc',
-    slug: 'svet-hoodie-bubble', preOrderPrice: 69, retailPrice: 95,
-    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-  },
-  {
-    id: 'pants-bubble', nameKey: 'product.pants-bubble', descKey: 'product.pants-bubble.desc',
-    slug: 'svet-pants-bubble', preOrderPrice: 59, retailPrice: 85,
-    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    image: '/images/products/set-hoodie-pants.png',
-  },
-  {
-    id: 'set-hoodie-pants', nameKey: 'product.set-hoodie-pants', descKey: 'product.set-hoodie-pants.desc',
-    slug: 'svet-set-hoodie-pants', preOrderPrice: 99, retailPrice: 149,
-    sizes: ['S/M', 'L/XL'], category: 'CLOTHING',
-    badge: 'bestValue',
-    image: '/images/products/set-hoodie-pants.png',
   },
   {
     id: 'cap', nameKey: 'product.cap', descKey: 'product.cap.desc',
@@ -89,7 +112,7 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
       name: t(product.nameKey),
       price: product.preOrderPrice * 100,
       size: selectedSize,
-      image: product.image || '/images/placeholder.jpg',
+      image: product.image,
       slug: product.slug,
     });
     setAdded(true);
@@ -103,17 +126,11 @@ function ShopProductCard({ product }: { product: ShopProduct }) {
 
       {/* Product image — links to detail page */}
       <Link href={`/product/${product.slug}`} className="shop-card__image-wrap">
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={t(product.nameKey)}
-            loading="lazy"
-          />
-        ) : (
-          <div className="shop-card__image-placeholder">
-            <span>SVET</span>
-          </div>
-        )}
+        <img
+          src={product.image}
+          alt={t(product.nameKey)}
+          loading="lazy"
+        />
       </Link>
 
       {/* Info */}
