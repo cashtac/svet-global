@@ -2851,3 +2851,22 @@ img {
 @media (max-width: 600px) {
   .bot-admin__stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Pricing demo message */
+.pricing-demo-msg {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  padding: 16px 24px;
+  background: rgba(76,175,80,0.08);
+  border: 1px solid rgba(76,175,80,0.2);
+  border-radius: 12px;
+  color: #4CAF50;
+  font-size: 14px;
+  text-align: center;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

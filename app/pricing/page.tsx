@@ -1,15 +1,18 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useI18n } from '@/lib/i18n-provider';
 import type { TranslationKey } from '@/lib/i18n';
 
 /* ════════════════════════════════════════════════
    SVET AI — SUBSCRIPTION PRICING
+   Stripe Checkout integration
    ════════════════════════════════════════════════ */
 
 interface Plan {
   name: string;
+  slug: string;
   price: number;
   period: string;
   highlight: boolean;
@@ -18,19 +21,19 @@ interface Plan {
 
 const PLANS: Plan[] = [
   {
-    name: 'Starter', price: 23, period: '/mo', highlight: false,
+    name: 'Starter', slug: 'starter', price: 23, period: '/mo', highlight: false,
     featureKeys: ['plan.starter.f1', 'plan.starter.f2', 'plan.starter.f3', 'plan.starter.f4'],
   },
   {
-    name: 'Builder', price: 69, period: '/mo', highlight: true,
+    name: 'Builder', slug: 'builder', price: 69, period: '/mo', highlight: true,
     featureKeys: ['plan.builder.f1', 'plan.builder.f2', 'plan.builder.f3', 'plan.builder.f4', 'plan.builder.f5'],
   },
   {
-    name: 'Ultra', price: 99, period: '/mo', highlight: false,
+    name: 'Ultra', slug: 'ultra', price: 99, period: '/mo', highlight: false,
     featureKeys: ['plan.ultra.f1', 'plan.ultra.f2', 'plan.ultra.f3', 'plan.ultra.f4', 'plan.ultra.f5'],
   },
   {
-    name: 'Business', price: 299, period: '/mo', highlight: false,
+    name: 'Business', slug: 'business', price: 299, period: '/mo', highlight: false,
     featureKeys: ['plan.business.f1', 'plan.business.f2', 'plan.business.f3', 'plan.business.f4', 'plan.business.f5', 'plan.business.f6'],
   },
 ];
@@ -45,6 +48,39 @@ const PAYMENT_METHODS = [
 
 export default function PricingPage() {
   const { t } = useI18n();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [demoMsg, setDemoMsg] = useState('');
+
+  async function handleCheckout(plan: Plan) {
+    setLoadingPlan(plan.slug);
+    setDemoMsg('');
+
+    try {
+      const res = await fetch('/api/stripe-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan.slug }),
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        if (data.demo) {
+          // No Stripe key — show demo message
+          setDemoMsg(`✅ ${plan.name} ($${plan.price}/mo) — Stripe test mode: checkout ready when STRIPE_SECRET_KEY is set.`);
+        } else {
+          // Redirect to Stripe Checkout
+          window.location.href = data.url;
+        }
+      } else {
+        setDemoMsg(data.error || 'Checkout failed');
+      }
+    } catch {
+      setDemoMsg('Network error. Try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
 
   return (
     <>
@@ -62,6 +98,12 @@ export default function PricingPage() {
               {t('pricing.desc')}
             </p>
           </div>
+
+          {demoMsg && (
+            <div className="pricing-demo-msg">
+              {demoMsg}
+            </div>
+          )}
 
           {/* Plans grid */}
           <div className="pricing-grid">
@@ -83,8 +125,12 @@ export default function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className={`pricing-card__cta ${plan.highlight ? 'pricing-card__cta--highlight' : ''}`}>
-                  {t('pricing.get')} {plan.name}
+                <button
+                  className={`pricing-card__cta ${plan.highlight ? 'pricing-card__cta--highlight' : ''}`}
+                  onClick={() => handleCheckout(plan)}
+                  disabled={loadingPlan === plan.slug}
+                >
+                  {loadingPlan === plan.slug ? 'Loading...' : `${t('pricing.get')} ${plan.name}`}
                 </button>
               </div>
             ))}

@@ -3,14 +3,15 @@ import { NextResponse } from 'next/server';
 /* ════════════════════════════════════════════════
    Stripe Checkout API — Test Mode
    POST /api/stripe-checkout
-   Body: { planName: string, priceId?: string }
+   Body: { plan: "starter" | "builder" | "ultra" | "business" }
+   Supports: Card, Apple Pay, Google Pay
    ════════════════════════════════════════════════ */
 
 const STRIPE_PLANS: Record<string, { price: number; name: string }> = {
-  starter: { price: 2300, name: 'SVET Starter' },
-  builder: { price: 6900, name: 'SVET Builder' },
-  ultra:   { price: 9900, name: 'SVET Ultra' },
-  business:{ price: 29900, name: 'SVET Business' },
+  starter:  { price: 2300,  name: 'SVET Starter' },
+  builder:  { price: 6900,  name: 'SVET Builder' },
+  ultra:    { price: 9900,  name: 'SVET Ultra' },
+  business: { price: 29900, name: 'SVET Business' },
 };
 
 export async function POST(request: Request) {
@@ -23,14 +24,15 @@ export async function POST(request: Request) {
     }
 
     const stripeKey = process.env.STRIPE_SECRET_KEY;
+    const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://svet.global';
 
     if (!stripeKey) {
       // No Stripe key configured — return demo URL
       console.log(`[Stripe] Would create checkout for ${plan.name} at $${plan.price / 100}/mo`);
       return NextResponse.json({
-        url: '/pricing?checkout=demo&plan=' + body.plan,
+        url: `/pricing?checkout=demo&plan=${body.plan}`,
         demo: true,
-        message: 'Stripe not configured yet. Set STRIPE_SECRET_KEY env var.',
+        message: `${plan.name} ($${plan.price / 100}/mo) — Stripe test mode ready. Set STRIPE_SECRET_KEY to enable real checkout.`,
       });
     }
 
@@ -38,18 +40,28 @@ export async function POST(request: Request) {
     const stripe = require('stripe')(stripeKey);
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
+      // Card enables Apple Pay + Google Pay automatically
       payment_method_types: ['card'],
+      allow_promotion_codes: true,
+      billing_address_collection: 'required',
       line_items: [{
         price_data: {
           currency: 'usd',
-          product_data: { name: plan.name },
+          product_data: {
+            name: plan.name,
+            description: `SVET AI subscription — ${plan.name} plan`,
+          },
           unit_amount: plan.price,
           recurring: { interval: 'month' },
         },
         quantity: 1,
       }],
-      success_url: `${process.env.NEXT_PUBLIC_URL || 'https://svet.global'}/profile?subscribed=${body.plan}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL || 'https://svet.global'}/pricing`,
+      success_url: `${siteUrl}/profile?subscribed=${body.plan}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/pricing?cancelled=true`,
+      metadata: {
+        plan: body.plan,
+        source: 'svet.global',
+      },
     });
 
     return NextResponse.json({ url: session.url });
