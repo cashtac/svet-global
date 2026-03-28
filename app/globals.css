@@ -4552,3 +4552,86 @@ img {
   margin: 0 auto;
 }
 
+/* ==========================================
+   PRODUCT CARD QUICK ADD (Homepage)
+   ========================================== */
+
+.product-card__quick-add {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card__quick-add:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.product-card__quick-add.added {
+  background: #1a3a1a;
+  border-color: #2d5a2d;
+  color: #4CAF50;
+}
+
+/* ==========================================
+   CHECKOUT FORM STYLES
+   ========================================== */
+
+.magic-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.magic-input:focus {
+  border-color: var(--accent);
+}
+
+.magic-input::placeholder {
+  color: var(--text-muted);
+}
+
+.magic-submit-btn {
+  width: 100%;
+  padding: 18px 0;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.magic-submit-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(233,51,35,0.3);
+}
+
+.magic-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+

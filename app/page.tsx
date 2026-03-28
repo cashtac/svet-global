@@ -1,50 +1,83 @@
 'use client';
 
 import Link from 'next/link';
-import { getProducts, formatPrice, Product } from '@/lib/api';
-import { ProductCard } from '@/components/ProductCard';
+import { formatPrice } from '@/lib/api';
 import { useI18n } from '@/lib/i18n-provider';
-import { useEffect, useState } from 'react';
+import catalogData from '@/data/products.json';
+import { useCart } from '@/lib/cart';
+import { useState } from 'react';
 
-// Mock data for when API is not running
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: '1', name: 'SVET Logo Long Sleeve', slug: 'svet-logo-long-sleeve',
-    shortDescription: 'Wear light. Spread warmth. One Sun connects us all.',
-    price: 8500, currency: 'USD', images: ['/images/long-sleeve.png'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'], badge: 'SVET', color: 'Yellow / Red Print',
-    category: 'TOPS', status: 'ACTIVE',
-  },
-  {
-    id: '2', name: 'SVET Hoodie & Pants Set', slug: 'svet-hoodie-pants-set',
-    shortDescription: 'Top and bottom, moving as one. One Energy in every fiber.',
-    price: 18000, currency: 'USD', images: ['/images/hoodie-set.png'],
-    sizes: ['S', 'M', 'L', 'XL'], badge: '3 WAYS', color: 'Forest Green',
-    category: 'SETS', status: 'ACTIVE',
-  },
-  {
-    id: '3', name: 'SVET Logo Tee 3-Pack', slug: 'svet-logo-tee-3pack',
-    shortDescription: 'Three tees, one message. One Planet, many ways to share.',
-    price: 6500, currency: 'USD', images: ['/images/tee-pack.png'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'], badge: 'SVET', color: 'Black / White / Red',
-    category: 'TOPS', status: 'ACTIVE',
-  },
-  {
-    id: '4', name: 'SVET Embroidered Cap', slug: 'svet-embroidered-cap',
-    shortDescription: 'Crown yourself in light. For everyone, everywhere.',
-    price: 4500, currency: 'USD', images: ['/images/cap.png'],
-    sizes: ['ONE SIZE'], badge: 'SVET', color: 'Black',
-    category: 'ACCESSORIES', status: 'ACTIVE',
-  },
-];
+/* ════════════════════════════════════════════════
+   SVET HOMEPAGE — Uses real catalog from products.json
+   No more mock data. Featured products pulled from catalog.
+   ════════════════════════════════════════════════ */
+
+// Get the first 4 featured/best products from the real catalog
+const FEATURED = catalogData.products
+  .filter(p => p.featured || p.badge === 'NEW')
+  .slice(0, 4);
+
+// If fewer than 4 featured, fill from catalog
+const HOMEPAGE_PRODUCTS = FEATURED.length >= 4
+  ? FEATURED
+  : [...FEATURED, ...catalogData.products.filter(p => !FEATURED.includes(p))].slice(0, 4);
+
+const PLACEHOLDER_SVG = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="400" height="500" fill="#111"/><rect x="20" y="20" width="360" height="460" rx="16" fill="none" stroke="#222" stroke-width="1"/><text x="200" y="220" text-anchor="middle" font-family="sans-serif" font-size="48" font-weight="900" fill="#333" letter-spacing="8">SVET</text><text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#444" letter-spacing="4">COMING SOON</text><circle cx="200" cy="340" r="24" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.3"/><text x="200" y="345" text-anchor="middle" font-size="16" fill="#C9A84C" opacity="0.4">☀</text></svg>')}`;
+
+function FeaturedCard({ product }: { product: typeof catalogData.products[number] }) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price_preorder * 100,
+      size: product.sizes[0],
+      image: product.image_main,
+      slug: product.id,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
+  return (
+    <Link href={`/product/svet-${product.id}`} className="product-card">
+      {product.badge && <span className="product-card__badge">{product.badge}</span>}
+      <div className="product-card__image-wrap">
+        <img
+          src={product.image_main}
+          alt={product.name}
+          className="product-card__image"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.onerror = null;
+            target.src = PLACEHOLDER_SVG;
+          }}
+        />
+      </div>
+      <div className="product-card__info">
+        <div className="product-card__name">{product.name}</div>
+        <div className="product-card__color">{product.color}</div>
+        <div className="product-card__price">
+          <span>${product.price_preorder}</span>
+          <span style={{ fontSize: 12, color: '#555', textDecoration: 'line-through', marginLeft: 8 }}>${product.price_retail}</span>
+        </div>
+        <button
+          className={`product-card__quick-add ${added ? 'added' : ''}`}
+          onClick={handleQuickAdd}
+        >
+          {added ? '✓ ADDED' : 'QUICK ADD'}
+        </button>
+      </div>
+    </Link>
+  );
+}
 
 export default function Home() {
   const { t } = useI18n();
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
-
-  useEffect(() => {
-    getProducts().then(p => setProducts(p)).catch(() => setProducts(MOCK_PRODUCTS));
-  }, []);
 
   return (
     <>
@@ -87,7 +120,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ FEATURED PRODUCTS ═══ */}
+      {/* ═══ FEATURED PRODUCTS — Real Catalog ═══ */}
       <section className="section">
         <div className="section__container">
           <div className="section-header">
@@ -98,9 +131,15 @@ export default function Home() {
             </p>
           </div>
           <div className="products">
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+            {HOMEPAGE_PRODUCTS.map(product => (
+              <FeaturedCard key={product.id} product={product} />
             ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 48 }}>
+            <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
+              VIEW ALL {catalogData.products.length} PRODUCTS
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+            </Link>
           </div>
         </div>
       </section>
