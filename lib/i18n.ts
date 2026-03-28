@@ -96,6 +96,7 @@ const translations: Record<Locale, Record<string, string>> = {
   en: {
     // Nav
     'nav.shop': 'Shop',
+    'nav.about': 'About',
     'nav.pricing': 'Pricing',
     'nav.community': 'Community',
     'nav.philosophy': 'Philosophy',
@@ -383,6 +384,7 @@ const translations: Record<Locale, Record<string, string>> = {
   /* ═══════════════════════════════ RUSSIAN ═══════════════════════════════ */
   ru: {
     'nav.shop': 'Магазин',
+    'nav.about': 'О нас',
     'nav.pricing': 'Цены',
     'nav.community': 'Сообщество',
     'nav.philosophy': 'Философия',
@@ -649,6 +651,7 @@ const translations: Record<Locale, Record<string, string>> = {
   /* ═══════════════════════════════ PORTUGUESE ═══════════════════════════════ */
   pt: {
     'nav.shop': 'Loja',
+    'nav.about': 'Sobre',
     'nav.pricing': 'Preços',
     'nav.community': 'Comunidade',
     'nav.philosophy': 'Filosofia',
@@ -849,6 +852,7 @@ const translations: Record<Locale, Record<string, string>> = {
   /* ═══════════════════════════════ GERMAN ═══════════════════════════════ */
   de: {
     'nav.shop': 'Shop',
+    'nav.about': 'Über uns',
     'nav.pricing': 'Preise',
     'nav.community': 'Community',
     'nav.philosophy': 'Philosophie',
@@ -1047,6 +1051,7 @@ const translations: Record<Locale, Record<string, string>> = {
   /* ════════════════════════ EGYPTIAN ARABIC (عامية مصرية) ════════════════════════ */
   ar: {
     'nav.shop': 'المحل',
+    'nav.about': 'عنا',
     'nav.pricing': 'الأسعار',
     'nav.community': 'الكوميونتي',
     'nav.philosophy': 'الفلسفة',
@@ -1243,7 +1248,7 @@ const translations: Record<Locale, Record<string, string>> = {
 
   /* ═══════════════════════════════ TURKISH ═══════════════════════════════ */
   tr: {
-    'nav.shop': 'Mağaza', 'nav.pricing': 'Fiyatlar', 'nav.community': 'Topluluk', 'nav.philosophy': 'Felsefe',
+    'nav.shop': 'Mağaza', 'nav.about': 'Hakkımızda', 'nav.pricing': 'Fiyatlar', 'nav.community': 'Topluluk', 'nav.philosophy': 'Felsefe',
     'nav.symbols': 'Semboller', 'nav.chain': 'Zincirin', 'nav.sustainability': 'Sürdürülebilirlik',
     'nav.cart': 'Sepet', 'nav.signin': 'Giriş Yap', 'nav.myaccount': 'HESABIM →',
     'nav.insight': 'Keşfet', 'nav.profile': 'Profil',
@@ -1397,7 +1402,7 @@ const translations: Record<Locale, Record<string, string>> = {
 
   /* ═══════════════════════════════ CHINESE SIMPLIFIED ═══════════════════════════════ */
   zh: {
-    'nav.shop': '商店', 'nav.pricing': '价格', 'nav.community': '社区', 'nav.philosophy': '理念',
+    'nav.shop': '商店', 'nav.about': '关于', 'nav.pricing': '价格', 'nav.community': '社区', 'nav.philosophy': '理念',
     'nav.symbols': '符号', 'nav.chain': '你的链条', 'nav.sustainability': '可持续',
     'nav.cart': '购物车', 'nav.signin': '登录', 'nav.myaccount': '我的账户 →',
     'nav.insight': '发现', 'nav.profile': '个人资料',
