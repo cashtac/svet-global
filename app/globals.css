@@ -4634,4 +4634,84 @@ img {
   cursor: not-allowed;
 }
 
+/* ==========================================
+   SVET TIMELINE — Brand Story
+   ========================================== */
+
+.svet-timeline {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-left: 32px;
+}
+
+.svet-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--border), rgba(201,168,76,0.3), var(--border));
+}
+
+.svet-timeline__item {
+  position: relative;
+  padding: 0 0 48px 32px;
+}
+
+.svet-timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+.svet-timeline__dot {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  border: 2px solid var(--bg-secondary);
+}
+
+.svet-timeline__dot--active {
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(233,51,35,0.4);
+}
+
+.svet-timeline__year {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(201,168,76,0.7);
+  margin-bottom: 8px;
+}
+
+.svet-timeline__text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* ==========================================
+   OUTLINE CTA VARIANT
+   ========================================== */
+
+.hero__cta--outline {
+  background: transparent !important;
+  border: 1px solid var(--border-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.hero__cta--outline:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
+
+/* ==========================================
+   FOOTER LINKS — Clean (match nav)
+   ========================================== */
 

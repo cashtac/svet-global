@@ -1,87 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { formatPrice } from '@/lib/api';
 import { useI18n } from '@/lib/i18n-provider';
-import catalogData from '@/data/products.json';
-import { useCart } from '@/lib/cart';
-import { useState } from 'react';
 
 /* ════════════════════════════════════════════════
-   SVET HOMEPAGE — Uses real catalog from products.json
-   No more mock data. Featured products pulled from catalog.
+   SVET — BRAND LANDING PAGE
+   Pure story. Pure philosophy. Pure energy.
+   No product cards. No noise. Just the message.
    ════════════════════════════════════════════════ */
-
-// Get the first 4 featured/best products from the real catalog
-const FEATURED = catalogData.products
-  .filter(p => p.featured || p.badge === 'NEW')
-  .slice(0, 4);
-
-// If fewer than 4 featured, fill from catalog
-const HOMEPAGE_PRODUCTS = FEATURED.length >= 4
-  ? FEATURED
-  : [...FEATURED, ...catalogData.products.filter(p => !FEATURED.includes(p))].slice(0, 4);
-
-const PLACEHOLDER_SVG = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="400" height="500" fill="#111"/><rect x="20" y="20" width="360" height="460" rx="16" fill="none" stroke="#222" stroke-width="1"/><text x="200" y="220" text-anchor="middle" font-family="sans-serif" font-size="48" font-weight="900" fill="#333" letter-spacing="8">SVET</text><text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#444" letter-spacing="4">COMING SOON</text><circle cx="200" cy="340" r="24" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.3"/><text x="200" y="345" text-anchor="middle" font-size="16" fill="#C9A84C" opacity="0.4">☀</text></svg>')}`;
-
-function FeaturedCard({ product }: { product: typeof catalogData.products[number] }) {
-  const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
-
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({
-      productId: product.id,
-      name: product.name,
-      price: product.price_preorder * 100,
-      size: product.sizes[0],
-      image: product.image_main,
-      slug: product.id,
-    });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  };
-
-  return (
-    <Link href={`/product/svet-${product.id}`} className="product-card">
-      {product.badge && <span className="product-card__badge">{product.badge}</span>}
-      <div className="product-card__image-wrap">
-        <img
-          src={product.image_main}
-          alt={product.name}
-          className="product-card__image"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.onerror = null;
-            target.src = PLACEHOLDER_SVG;
-          }}
-        />
-      </div>
-      <div className="product-card__info">
-        <div className="product-card__name">{product.name}</div>
-        <div className="product-card__color">{product.color}</div>
-        <div className="product-card__price">
-          <span>${product.price_preorder}</span>
-          <span style={{ fontSize: 12, color: '#555', textDecoration: 'line-through', marginLeft: 8 }}>${product.price_retail}</span>
-        </div>
-        <button
-          className={`product-card__quick-add ${added ? 'added' : ''}`}
-          onClick={handleQuickAdd}
-        >
-          {added ? '✓ ADDED' : 'QUICK ADD'}
-        </button>
-      </div>
-    </Link>
-  );
-}
 
 export default function Home() {
   const { t } = useI18n();
 
   return (
     <>
-      {/* ═══ HERO ═══ */}
+      {/* ═══ HERO — Full screen brand statement ═══ */}
       <section className="hero">
         <div className="hero__bg-grid" />
         <div className="hero__content">
@@ -102,7 +35,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ MARQUEE ═══ */}
+      {/* ═══ MARQUEE — Running text ═══ */}
       <div className="marquee">
         <div className="marquee__track">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -120,31 +53,23 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══ FEATURED PRODUCTS — Real Catalog ═══ */}
+      {/* ═══ THE ORIGIN STORY ═══ */}
       <section className="section">
         <div className="section__container">
           <div className="section-header">
-            <span className="section-header__label">{t('home.featuredLabel')}</span>
-            <h2 className="section-header__title">{t('home.wearTheLight')}</h2>
-            <p className="section-header__desc">
-              {t('home.featuredDesc')}
+            <span className="section-header__label">THE MEANING</span>
+            <h2 className="section-header__title" style={{ fontSize: 'clamp(32px, 5vw, 56px)' }}>
+              SVET means <em style={{ color: 'var(--cream)', fontStyle: 'normal' }}>Light</em>
+            </h2>
+            <p className="section-header__desc" style={{ maxWidth: 640, fontSize: 16, lineHeight: 1.9 }}>
+              In Slavic languages, SVET (СВЕТ) means light — the kind of light that reveals truth,
+              connects people, and illuminates what matters. We took that word and built a world around it.
             </p>
-          </div>
-          <div className="products">
-            {HOMEPAGE_PRODUCTS.map(product => (
-              <FeaturedCard key={product.id} product={product} />
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: 48 }}>
-            <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
-              VIEW ALL {catalogData.products.length} PRODUCTS
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* ═══ FEATURES ═══ */}
+      {/* ═══ THREE PILLARS ═══ */}
       <section className="features">
         <div className="features__container">
           <div className="feature">
@@ -165,7 +90,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ PHILOSOPHY ═══ */}
+      {/* ═══ THE PHILOSOPHY — Full width storytelling ═══ */}
       <section className="philosophy">
         <div className="philosophy__container">
           <div>
@@ -191,37 +116,76 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ COMMUNITY ═══ */}
-      <section className="ecosystem-banner">
-        <div className="ecosystem-banner__container">
-          <div className="ecosystem-banner__label">{t('home.connectionTokens')}</div>
-          <h2 className="ecosystem-banner__title">{t('home.joinConnection')}</h2>
-          <p className="ecosystem-banner__desc">{t('home.communityDesc')}</p>
-          <div className="ecosystem-banner__grid">
-            <div className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">🛒</div>
-              <div className="ecosystem-banner__card-name">{t('home.buy')}</div>
-              <div className="ecosystem-banner__card-desc">{t('home.buyDesc')}</div>
+      {/* ═══ BRAND TIMELINE ═══ */}
+      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="section__container">
+          <div className="section-header">
+            <span className="section-header__label">OUR JOURNEY</span>
+            <h2 className="section-header__title">The SVET Story</h2>
+          </div>
+          <div className="svet-timeline">
+            <div className="svet-timeline__item">
+              <div className="svet-timeline__dot" />
+              <div className="svet-timeline__content">
+                <div className="svet-timeline__year">The Idea</div>
+                <p className="svet-timeline__text">
+                  Born from a simple belief: clothing should carry meaning, not just style.
+                  Every thread should connect the person wearing it to something bigger.
+                </p>
+              </div>
             </div>
-            <div className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">📸</div>
-              <div className="ecosystem-banner__card-name">{t('home.share')}</div>
-              <div className="ecosystem-banner__card-desc">{t('home.shareDesc')}</div>
+            <div className="svet-timeline__item">
+              <div className="svet-timeline__dot" />
+              <div className="svet-timeline__content">
+                <div className="svet-timeline__year">The Philosophy</div>
+                <p className="svet-timeline__text">
+                  One Sun. One Energy. One Planet. For Everyone. —
+                  Four truths that became our compass. Not a tagline. A way of living.
+                </p>
+              </div>
             </div>
-            <div className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">👋</div>
-              <div className="ecosystem-banner__card-name">{t('home.refer')}</div>
-              <div className="ecosystem-banner__card-desc">{t('home.referDesc')}</div>
+            <div className="svet-timeline__item">
+              <div className="svet-timeline__dot" />
+              <div className="svet-timeline__content">
+                <div className="svet-timeline__year">The Design</div>
+                <p className="svet-timeline__text">
+                  Premium heavyweight fabrics. Bubble embroidery. Vintage washes.
+                  Every piece designed to feel like a statement, not just a garment.
+                </p>
+              </div>
             </div>
-            <div className="ecosystem-banner__card">
-              <div className="ecosystem-banner__card-icon">💬</div>
-              <div className="ecosystem-banner__card-name">{t('home.engage')}</div>
-              <div className="ecosystem-banner__card-desc">{t('home.engageDesc')}</div>
+            <div className="svet-timeline__item">
+              <div className="svet-timeline__dot svet-timeline__dot--active" />
+              <div className="svet-timeline__content">
+                <div className="svet-timeline__year" style={{ color: 'var(--accent)' }}>Now — Pre-Order</div>
+                <p className="svet-timeline__text">
+                  The first collection is ready. 12 pieces. Hoodies, tees, pants, and accessories.
+                  Pre-order now at exclusive launch prices before retail drop.
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ═══ FINAL CTA — Go to Shop ═══ */}
+      <section className="ecosystem-banner">
+        <div className="ecosystem-banner__container">
+          <div style={{ fontSize: 48, marginBottom: 16 }}>☀</div>
+          <h2 className="ecosystem-banner__title" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
+            Wear the Light
+          </h2>
+          <p className="ecosystem-banner__desc" style={{ maxWidth: 500, fontSize: 16, lineHeight: 1.8 }}>
+            12 premium pieces. Exclusive pre-order prices.
+            Free worldwide shipping on orders over $100.
+          </p>
           <div style={{ marginTop: 40, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/community" className="hero__cta" style={{ marginTop: 0 }}>
-              {t('home.learnMore')}
+            <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
+              EXPLORE COLLECTION
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+            </Link>
+            <Link href="/about" className="hero__cta hero__cta--outline" style={{ marginTop: 0 }}>
+              OUR STORY
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>

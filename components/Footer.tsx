@@ -17,9 +17,7 @@ export function Footer() {
         {/* Store links */}
         <div className="footer__links">
           <Link href="/shop" className="footer__link">{t('nav.shop')}</Link>
-          <Link href="/pricing" className="footer__link">{t('nav.pricing')}</Link>
-          <Link href="/community" className="footer__link">{t('nav.community')}</Link>
-          <Link href="/about" className="footer__link">{t('nav.philosophy')}</Link>
+          <Link href="/about" className="footer__link">{t('nav.about')}</Link>
           <Link href="/cart" className="footer__link">{t('nav.cart')}</Link>
         </div>
 
