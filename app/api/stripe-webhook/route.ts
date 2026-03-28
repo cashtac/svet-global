@@ -78,33 +78,48 @@ export async function POST(request: NextRequest) {
         const email = session.customer_details?.email || session.customer_email || 'unknown';
         const customerId = session.customer || 'unknown';
         const amountTotal = session.amount_total || 0;
-        const plan = getPlanFromAmount(amountTotal);
+        const mode = session.mode; // 'payment' for products, 'subscription' for AI plans
+        const orderNumber = session.metadata?.orderNumber || '';
 
-        // Create subscriber record
-        const subId = `sub_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-        subscribers.set(subId, {
-          id: subId,
-          email,
-          plan,
-          amount: amountTotal,
-          stripeCustomerId: customerId,
-          stripeSessionId: session.id,
-          createdAt: Date.now(),
-        });
+        if (mode === 'payment') {
+          // ═══ PRODUCT ORDER ═══
+          console.log(`[Stripe Webhook] Product order: ${orderNumber} by ${email} — $${(amountTotal / 100).toFixed(2)}`);
 
-        // Store in localStorage-compatible format for profile page
-        console.log(`[Stripe Webhook] New subscriber: ${email} → ${plan} ($${amountTotal / 100})`);
+          await notifyTelegram(
+            `🛍️ <b>NEW ORDER!</b>\n\n` +
+            `📧 ${email}\n` +
+            `📦 Order: <b>${orderNumber}</b>\n` +
+            `💵 Total: <b>$${(amountTotal / 100).toFixed(2)}</b>\n` +
+            `🚚 Shipping address collected\n` +
+            `⏰ ${new Date().toISOString()}\n\n` +
+            `📋 Check Stripe Dashboard for full details.`
+          );
+        } else {
+          // ═══ SUBSCRIPTION ═══
+          const plan = getPlanFromAmount(amountTotal);
+          const subId = `sub_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+          subscribers.set(subId, {
+            id: subId,
+            email,
+            plan,
+            amount: amountTotal,
+            stripeCustomerId: customerId,
+            stripeSessionId: session.id,
+            createdAt: Date.now(),
+          });
 
-        // Notify admin via Telegram
-        await notifyTelegram(
-          `💰 <b>NEW PAYMENT!</b>\n\n` +
-          `📧 ${email}\n` +
-          `📦 Plan: <b>${plan.toUpperCase()}</b>\n` +
-          `💵 Amount: <b>$${(amountTotal / 100).toFixed(2)}</b>\n` +
-          `🆔 ${subId}\n` +
-          `⏰ ${new Date().toISOString()}\n\n` +
-          `✅ Account created automatically.`
-        );
+          console.log(`[Stripe Webhook] New subscriber: ${email} → ${plan} ($${amountTotal / 100})`);
+
+          await notifyTelegram(
+            `💰 <b>NEW SUBSCRIPTION!</b>\n\n` +
+            `📧 ${email}\n` +
+            `📦 Plan: <b>${plan.toUpperCase()}</b>\n` +
+            `💵 Amount: <b>$${(amountTotal / 100).toFixed(2)}/mo</b>\n` +
+            `🆔 ${subId}\n` +
+            `⏰ ${new Date().toISOString()}\n\n` +
+            `✅ Account created automatically.`
+          );
+        }
 
         break;
       }
