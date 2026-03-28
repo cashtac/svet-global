@@ -1,13 +1,15 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { detectLocale, t, isRTL, type Locale, type TranslationKey } from './i18n';
+import { detectLocale, t, isRTL, LOCALE_LIST, type Locale, type TranslationKey } from './i18n';
 
 interface I18nContextValue {
   locale: Locale;
   setLocale: (l: Locale) => void;
   t: (key: TranslationKey) => string;
   rtl: boolean;
+  isFirstVisit: boolean;
+  dismissFirstVisit: () => void;
 }
 
 const I18nContext = createContext<I18nContextValue>({
@@ -15,17 +17,25 @@ const I18nContext = createContext<I18nContextValue>({
   setLocale: () => {},
   t: (key) => key,
   rtl: false,
+  isFirstVisit: false,
+  dismissFirstVisit: () => {},
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const saved = localStorage.getItem('svet-locale') as Locale | null;
-    if (saved && ['en', 'ru', 'pt', 'de', 'ar'].includes(saved)) {
+    if (saved && (LOCALE_LIST as string[]).includes(saved)) {
       setLocaleState(saved);
+      setIsFirstVisit(false);
     } else {
-      setLocaleState(detectLocale());
+      // No saved locale — first visit
+      setIsFirstVisit(true);
+      setLocaleState('en'); // default until user picks
     }
   }, []);
 
@@ -41,8 +51,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('svet-locale', l);
   };
 
+  const dismissFirstVisit = () => {
+    setIsFirstVisit(false);
+  };
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t: (key) => t(locale, key), rtl: isRTL(locale) }}>
+    <I18nContext.Provider value={{ locale, setLocale, t: (key) => t(locale, key), rtl: isRTL(locale), isFirstVisit: mounted && isFirstVisit, dismissFirstVisit }}>
       {children}
     </I18nContext.Provider>
   );

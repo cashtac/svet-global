@@ -47,6 +47,7 @@ export function Navbar() {
           {/* Desktop links */}
           <div className="nav__links">
             <Link href="/shop" className="nav__link">{t('nav.shop')}</Link>
+            <Link href="/ai" className="nav__link">{t('nav.ai')}</Link>
             <Link href="/pricing" className="nav__link">{t('nav.pricing')}</Link>
             <Link href="/symbols" className="nav__link">{t('nav.symbols' as any)}</Link>
             <Link href="/chain" className="nav__link nav__link--hide-sm">{t('nav.chain' as any)}</Link>
@@ -55,6 +56,9 @@ export function Navbar() {
             <Link href="/cart" className="nav__cart">
               {t('nav.cart')}
               {count > 0 && <span className="nav__cart-count">{count}</span>}
+            </Link>
+            <Link href="/profile" className="nav__profile-icon" aria-label="Profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </Link>
 
             {/* Language dropdown */}
@@ -110,6 +114,7 @@ export function Navbar() {
         <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu__inner" onClick={e => e.stopPropagation()}>
             <Link href="/shop" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.shop').toUpperCase()}</Link>
+            <Link href="/ai" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.ai').toUpperCase()}</Link>
             <Link href="/pricing" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.pricing').toUpperCase()}</Link>
             <Link href="/symbols" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.symbols' as any).toUpperCase()}</Link>
             <Link href="/chain" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{t('nav.chain' as any).toUpperCase()}</Link>

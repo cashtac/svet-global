@@ -20,34 +20,48 @@ const CHAIN_SYMBOLS = [
   { emoji: '🦁', name: 'Eternity' },
 ];
 
-const LEVELS = [
-  { level: 1, name: 'Registered', desc: 'Dark base, subtle particles', className: 'profile-level--1' },
-  { level: 2, name: 'Email Subscriber', desc: 'Soft gradient colors', className: 'profile-level--2' },
-  { level: 3, name: 'First Purchase', desc: 'Warm golden particles', className: 'profile-level--3' },
-  { level: 4, name: 'Discord Member', desc: 'Ocean wave texture', className: 'profile-level--4' },
-  { level: 5, name: '3-Month Sub', desc: 'Mountain silhouettes', className: 'profile-level--5' },
-  { level: 6, name: '12-Month Sub', desc: 'Aurora borealis', className: 'profile-level--6' },
-  { level: 7, name: 'SVET COMPLETE', desc: 'Golden butterflies', className: 'profile-level--7' },
+const TOKEN_LEVELS = [
+  { key: 'seedling', min: 0, max: 99, color: '#4a7c59' },
+  { key: 'energized', min: 100, max: 499, color: '#f5a623' },
+  { key: 'radiant', min: 500, max: 999, color: '#e93323' },
+  { key: 'luminary', min: 1000, max: Infinity, color: '#FFD700' },
+];
+
+// Mock transaction data — in production this comes from API
+const MOCK_TRANSACTIONS = [
+  { id: 1, type: 'purchase', label: 'Purchase: SVET Hoodie', tokens: 69, date: '2026-03-28' },
+  { id: 2, type: 'referral', label: 'Referral bonus', tokens: 25, date: '2026-03-27' },
+  { id: 3, type: 'share', label: 'Instagram post', tokens: 10, date: '2026-03-25' },
+  { id: 4, type: 'signup', label: 'Account created 🪲', tokens: 5, date: '2026-03-20' },
 ];
 
 export default function ProfilePage() {
   const { t } = useI18n();
   const [user, setUser] = useState<any>(null);
-  const [level, setLevel] = useState(0);
+  const [tokens, setTokens] = useState(0);
   const [earnedSymbols, setEarnedSymbols] = useState<Set<number>>(new Set());
+  const [transactions, setTransactions] = useState<typeof MOCK_TRANSACTIONS>([]);
 
   useEffect(() => {
-    // Check localStorage for user data
     try {
       const stored = localStorage.getItem('svet_profile');
       if (stored) {
         const data = JSON.parse(stored);
         setUser(data);
-        setLevel(data.level || 1);
+        setTokens(data.tokens || 0);
         setEarnedSymbols(new Set(data.symbols || [0]));
+        setTransactions(data.transactions || MOCK_TRANSACTIONS);
       }
     } catch {}
   }, []);
+
+  // Determine current level from tokens
+  const currentLevel = TOKEN_LEVELS.find(l => tokens >= l.min && tokens <= l.max) || TOKEN_LEVELS[0];
+  const currentLevelIndex = TOKEN_LEVELS.indexOf(currentLevel);
+  const nextLevel = TOKEN_LEVELS[currentLevelIndex + 1];
+  const progressInLevel = nextLevel
+    ? ((tokens - currentLevel.min) / (currentLevel.max - currentLevel.min + 1)) * 100
+    : 100;
 
   // Guest state — not logged in
   if (!user) {
@@ -56,23 +70,23 @@ export default function ProfilePage() {
         <div className="section__container">
           <div className="section-header" style={{ paddingTop: 150 }}>
             <h1 className="section-header__title" style={{ fontSize: '2rem', color: '#555' }}>
-              {t('profile.title' as any)}
+              {t('profile.title')}
             </h1>
             <p className="section-header__desc" style={{ color: '#444' }}>
-              Create your account to begin your SVET journey.
+              {t('profile.guestTitle')}
             </p>
           </div>
 
           <div className="profile-guest-card">
             <div className="profile-guest-card__icon">🌑</div>
             <p className="profile-guest-card__text">
-              The site waits in silence. Register to awaken the light.
+              {t('profile.guestText')}
             </p>
             <Link href="/register" className="profile-guest-card__cta">
-              CREATE ACCOUNT →
+              {t('profile.createAccount')} →
             </Link>
             <Link href="/login" className="profile-guest-card__login">
-              Already have an account? Sign in
+              {t('profile.alreadyHave')}
             </Link>
           </div>
         </div>
@@ -80,30 +94,129 @@ export default function ProfilePage() {
     );
   }
 
-  const currentLevel = LEVELS.find(l => l.level === level) || LEVELS[0];
-  const nextLevel = LEVELS.find(l => l.level === level + 1);
-  const progress = (earnedSymbols.size / 9) * 100;
+  const chainProgress = (earnedSymbols.size / 9) * 100;
+
+  // Subscription mock
+  const subscription = user.subscription || null;
 
   return (
-    <section className={`profile-page ${currentLevel.className}`}>
+    <section className="profile-page">
       <div className="section__container">
         <div className="section-header" style={{ paddingTop: 120 }}>
-          <span className="section-header__label" style={{ color: '#C9A84C' }}>
-            {t('profile.level' as any)} {level}
+          <span className="section-header__label" style={{ color: currentLevel.color }}>
+            {t(`profile.level.${currentLevel.key}`)}
           </span>
-          <h1 className="section-header__title">{t('profile.title' as any)}</h1>
+          <h1 className="section-header__title">{t('profile.title')}</h1>
         </div>
 
-        {/* User info */}
-        <div className="profile-info">
-          <div className="profile-avatar">{user.name?.[0]?.toUpperCase() || '✦'}</div>
-          <h2 className="profile-name">{user.name}</h2>
-          <span className="profile-level-badge">{currentLevel.name}</span>
+        {/* ═══ User Header ═══ */}
+        <div className="profile-header">
+          <div className="profile-avatar" style={{ borderColor: currentLevel.color }}>
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt="" className="profile-avatar__img" />
+            ) : (
+              <span className="profile-avatar__initials">{user.name?.[0]?.toUpperCase() || '✦'}</span>
+            )}
+          </div>
+          <div className="profile-header__info">
+            <h2 className="profile-name">{user.name}</h2>
+            <span className="profile-email">{user.email || ''}</span>
+          </div>
+          <button className="profile-edit-btn">{t('profile.edit')}</button>
         </div>
 
-        {/* Chain Progress */}
+        {/* ═══ Token Balance ═══ */}
+        <div className="profile-section profile-tokens-section">
+          <h3 className="profile-section__title">☀️ {t('profile.tokens')}</h3>
+          <div className="profile-tokens-display">
+            <span className="profile-tokens__big-number">{tokens}</span>
+            <span className="profile-tokens__label">☀ Connection Tokens</span>
+          </div>
+          <div className="profile-level-progress">
+            <div className="profile-level-progress__labels">
+              <span style={{ color: currentLevel.color }}>{t(`profile.level.${currentLevel.key}`)}</span>
+              {nextLevel && <span style={{ color: '#555' }}>{t(`profile.level.${nextLevel.key}`)}</span>}
+            </div>
+            <div className="profile-level-progress__bar">
+              <div
+                className="profile-level-progress__fill"
+                style={{ width: `${progressInLevel}%`, background: currentLevel.color }}
+              />
+            </div>
+            {nextLevel && (
+              <p className="profile-level-progress__hint">
+                {nextLevel.min - tokens} ☀ {t('profile.nextUnlock')} {t(`profile.level.${nextLevel.key}`)}
+              </p>
+            )}
+          </div>
+
+          {/* Level badges */}
+          <div className="profile-levels-grid">
+            {TOKEN_LEVELS.map((level, i) => {
+              const isActive = i <= currentLevelIndex;
+              return (
+                <div key={level.key} className={`profile-level-badge ${isActive ? 'profile-level-badge--active' : 'profile-level-badge--locked'}`}>
+                  <span className="profile-level-badge__icon">{t(`profile.level.${level.key}`).split(' ')[0]}</span>
+                  <span className="profile-level-badge__name">{t(`profile.level.${level.key}`).split(' ').slice(1).join(' ')}</span>
+                  {!isActive && <span className="profile-level-badge__lock">🔒</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ═══ Transaction History ═══ */}
         <div className="profile-section">
-          <h3 className="profile-section__title">{t('profile.chain' as any)}</h3>
+          <h3 className="profile-section__title">{t('profile.history')}</h3>
+          {transactions.length > 0 ? (
+            <div className="profile-tx-list">
+              {transactions.map(tx => (
+                <div key={tx.id} className="profile-tx">
+                  <div className="profile-tx__left">
+                    <span className="profile-tx__icon">
+                      {tx.type === 'purchase' ? '🛒' : tx.type === 'referral' ? '👋' : tx.type === 'share' ? '📸' : '✨'}
+                    </span>
+                    <div>
+                      <div className="profile-tx__label">{tx.label}</div>
+                      <div className="profile-tx__date">{tx.date}</div>
+                    </div>
+                  </div>
+                  <span className="profile-tx__tokens">+{tx.tokens} ☀</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="profile-empty-state">
+              <span>📜</span>
+              <p style={{ color: '#555', marginTop: 8 }}>—</p>
+            </div>
+          )}
+        </div>
+
+        {/* ═══ Subscription ═══ */}
+        <div className="profile-section">
+          <h3 className="profile-section__title">{t('profile.subscription')}</h3>
+          {subscription ? (
+            <div className="profile-sub-card profile-sub-card--active">
+              <div className="profile-sub-card__info">
+                <span className="profile-sub-card__plan">{subscription.plan}</span>
+                <span className="profile-sub-card__renew">
+                  {t('profile.renews')} {subscription.renewDate}
+                </span>
+              </div>
+              <button className="profile-sub-card__manage-btn">{t('profile.manage')}</button>
+            </div>
+          ) : (
+            <div className="profile-sub-card">
+              <span>{t('profile.noSub')}</span>
+              <Link href="/pricing" className="profile-sub-card__cta">{t('profile.viewPlans')} →</Link>
+            </div>
+          )}
+        </div>
+
+        {/* ═══ Chain Progress ═══ */}
+        <div className="profile-section">
+          <h3 className="profile-section__title">{t('profile.chain')}</h3>
           <div className="profile-chain">
             {CHAIN_SYMBOLS.map((s, i) => (
               <div key={i} className={`profile-chain__slot ${earnedSymbols.has(i) ? 'profile-chain__slot--earned' : ''}`}>
@@ -114,32 +227,18 @@ export default function ProfilePage() {
           </div>
           <div className="profile-progress">
             <div className="profile-progress__bar">
-              <div className="profile-progress__fill" style={{ width: `${progress}%` }} />
+              <div className="profile-progress__fill" style={{ width: `${chainProgress}%` }} />
             </div>
             <span className="profile-progress__text">{earnedSymbols.size}/9</span>
           </div>
-          {nextLevel && (
-            <p className="profile-next-unlock">
-              {t('profile.nextUnlock' as any)} <strong>{nextLevel.name}</strong>
-            </p>
-          )}
         </div>
 
-        {/* Tokens */}
+        {/* ═══ Order History ═══ */}
         <div className="profile-section">
-          <h3 className="profile-section__title">☀️ {t('profile.tokens' as any)}</h3>
-          <div className="profile-tokens">
-            <span className="profile-tokens__count">0</span>
-            <span className="profile-tokens__label">Connection Tokens</span>
-          </div>
-        </div>
-
-        {/* Subscription */}
-        <div className="profile-section">
-          <h3 className="profile-section__title">{t('profile.subscription' as any)}</h3>
-          <div className="profile-sub-card">
-            <span>No active subscription</span>
-            <Link href="/pricing" className="profile-sub-card__cta">View Plans →</Link>
+          <h3 className="profile-section__title">{t('profile.orders')}</h3>
+          <div className="profile-empty-state">
+            <span>🛒</span>
+            <p style={{ color: '#555', marginTop: 8 }}>—</p>
           </div>
         </div>
       </div>

@@ -1,110 +1,125 @@
-import type { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Philosophy — SVET',
-  description: 'We are all connected. One Sun. One Energy. One Planet. For Everyone. SVET means light.',
-};
+import Link from 'next/link';
+import { useI18n } from '@/lib/i18n-provider';
 
 export default function AboutPage() {
+  const { t } = useI18n();
+
   return (
     <>
-      {/* Hero */}
-      <section className="hero" style={{ minHeight: '60vh' }}>
-        <div className="hero__bg-grid" />
-        <div className="hero__content">
-          <span className="hero__badge">OUR PHILOSOPHY</span>
-          <h1 className="hero__title" style={{ fontSize: 'clamp(48px, 8vw, 96px)' }}>WE ARE ALL CONNECTED</h1>
-          <p className="hero__tagline">
-            SVET means light. Not a brand built on hype — a belief that everything is interconnected.
-          </p>
+      {/* ═══ HERO — Full-bleed impact ═══ */}
+      <section className="about-hero">
+        <div className="about-hero__particles">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={i}
+              className="about-hero__particle"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 6}s`,
+                animationDuration: `${4 + Math.random() * 4}s`,
+                width: `${2 + Math.random() * 3}px`,
+                height: `${2 + Math.random() * 3}px`,
+              }}
+            />
+          ))}
+        </div>
+        <div className="about-hero__pulse" />
+        <div className="about-hero__content">
+          <span className="about-hero__badge">{t('about.badge')}</span>
+          <h1 className="about-hero__title">{t('about.title')}</h1>
+          <p className="about-hero__sub">{t('about.heroDesc')}</p>
+          <div className="about-hero__scroll-hint">
+            <div className="about-hero__scroll-line" />
+          </div>
         </div>
       </section>
 
-      {/* Marquee */}
-      <div className="marquee">
+      {/* ═══ MARQUEE ═══ */}
+      <div className="marquee" style={{ borderTop: '1px solid rgba(201,168,76,0.1)', borderBottom: '1px solid rgba(201,168,76,0.1)' }}>
         <div className="marquee__track">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i}>
-              <span className="marquee__item">ONE SUN ☀</span>
-              <span className="marquee__item" style={{ margin: '0 20px' }}>◆</span>
-              <span className="marquee__item">ONE ENERGY</span>
-              <span className="marquee__item" style={{ margin: '0 20px' }}>◆</span>
-              <span className="marquee__item">ONE PLANET 🌍</span>
-              <span className="marquee__item" style={{ margin: '0 20px' }}>◆</span>
-              <span className="marquee__item">FOR EVERYONE</span>
+              <span className="marquee__item">{t('home.marquee.oneSun')}</span>
+              <span className="marquee__item" style={{ margin: '0 20px', color: '#C9A84C' }}>◆</span>
+              <span className="marquee__item">{t('home.marquee.oneEnergy')}</span>
+              <span className="marquee__item" style={{ margin: '0 20px', color: '#C9A84C' }}>◆</span>
+              <span className="marquee__item">{t('home.marquee.onePlanet')}</span>
+              <span className="marquee__item" style={{ margin: '0 20px', color: '#C9A84C' }}>◆</span>
+              <span className="marquee__item">{t('home.marquee.forEveryone')}</span>
               <span className="marquee__item" style={{ margin: '0 20px', color: 'var(--accent)' }}>●</span>
             </span>
           ))}
         </div>
       </div>
 
-      {/* Philosophy */}
-      <section className="section" style={{ paddingTop: 80 }}>
-        <div className="section__container" style={{ maxWidth: 720, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, marginBottom: 32 }}>
-            THE MEANING OF SVET
-          </h2>
-          <p style={{ fontSize: 18, color: 'var(--text-secondary)', lineHeight: 2, marginBottom: 24, fontWeight: 300 }}>
-            In many Slavic languages, SVET means <em>light</em> — and also <em>world</em>.
-            It's not a coincidence. The same word for light is used to describe the entire world
-            because they are the same thing. Light illuminates, connects, and sustains.
-          </p>
-          <p style={{ fontSize: 18, color: 'var(--text-secondary)', lineHeight: 2, marginBottom: 24, fontWeight: 300 }}>
-            We started SVET because we believe that what connects us is greater than what divides us.
-            We share one sun, breathe the same air, walk the same earth.
-            Our clothing isn't about standing out — it's about standing together.
-          </p>
-          <p style={{ fontSize: 18, color: 'var(--text-secondary)', lineHeight: 2, fontWeight: 300 }}>
-            Every piece is a reminder. When you wear SVET, you carry a message:
-            we are all one. Not a trend — a truth.
-          </p>
+      {/* ═══ MEANING SECTION — with visual accent ═══ */}
+      <section className="about-meaning">
+        <div className="about-meaning__container">
+          <div className="about-meaning__accent">☀</div>
+          <h2 className="about-meaning__title">{t('about.meaningTitle')}</h2>
+          <p className="about-meaning__text">{t('about.meaningP1')}</p>
+          <p className="about-meaning__text">{t('about.meaningP2')}</p>
+          <p className="about-meaning__text about-meaning__text--highlight">{t('about.meaningP3')}</p>
         </div>
       </section>
 
-      {/* Three Pillars */}
-      <section className="features">
-        <div className="features__container">
-          <div className="feature">
-            <div className="feature__icon" style={{ fontSize: 32 }}>☀</div>
-            <h3 className="feature__title">One Sun</h3>
-            <p className="feature__desc">
-              The same sun rises for everyone. It doesn't choose who to warm.
-              Our designs reflect that universal truth — light is for all.
-            </p>
+      {/* ═══ THREE PILLARS — animated cards ═══ */}
+      <section className="about-pillars">
+        <div className="about-pillars__container">
+          <div className="about-pillar">
+            <div className="about-pillar__glow" style={{ background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)' }} />
+            <div className="about-pillar__icon">☀</div>
+            <h3 className="about-pillar__title">{t('home.oneSun')}</h3>
+            <p className="about-pillar__desc">{t('about.oneSunDesc')}</p>
           </div>
-          <div className="feature">
-            <div className="feature__icon" style={{ fontSize: 32 }}>⚡</div>
-            <h3 className="feature__title">One Energy</h3>
-            <p className="feature__desc">
-              Everything is energy. The thread in your shirt, the breath you take,
-              the planet spinning. We are all the same energy, expressing differently.
-            </p>
+          <div className="about-pillar">
+            <div className="about-pillar__glow" style={{ background: 'radial-gradient(circle, rgba(233,51,35,0.1) 0%, transparent 70%)' }} />
+            <div className="about-pillar__icon">⚡</div>
+            <h3 className="about-pillar__title">{t('home.oneEnergy')}</h3>
+            <p className="about-pillar__desc">{t('about.oneEnergyDesc')}</p>
           </div>
-          <div className="feature">
-            <div className="feature__icon" style={{ fontSize: 32 }}>🌍</div>
-            <h3 className="feature__title">One Planet</h3>
-            <p className="feature__desc">
-              We have one home. No borders when seen from space. SVET is for
-              every person, every culture, every corner of this shared world.
-            </p>
+          <div className="about-pillar">
+            <div className="about-pillar__glow" style={{ background: 'radial-gradient(circle, rgba(76,175,80,0.1) 0%, transparent 70%)' }} />
+            <div className="about-pillar__icon">🌍</div>
+            <h3 className="about-pillar__title">{t('home.onePlanet')}</h3>
+            <p className="about-pillar__desc">{t('about.onePlanetDesc')}</p>
           </div>
         </div>
       </section>
 
-      {/* Closing */}
-      <section className="section">
-        <div className="section__container" style={{ maxWidth: 720, textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 700, marginBottom: 16 }}>
-            FOR EVERYONE
-          </h2>
-          <p style={{ fontSize: 18, color: 'var(--text-secondary)', lineHeight: 2, fontWeight: 300, marginBottom: 32 }}>
-            SVET isn't exclusive. It's not limited edition to be limited.
-            It's for everyone who feels the same truth: that we're all connected
-            by the same light, energy, and planet. Wear it if you believe it.
-          </p>
-          <p style={{ fontFamily: 'var(--font-heading)', fontSize: 24, color: 'var(--accent)', letterSpacing: '0.1em' }}>
-            ☀ SVET ☀
-          </p>
+      {/* ═══ STATS STRIP ═══ */}
+      <section className="about-stats">
+        <div className="about-stats__item">
+          <span className="about-stats__number">∞</span>
+          <span className="about-stats__label">{t('home.connections')}</span>
+        </div>
+        <div className="about-stats__divider" />
+        <div className="about-stats__item">
+          <span className="about-stats__number">1</span>
+          <span className="about-stats__label">{t('home.planet')}</span>
+        </div>
+        <div className="about-stats__divider" />
+        <div className="about-stats__item">
+          <span className="about-stats__number">ALL</span>
+          <span className="about-stats__label">{t('home.forEveryone')}</span>
+        </div>
+      </section>
+
+      {/* ═══ CLOSING CTA ═══ */}
+      <section className="about-closing">
+        <div className="about-closing__container">
+          <h2 className="about-closing__title">{t('about.forEveryoneTitle')}</h2>
+          <p className="about-closing__desc">{t('about.forEveryoneDesc')}</p>
+          <div className="about-closing__cta-row">
+            <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
+              {t('home.learnMore')}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+            </Link>
+          </div>
+          <p className="about-closing__svet">☀ SVET ☀</p>
         </div>
       </section>
     </>
