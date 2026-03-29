@@ -4,33 +4,18 @@ import crypto from 'crypto';
 
 /* ════════════════════════════════════════════════
    Stripe Webhook — POST /api/stripe-webhook
-   Handles: checkout.session.completed, payment_intent.succeeded
-   Actions: create user, send Telegram notification
+   Handles: checkout.session.completed
+   Actions: send email confirmation, Telegram notification
    ════════════════════════════════════════════════ */
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const ADMIN_CHAT_ID = 339073973; // @carpediemrn
-
-// In-memory subscriber store (replace with DB)
-interface Subscriber {
-  id: string;
-  email: string;
-  plan: string;
-  amount: number;
-  stripeCustomerId: string;
-  stripeSessionId: string;
-  createdAt: number;
-}
-
-const subscribers = new Map<string, Subscriber>();
-export { subscribers };
+const ADMIN_CHAT_ID = 339073973;
 
 async function notifyTelegram(message: string) {
   if (!TELEGRAM_BOT_TOKEN) {
-    console.log('[Stripe Webhook] Telegram notification (no bot token):', message);
+    console.log('[Webhook] Telegram (no token):', message);
     return;
   }
-
   try {
     await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
@@ -41,9 +26,27 @@ async function notifyTelegram(message: string) {
         parse_mode: 'HTML',
       }),
     });
-    console.log('[Stripe Webhook] Telegram notification sent');
   } catch (err) {
-    console.error('[Stripe Webhook] Telegram notification failed:', err);
+    console.error('[Webhook] Telegram failed:', err);
+  }
+}
+
+async function sendOrderEmail(email: string, orderNumber: string, total: number) {
+  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://svet.global';
+  try {
+    await fetch(`${siteUrl}/api/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        orderNumber,
+        items: [{ name: 'SVET Collection Order', size: '', quantity: 1, price: total }],
+        total,
+      }),
+    });
+    console.log(`[Webhook] Confirmation email sent to ${email}`);
+  } catch (err) {
+    console.error('[Webhook] Email failed:', err);
   }
 }
 
@@ -56,140 +59,86 @@ export async function POST(request: NextRequest) {
     let event: any;
 
     if (webhookSecret && sig) {
-      // Verify webhook signature in production
       try {
         const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
         event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
       } catch (err: any) {
-        console.error('[Stripe Webhook] Signature verification failed:', err.message);
+        console.error('[Webhook] Signature failed:', err.message);
         return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
       }
     } else {
-      // Development mode — parse raw JSON
       event = JSON.parse(body);
-      console.log('[Stripe Webhook] Dev mode — no signature verification');
     }
 
-    console.log(`[Stripe Webhook] Event: ${event.type}`);
+    console.log(`[Webhook] Event: ${event.type}`);
 
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
         const email = session.customer_details?.email || session.customer_email || 'unknown';
-        const customerId = session.customer || 'unknown';
         const amountTotal = session.amount_total || 0;
-        const mode = session.mode; // 'payment' for products, 'subscription' for AI plans
-        const orderNumber = session.metadata?.orderNumber || '';
+        const mode = session.mode;
+        const orderNumber = session.metadata?.orderNumber || `SVET-${Date.now().toString(36).toUpperCase()}`;
 
         if (mode === 'payment') {
           // ═══ PRODUCT ORDER ═══
-          console.log(`[Stripe Webhook] Product order: ${orderNumber} by ${email} — $${(amountTotal / 100).toFixed(2)}`);
+          console.log(`[Webhook] Order: ${orderNumber} by ${email} - $${(amountTotal / 100).toFixed(2)}`);
 
-          await notifyTelegram(
-            `🛍️ <b>NEW ORDER!</b>\n\n` +
-            `📧 ${email}\n` +
-            `📦 Order: <b>${orderNumber}</b>\n` +
-            `💵 Total: <b>$${(amountTotal / 100).toFixed(2)}</b>\n` +
-            `🚚 Shipping address collected\n` +
-            `⏰ ${new Date().toISOString()}\n\n` +
-            `📋 Check Stripe Dashboard for full details.`
-          );
-        } else {
-          // ═══ SUBSCRIPTION ═══
-          const plan = getPlanFromAmount(amountTotal);
-          const subId = `sub_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-          subscribers.set(subId, {
-            id: subId,
-            email,
-            plan,
-            amount: amountTotal,
-            stripeCustomerId: customerId,
-            stripeSessionId: session.id,
-            createdAt: Date.now(),
-          });
+          // Send branded confirmation email to customer
+          await sendOrderEmail(email, orderNumber, amountTotal);
 
-          console.log(`[Stripe Webhook] New subscriber: ${email} → ${plan} ($${amountTotal / 100})`);
-
-          await notifyTelegram(
-            `💰 <b>NEW SUBSCRIPTION!</b>\n\n` +
-            `📧 ${email}\n` +
-            `📦 Plan: <b>${plan.toUpperCase()}</b>\n` +
-            `💵 Amount: <b>$${(amountTotal / 100).toFixed(2)}/mo</b>\n` +
-            `🆔 ${subId}\n` +
-            `⏰ ${new Date().toISOString()}\n\n` +
-            `✅ Account created automatically.`
-          );
+          // Notify admin on Telegram
+          const msg = [
+            '<b>NEW ORDER!</b>',
+            '',
+            `Email: ${email}`,
+            `Order: <b>${orderNumber}</b>`,
+            `Total: <b>$${(amountTotal / 100).toFixed(2)}</b>`,
+            `Shipping: address collected`,
+            `Email: confirmation sent`,
+            `Time: ${new Date().toISOString()}`,
+            '',
+            'Check Stripe Dashboard for details.',
+          ].join('\n');
+          await notifyTelegram(msg);
         }
 
         break;
       }
 
       case 'customer.subscription.created': {
-        const subscription = event.data.object;
-        console.log(`[Stripe Webhook] Subscription created: ${subscription.id}`);
-
-        await notifyTelegram(
-          `🔄 <b>SUBSCRIPTION ACTIVE</b>\n\n` +
-          `🆔 ${subscription.id}\n` +
-          `📊 Status: ${subscription.status}\n` +
-          `⏰ ${new Date().toISOString()}`
-        );
+        const sub = event.data.object;
+        await notifyTelegram(`<b>SUBSCRIPTION ACTIVE</b>\nID: ${sub.id}\nStatus: ${sub.status}`);
         break;
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object;
-        console.log(`[Stripe Webhook] Subscription cancelled: ${subscription.id}`);
-
-        await notifyTelegram(
-          `❌ <b>SUBSCRIPTION CANCELLED</b>\n\n` +
-          `🆔 ${subscription.id}\n` +
-          `⏰ ${new Date().toISOString()}`
-        );
+        const sub = event.data.object;
+        await notifyTelegram(`<b>SUBSCRIPTION CANCELLED</b>\nID: ${sub.id}`);
         break;
       }
 
       case 'invoice.payment_failed': {
-        const invoice = event.data.object;
-        console.log(`[Stripe Webhook] Payment failed: ${invoice.id}`);
-
-        await notifyTelegram(
-          `⚠️ <b>PAYMENT FAILED</b>\n\n` +
-          `🆔 Invoice: ${invoice.id}\n` +
-          `📧 ${invoice.customer_email || 'unknown'}\n` +
-          `💵 $${((invoice.amount_due || 0) / 100).toFixed(2)}\n` +
-          `⏰ ${new Date().toISOString()}`
-        );
+        const inv = event.data.object;
+        await notifyTelegram(`<b>PAYMENT FAILED</b>\nInvoice: ${inv.id}\nEmail: ${inv.customer_email || 'unknown'}\nAmount: $${((inv.amount_due || 0) / 100).toFixed(2)}`);
         break;
       }
 
       default:
-        console.log(`[Stripe Webhook] Unhandled event: ${event.type}`);
+        console.log(`[Webhook] Unhandled: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
   } catch (err: any) {
-    console.error('[Stripe Webhook] Error:', err.message);
+    console.error('[Webhook] Error:', err.message);
     return NextResponse.json({ error: 'Webhook error' }, { status: 500 });
   }
 }
 
-function getPlanFromAmount(amountCents: number): string {
-  switch (amountCents) {
-    case 2300: return 'starter';
-    case 6900: return 'builder';
-    case 9900: return 'ultra';
-    case 29900: return 'business';
-    default: return `custom_${amountCents}`;
-  }
-}
-
-// Health check
 export async function GET() {
   return NextResponse.json({
     ok: true,
     webhook: 'SVET Stripe Webhook',
     events: ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.deleted', 'invoice.payment_failed'],
-    subscribers: subscribers.size,
   });
 }
