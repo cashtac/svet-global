@@ -15,7 +15,8 @@ import { NextRequest, NextResponse } from 'next/server';
    ════════════════════════════════════════════════ */
 
 const RESEND_KEY = process.env.RESEND_API_KEY || '';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'SVET <orders@svet.global>';
+// Use FROM_EMAIL env if domain is verified, else Resend's free sender
+const FROM_EMAIL = process.env.FROM_EMAIL || 'SVET Orders <onboarding@resend.dev>';
 
 function buildOrderHTML(orderNumber: string, items: any[], total: number): string {
   const itemRows = items.map(i => `
