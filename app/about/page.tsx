@@ -108,6 +108,83 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ═══ MANUFACTURING & PARTNERS ═══ */}
+      <section className="section" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="section__container">
+          <div className="section-header">
+            <span className="section-header__label">CRAFTED WITH</span>
+            <h2 className="section-header__title">World-Class Partners</h2>
+            <p className="section-header__desc" style={{ maxWidth: 560 }}>
+              Every SVET piece is manufactured by industry leaders and powered by world-class technology.
+            </p>
+          </div>
+
+          {/* Manufacturing Partner */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.02) 100%)',
+            border: '1px solid rgba(201,168,76,0.15)',
+            borderRadius: 16,
+            padding: 32,
+            maxWidth: 560,
+            margin: '0 auto 48px',
+            textAlign: 'center',
+          }}>
+            <div style={{ fontSize: 11, letterSpacing: '0.2em', color: '#C9A84C', marginBottom: 8, fontWeight: 700 }}>
+              MANUFACTURING PARTNER
+            </div>
+            <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: '8px 0' }}>
+              Sinerji Textile
+            </h3>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, margin: '12px 0' }}>
+              20+ years of premium textile manufacturing in Istanbul, Turkey.
+              Full production control from design to quality check.
+              Serving leading European brands with sustainable practices.
+            </p>
+            <a
+              href="https://www.sinerjitextile.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 12, color: '#C9A84C', letterSpacing: '0.1em', textDecoration: 'none' }}
+            >
+              SINERJITEXTILE.COM →
+            </a>
+          </div>
+
+          {/* Technology & Business Partners */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: 16,
+            maxWidth: 640,
+            margin: '0 auto',
+          }}>
+            {[
+              { name: 'Stripe', role: 'Payments' },
+              { name: 'Apple', role: 'Apple Pay' },
+              { name: 'Railway', role: 'Infrastructure' },
+              { name: 'Anthropic', role: 'AI Partner' },
+              { name: 'Red Bull', role: 'Brand Partner' },
+              { name: 'Raiffeisen', role: 'Banking' },
+            ].map(p => (
+              <div key={p.name} style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid var(--border)',
+                borderRadius: 12,
+                padding: '20px 12px',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+                  {p.name}
+                </div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4, letterSpacing: '0.1em' }}>
+                  {p.role}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ CLOSING CTA ═══ */}
       <section className="about-closing">
         <div className="about-closing__container">
@@ -115,7 +192,7 @@ export default function AboutPage() {
           <p className="about-closing__desc">{t('about.forEveryoneDesc')}</p>
           <div className="about-closing__cta-row">
             <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
-              {t('home.learnMore')}
+              SHOP THE COLLECTION
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>
