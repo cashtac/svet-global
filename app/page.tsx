@@ -168,7 +168,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ FINAL CTA — Go to Shop ═══ */}
+      {/* ═══ FINAL CTA ═══ */}
       <section className="ecosystem-banner">
         <div className="ecosystem-banner__container">
           <div style={{ fontSize: 48, marginBottom: 16 }}>☀</div>
@@ -176,10 +176,10 @@ export default function Home() {
             Wear the Light
           </h2>
           <p className="ecosystem-banner__desc" style={{ maxWidth: 500, fontSize: 16, lineHeight: 1.8 }}>
-            12 premium pieces. Exclusive pre-order prices.
-            Free worldwide shipping on orders over $100.
+            12 premium pieces. Pre-order prices.
+            Free shipping in the US.
           </p>
-          <div style={{ marginTop: 40, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: 32, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
               EXPLORE COLLECTION
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>

@@ -1,0 +1,121 @@
+[
+  {
+    "name": "SVET Hoodie Vintage",
+    "productId": "prod_UEy7fAumbl4oky",
+    "priceId": "price_1TGUB7Q6KwCDnEHoIxEiE9Tz",
+    "price": 6900,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Hoodie Bubble",
+    "productId": "prod_UEy7lhnVOiMW7Y",
+    "priceId": "price_1TGUB8Q6KwCDnEHo4HGhVhcB",
+    "price": 6900,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Hoodie Serif",
+    "productId": "prod_UEy7oCbfVF2zhk",
+    "priceId": "price_1TGUB9Q6KwCDnEHoIu9NODbg",
+    "price": 6900,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Jogger Pants",
+    "productId": "prod_UEy7jP9V8jFJZy",
+    "priceId": "price_1TGUBAQ6KwCDnEHoImGQHF20",
+    "price": 5500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Wide-Leg Pants Bubble",
+    "productId": "prod_UEy7VQSKGozcU2",
+    "priceId": "price_1TGUBAQ6KwCDnEHowJ2dRyYI",
+    "price": 5900,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Pants Olive",
+    "productId": "prod_UEy7OMW8RxVCw2",
+    "priceId": "price_1TGUBBQ6KwCDnEHoT4Vqa95O",
+    "price": 5900,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET T-Shirt Black",
+    "productId": "prod_UEy7Y8K032kNlP",
+    "priceId": "price_1TGUBCQ6KwCDnEHoBnkImrTx",
+    "price": 2500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET T-Shirt Black Glow",
+    "productId": "prod_UEy7DIpxziHaHp",
+    "priceId": "price_1TGUBDQ6KwCDnEHo94TBS6af",
+    "price": 2500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET T-Shirt Yellow",
+    "productId": "prod_UEy7AsMGWt80Ps",
+    "priceId": "price_1TGUBEQ6KwCDnEHoA0hl1oBo",
+    "price": 2500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET T-Shirt White",
+    "productId": "prod_UEy7XeHRWWogMJ",
+    "priceId": "price_1TGUBEQ6KwCDnEHoFnBz4aib",
+    "price": 2500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Long Sleeve Yellow",
+    "productId": "prod_UEy7gv1ENGOtK8",
+    "priceId": "price_1TGUBFQ6KwCDnEHowcDDwnpd",
+    "price": 4500,
+    "sizes": [
+      "S/M",
+      "L/XL"
+    ]
+  },
+  {
+    "name": "SVET Cap",
+    "productId": "prod_UEy768WAqDk0K4",
+    "priceId": "price_1TGUBGQ6KwCDnEHo9jhzbWzP",
+    "price": 2500,
+    "sizes": [
+      "ONE SIZE"
+    ]
+  }
+]

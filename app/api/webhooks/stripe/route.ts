@@ -4,13 +4,18 @@ import Stripe from 'stripe';
 import { saveOrder } from '@/lib/orders';
 
 /* ════════════════════════════════════════════════
-   Stripe Webhook — POST /api/stripe-webhook
+   Stripe Webhook — POST /api/webhooks/stripe
    
-   ✅ Extracts shipping address from Stripe session
-   ✅ Fetches actual line items from Stripe
-   ✅ Saves order locally (JSON)
-   ✅ Sends branded email with items + address
-   ✅ Notifies admin on Telegram with full details
+   Register in Stripe Dashboard:
+   https://dashboard.stripe.com/webhooks
+   URL: https://svet.global/api/webhooks/stripe
+   Events: checkout.session.completed
+   
+   ✅ Verifies webhook signature
+   ✅ Extracts shipping address + line items
+   ✅ Saves order locally
+   ✅ Sends branded confirmation email
+   ✅ Notifies admin on Telegram
    ════════════════════════════════════════════════ */
 
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -77,29 +82,33 @@ export async function POST(request: NextRequest) {
 
     let event: Stripe.Event;
 
+    // ═══ VERIFY SIGNATURE ═══
     if (webhookSecret && sig && stripe) {
       try {
         event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
       } catch (err: any) {
-        console.error('[Webhook] Signature failed:', err.message);
+        console.error('[Webhook] ❌ Signature verification failed:', err.message);
         return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
       }
+    } else if (!webhookSecret) {
+      console.warn('[Webhook] ⚠️ No STRIPE_WEBHOOK_SECRET set — skipping signature verification');
+      event = JSON.parse(body) as Stripe.Event;
     } else {
       event = JSON.parse(body) as Stripe.Event;
     }
 
-    console.log(`[Webhook] Event: ${event.type}`);
+    console.log(`[Webhook] ✅ Event received: ${event.type}`);
 
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const sessionAny = session as any; // flexible access to shipping_details across API versions
+        const sessionAny = session as any;
         const email = session.customer_details?.email || session.customer_email || 'unknown';
         const phone = session.customer_details?.phone || '';
         const amountTotal = session.amount_total || 0;
         const orderNumber = session.metadata?.orderNumber || `SVET-${Date.now().toString(36).toUpperCase()}`;
 
-        // ═══ GET SHIPPING ADDRESS (works across Stripe API versions) ═══
+        // ═══ SHIPPING ADDRESS ═══
         const shippingRaw = sessionAny.shipping_details
           || sessionAny.collected_information?.shipping_details
           || null;
@@ -111,14 +120,14 @@ export async function POST(request: NextRequest) {
             }
           : null;
 
-        // ═══ GET LINE ITEMS FROM STRIPE ═══
+        // ═══ LINE ITEMS FROM STRIPE ═══
         let lineItems: { name: string; size: string; quantity: number; price: number }[] = [];
         if (stripe) {
           try {
             const stripeItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 50 });
             lineItems = stripeItems.data.map(item => ({
               name: item.description || 'SVET Product',
-              size: '', // Size is in the description
+              size: '',
               quantity: item.quantity || 1,
               price: item.amount_total || 0,
             }));
@@ -129,7 +138,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (session.mode === 'payment') {
-          // ═══ SAVE ORDER LOCALLY ═══
+          // ═══ SAVE ORDER ═══
           try {
             await saveOrder({
               orderNumber,
@@ -142,14 +151,15 @@ export async function POST(request: NextRequest) {
               stripeSessionId: session.id,
               createdAt: new Date().toISOString(),
             });
+            console.log(`[Webhook] Order saved: ${orderNumber}`);
           } catch (err) {
             console.error('[Webhook] Failed to save order:', err);
           }
 
-          // ═══ SEND BRANDED EMAIL ═══
+          // ═══ SEND EMAIL ═══
           await sendOrderEmail(email, orderNumber, lineItems, amountTotal, shipping);
 
-          // ═══ NOTIFY ADMIN ON TELEGRAM ═══
+          // ═══ TELEGRAM NOTIFICATION ═══
           const msg = [
             '🛍 <b>NEW ORDER!</b>',
             '',
@@ -168,8 +178,8 @@ export async function POST(request: NextRequest) {
           ].filter(Boolean).join('\n');
 
           await notifyTelegram(msg);
+          console.log(`[Webhook] ✅ Order ${orderNumber} processed — email + telegram sent`);
         }
-
         break;
       }
 
@@ -192,7 +202,7 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`[Webhook] Unhandled: ${event.type}`);
+        console.log(`[Webhook] Unhandled event: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
@@ -206,6 +216,8 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     webhook: 'SVET Stripe Webhook',
+    endpoint: '/api/webhooks/stripe',
     events: ['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.deleted', 'invoice.payment_failed'],
+    docs: 'Register at https://dashboard.stripe.com/webhooks with URL: https://svet.global/api/webhooks/stripe',
   });
 }

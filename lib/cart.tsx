@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, useCallback, ReactNode 
 
 export interface CartItem {
   productId: string;
+  stripePriceId?: string;
   name: string;
   price: number;
   size: string;

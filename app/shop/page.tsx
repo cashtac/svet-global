@@ -5,6 +5,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n-provider';
 import catalogData from '@/data/products.json';
+import { getStripePriceId } from '@/lib/stripe-lookup';
 
 /* ════════════════════════════════════════════════
    SVET SHOP — FULL CATALOG SYSTEM
@@ -24,13 +25,14 @@ const SORT_OPTIONS = [
 /* ── Product Card ────────────────────────────── */
 function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0] || '');
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
     if (!selectedSize && product.sizes.length > 1) return;
     addItem({
       productId: product.id,
+      stripePriceId: getStripePriceId(product.name),
       name: product.name,
       price: product.price_preorder * 100,
       size: selectedSize || product.sizes[0],
@@ -72,7 +74,7 @@ function ProductCard({ product }: { product: Product }) {
           <span className="shop-card__retail-price">${product.price_retail}</span>
         </div>
 
-        <div className="shop-card__shipping">🌍 WORLDWIDE SHIPPING</div>
+        <div className="shop-card__shipping">🇺🇸 FREE US SHIPPING</div>
 
         <div className="shop-card__sizes">
           <div className="shop-card__sizes-label">SIZE</div>

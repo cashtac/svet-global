@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useI18n } from '@/lib/i18n-provider';
 import catalogData from '@/data/products.json';
+import { getStripePriceId } from '@/lib/stripe-lookup';
 
 /* ════════════════════════════════════════════════
    SVET — PRODUCT PAGE (reads from products.json)
@@ -55,8 +56,6 @@ export default function ProductPage() {
 
   const savings = product.price_retail - product.price_preorder;
   const savingsPercent = Math.round((savings / product.price_retail) * 100);
-  const cartTotal = items.reduce((sum, i) => sum + i.price / 100, 0) + product.price_preorder;
-  const qualifiesForFreeAI = cartTotal >= 100;
   const related = getRelated(product);
   const productSlug = `svet-${product.id}`;
 
@@ -64,6 +63,7 @@ export default function ProductPage() {
     if (!selectedSize && product!.sizes.length > 1) return;
     addItem({
       productId: product!.id,
+      stripePriceId: getStripePriceId(product!.name),
       name: product!.name,
       price: product!.price_preorder * 100,
       size: selectedSize || product!.sizes[0],
@@ -172,25 +172,12 @@ export default function ProductPage() {
             </button>
           )}
 
-          {/* Promotion */}
-          <div className={`pdp__promo ${qualifiesForFreeAI ? 'pdp__promo--active' : ''}`}>
-            <div className="pdp__promo-icon">{qualifiesForFreeAI ? '✅' : '🎁'}</div>
-            <div className="pdp__promo-text">
-              {qualifiesForFreeAI ? (
-                <><strong>You qualify!</strong> 24h AI Starter FREE with your order.</>
-              ) : (
-                <><strong>Spend $100+ → 24h AI Starter FREE</strong><br />
-                <span className="pdp__promo-remaining">Add ${Math.ceil(100 - cartTotal)} more</span></>
-              )}
-            </div>
-          </div>
-
           {/* Shipping */}
           <div className="pdp__shipping">
-            <div className="pdp__shipping-item">🌍 Worldwide Shipping</div>
-            <div className="pdp__shipping-item">📦 Ships in ~1 month</div>
-            <div className="pdp__shipping-item">🚚 Free on $100+</div>
-            <div className="pdp__shipping-item">🔒 Stripe Secure</div>
+            <div className="pdp__shipping-item">🇺🇸 Free shipping in the US</div>
+            <div className="pdp__shipping-item">🌍 International — shipping calculated separately</div>
+            <div className="pdp__shipping-item">📦 Pre-order: ships in ~1 month</div>
+            <div className="pdp__shipping-item">🔒 Secure checkout via Stripe</div>
           </div>
 
           {/* Details */}

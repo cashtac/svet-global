@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/api';
-import { useI18n } from '@/lib/i18n-provider';
 import { trackBeginCheckout } from '@/components/Analytics';
 
 /* ════════════════════════════════════════════════
@@ -14,13 +14,23 @@ import { trackBeginCheckout } from '@/components/Analytics';
 
 const PLACEHOLDER_SVG = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" fill="#111"/><text x="40" y="42" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="900" fill="#333" letter-spacing="2">SVET</text></svg>')}`;
 
-export default function CartPage() {
+function CartPageInner() {
   const { items, removeItem, updateQuantity, clearCart, total, count } = useCart();
-  const { t } = useI18n();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showCancelBanner, setShowCancelBanner] = useState(false);
+
+  // Check for cancelled checkout
+  useEffect(() => {
+    if (searchParams.get('cancelled') === 'true') {
+      setShowCancelBanner(true);
+      // Clean up URL without reload
+      window.history.replaceState({}, '', '/cart');
+    }
+  }, [searchParams]);
 
   async function handleCheckout(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +39,6 @@ export default function CartPage() {
     setLoading(true);
     setError('');
 
-    // Track checkout event
     trackBeginCheckout(total, count);
 
     try {
@@ -40,6 +49,7 @@ export default function CartPage() {
           email,
           items: items.map(i => ({
             productId: i.productId,
+            stripePriceId: i.stripePriceId,
             name: i.name,
             price: i.price,
             size: i.size,
@@ -57,13 +67,12 @@ export default function CartPage() {
       const data = json.data;
 
       if (data.checkoutUrl) {
-        // Real Stripe — redirect
-        clearCart();
+        // Stripe — redirect (cart cleared on /success page)
         window.location.href = data.checkoutUrl;
       } else {
-        // Demo mode — show success
+        // Demo mode
         clearCart();
-        setSuccess(`✅ Order ${data.orderNumber} created! This is demo mode. Set STRIPE_SECRET_KEY for real payments.`);
+        setSuccess(`✅ Order ${data.orderNumber} created!`);
       }
     } catch (err: any) {
       setError(err.message || 'Checkout failed. Please try again.');
@@ -78,10 +87,10 @@ export default function CartPage() {
         <div className="cart-page__container">
           <div className="cart-success">
             <div className="cart-success__icon">☀</div>
-            <h2 className="cart-success__title">{t('nav.cart')}</h2>
+            <h2 className="cart-success__title">Order Placed</h2>
             <p className="cart-success__msg">{success}</p>
             <Link href="/shop" className="hero__cta" style={{ marginTop: 24 }}>
-              {t('nav.shop')}
+              CONTINUE SHOPPING
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>
@@ -94,11 +103,11 @@ export default function CartPage() {
     return (
       <section className="cart-page">
         <div className="cart-page__container">
-          <h1 className="cart-page__title">{t('nav.cart').toUpperCase()}</h1>
+          <h1 className="cart-page__title">CART</h1>
           <div className="cart-empty">
             <div className="cart-empty__icon">🛒</div>
             <p className="cart-empty__text">Empty</p>
-            <Link href="/shop" className="btn-primary">{t('nav.shop')}</Link>
+            <Link href="/shop" className="btn-primary">Shop</Link>
           </div>
         </div>
       </section>
@@ -108,7 +117,29 @@ export default function CartPage() {
   return (
     <section className="cart-page">
       <div className="cart-page__container">
-        <h1 className="cart-page__title">{t('nav.cart').toUpperCase()}</h1>
+        <h1 className="cart-page__title">CART</h1>
+
+        {/* Cancel banner */}
+        {showCancelBanner && (
+          <div style={{
+            background: 'rgba(201, 168, 76, 0.08)',
+            border: '1px solid rgba(201, 168, 76, 0.2)',
+            borderRadius: 10,
+            padding: '14px 20px',
+            marginBottom: 20,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+            <span style={{ color: '#C9A84C', fontSize: 13, fontWeight: 500 }}>
+              Payment was cancelled. Your items are still here — pick up where you left off.
+            </span>
+            <button
+              onClick={() => setShowCancelBanner(false)}
+              style={{ color: '#666', fontSize: 16, cursor: 'pointer', background: 'none', border: 'none', padding: '0 4px' }}
+            >✕</button>
+          </div>
+        )}
 
         {items.map(item => (
           <div key={`${item.productId}-${item.size}`} className="cart-item">
@@ -139,7 +170,10 @@ export default function CartPage() {
           </div>
           <div className="cart-summary__row">
             <span>Shipping</span>
-            <span style={{ color: '#4CAF50' }}>FREE</span>
+            <span style={{ color: '#4CAF50', fontSize: 13 }}>Free in the US</span>
+          </div>
+          <div style={{ fontSize: 11, color: '#666', textAlign: 'right', marginTop: -4, marginBottom: 8 }}>
+            International orders — shipping calculated separately
           </div>
           <div className="cart-summary__row total">
             <span>Total</span>
@@ -168,5 +202,13 @@ export default function CartPage() {
         </form>
       </div>
     </section>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <Suspense>
+      <CartPageInner />
+    </Suspense>
   );
 }

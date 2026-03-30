@@ -28,15 +28,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('svet-locale') as Locale | null;
-    if (saved && (LOCALE_LIST as string[]).includes(saved)) {
-      setLocaleState(saved);
-      setIsFirstVisit(false);
-    } else {
-      // No saved locale — first visit
-      setIsFirstVisit(true);
-      setLocaleState('en'); // default until user picks
-    }
+    // Force English — no language detection
+    setLocaleState('en');
+    setIsFirstVisit(false);
   }, []);
 
   // Apply RTL direction to document
