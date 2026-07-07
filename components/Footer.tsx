@@ -33,12 +33,12 @@ export function Footer() {
           </a>
         </div>
 
-        {/* Account */}
+        {/* Contact */}
         <div className="footer__account">
-          <Link href="/login" className="footer__signin">
-            Sign In
-          </Link>
-          <span className="footer__account-desc">One account. Everything SVET.</span>
+          <a href="https://t.me/svetrixhello" target="_blank" rel="noopener noreferrer" className="footer__signin">
+            Contact Us
+          </a>
+          <span className="footer__account-desc">Questions? Reach out anytime.</span>
         </div>
 
         <div style={{ marginTop: 16 }}>

@@ -4,19 +4,24 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
-import { useI18n } from '@/lib/i18n-provider';
 import catalogData from '@/data/products.json';
-import { getStripePriceId } from '@/lib/stripe-lookup';
+import { getLocale, getCurrency, formatPrice, isRussia } from '@/lib/locale';
 
 /* ════════════════════════════════════════════════
-   SVET — PRODUCT PAGE (reads from products.json)
-   Clean, minimal, floating animation
+   SVET — PRODUCT PAGE (locale-aware)
    ════════════════════════════════════════════════ */
 
-type Product = (typeof catalogData.products)[number];
+type RawProduct = (typeof catalogData.products)[number];
 
-function getRelated(current: Product): Product[] {
-  // Same category first, then others
+const locale = getLocale();
+const currency = getCurrency();
+
+function pName(p: RawProduct) { return locale === 'ru' ? p.ru.name : p.en.name; }
+function pDesc(p: RawProduct) { return locale === 'ru' ? p.ru.description : p.en.description; }
+function pDetails(p: RawProduct) { return locale === 'ru' ? p.ru.details : p.en.details; }
+function pPrice(p: RawProduct) { return p.price[currency] || p.price.USD; }
+
+function getRelated(current: RawProduct): RawProduct[] {
   return catalogData.products
     .filter(p => p.id !== current.id)
     .sort((a, b) => {
@@ -30,11 +35,9 @@ function getRelated(current: Product): Product[] {
 export default function ProductPage() {
   const params = useParams();
   const router = useRouter();
-  const { addItem, items } = useCart();
-  const { t } = useI18n();
+  const { addItem } = useCart();
   const slug = params.slug as string;
 
-  // Match slug: can be "svet-hoodie-vintage" or "hoodie-vintage"
   const product = catalogData.products.find(p =>
     slug === `svet-${p.id}` || slug === p.id
   );
@@ -45,49 +48,49 @@ export default function ProductPage() {
   if (!product) {
     return (
       <section className="section" style={{ paddingTop: 160, minHeight: '80vh', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 32, marginBottom: 16 }}>Product Not Found</h1>
-        <p style={{ color: '#888', marginBottom: 32 }}>This item is not available.</p>
+        <h1 style={{ fontSize: 32, marginBottom: 16 }}>
+          {isRussia() ? 'Товар не найден' : 'Product Not Found'}
+        </h1>
+        <p style={{ color: '#888', marginBottom: 32 }}>
+          {isRussia() ? 'Этот товар недоступен.' : 'This item is not available.'}
+        </p>
         <Link href="/shop" className="pdp-btn pdp-btn--primary" style={{ display: 'inline-block', maxWidth: 300 }}>
-          ← Back to Shop
+          ← {isRussia() ? 'В магазин' : 'Back to Shop'}
         </Link>
       </section>
     );
   }
 
-  const savings = product.price_retail - product.price_preorder;
-  const savingsPercent = Math.round((savings / product.price_retail) * 100);
+  const name = pName(product);
+  const price = pPrice(product);
   const related = getRelated(product);
-  const productSlug = `svet-${product.id}`;
 
   function handleAddToCart() {
     if (!selectedSize && product!.sizes.length > 1) return;
     addItem({
       productId: product!.id,
-      stripePriceId: getStripePriceId(product!.name),
-      name: product!.name,
-      price: product!.price_preorder * 100,
+      stripePriceId: '',
+      name,
+      price,
       size: selectedSize || product!.sizes[0],
       image: product!.image_main,
-      slug: productSlug,
+      slug: product!.id,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   }
 
-  // Parse details string into list
-  const detailsList = product.details.split('. ').filter(Boolean);
+  const detailsList = pDetails(product).split('. ').filter(Boolean);
 
   return (
     <section className="pdp">
       {/* Breadcrumb */}
       <div className="pdp__breadcrumb">
-        <Link href="/">Home</Link>
+        <Link href="/">{isRussia() ? 'Главная' : 'Home'}</Link>
         <span>/</span>
-        <Link href="/shop">Shop</Link>
+        <Link href="/shop">{isRussia() ? 'Магазин' : 'Shop'}</Link>
         <span>/</span>
-        <Link href={`/shop?category=${product.category}`}>{product.category.charAt(0).toUpperCase() + product.category.slice(1)}</Link>
-        <span>/</span>
-        <span className="pdp__breadcrumb-current">{product.name}</span>
+        <span className="pdp__breadcrumb-current">{name}</span>
       </div>
 
       <div className="pdp__grid">
@@ -95,10 +98,12 @@ export default function ProductPage() {
         <div className="pdp__gallery">
           <div className="pdp__image-main">
             {product.badge && <span className="pdp__best-value">{product.badge}</span>}
-            {product.preorder && <span className="pdp__preorder-tag">PRE-ORDER</span>}
+            {product.preorder && (
+              <span className="pdp__preorder-tag">{isRussia() ? 'ПРЕДЗАКАЗ' : 'PRE-ORDER'}</span>
+            )}
             <img
               src={product.image_main}
-              alt={product.name}
+              alt={name}
               className="pdp__img pdp__img--float"
             />
           </div>
@@ -106,42 +111,35 @@ export default function ProductPage() {
 
         {/* Right: Product Info */}
         <div className="pdp__info">
-          <div className="pdp__category">{product.category.toUpperCase()} / {product.subcategory.toUpperCase()}</div>
-          <h1 className="pdp__name">{product.name}</h1>
-          <p className="pdp__desc">{product.description}</p>
+          <div className="pdp__category">
+            {product.category.toUpperCase()} / {product.subcategory.toUpperCase()}
+          </div>
+          <h1 className="pdp__name">{name}</h1>
+          <p className="pdp__desc">{pDesc(product)}</p>
 
-          {/* Price block */}
+          {/* Price */}
           <div className="pdp__price-block">
             <div className="pdp__prices">
-              <span className="pdp__price">${product.price_preorder}</span>
-              <span className="pdp__retail">${product.price_retail}</span>
+              <span className="pdp__price">{formatPrice(price)}</span>
             </div>
-            <div className="pdp__save-badge">SAVE {savingsPercent}%</div>
           </div>
 
           {/* Color + Material */}
           <div className="pdp__meta">
             <div className="pdp__meta-item">
-              <span className="pdp__meta-label">Color</span>
+              <span className="pdp__meta-label">{isRussia() ? 'Цвет' : 'Color'}</span>
               <span className="pdp__meta-value">{product.color}</span>
             </div>
             <div className="pdp__meta-item">
-              <span className="pdp__meta-label">Material</span>
+              <span className="pdp__meta-label">{isRussia() ? 'Материал' : 'Material'}</span>
               <span className="pdp__meta-value">{product.material}</span>
             </div>
-          </div>
-
-          {/* Tags */}
-          <div className="pdp__tags">
-            {product.tags.map(tag => (
-              <span key={tag} className="pdp__tag">{tag}</span>
-            ))}
           </div>
 
           {/* Size selector */}
           <div className="pdp__sizes">
             <div className="pdp__sizes-label">
-              SIZE
+              {isRussia() ? 'РАЗМЕР' : 'SIZE'}
               {selectedSize && <span className="pdp__sizes-selected"> — {selectedSize}</span>}
             </div>
             <div className="pdp__sizes-grid">
@@ -163,26 +161,40 @@ export default function ProductPage() {
             onClick={handleAddToCart}
             disabled={(product.sizes.length > 1 && !selectedSize) || added}
           >
-            {added ? '✓ ADDED' : `PRE-ORDER — $${product.price_preorder}`}
+            {added
+              ? (isRussia() ? '✓ ДОБАВЛЕНО' : '✓ ADDED')
+              : (isRussia()
+                ? `ПРЕДЗАКАЗ — ${formatPrice(price)}`
+                : `PRE-ORDER — ${formatPrice(price)}`)
+            }
           </button>
 
           {added && (
             <button className="pdp-btn pdp-btn--secondary" onClick={() => router.push('/cart')}>
-              VIEW CART →
+              {isRussia() ? 'ПЕРЕЙТИ В КОРЗИНУ →' : 'VIEW CART →'}
             </button>
           )}
 
           {/* Shipping */}
           <div className="pdp__shipping">
-            <div className="pdp__shipping-item">🇺🇸 Free shipping in the US</div>
-            <div className="pdp__shipping-item">🌍 International — shipping calculated separately</div>
-            <div className="pdp__shipping-item">📦 Pre-order: ships in ~1 month</div>
-            <div className="pdp__shipping-item">🔒 Secure checkout via Stripe</div>
+            {isRussia() ? (
+              <>
+                <div className="pdp__shipping-item">🇷🇺 Бесплатная доставка по России</div>
+                <div className="pdp__shipping-item">📦 Предзаказ: отправка в течение ~1 месяца</div>
+                <div className="pdp__shipping-item">🔒 Безопасная оплата</div>
+              </>
+            ) : (
+              <>
+                <div className="pdp__shipping-item">🌍 Free shipping</div>
+                <div className="pdp__shipping-item">📦 Pre-order: ships in ~1 month</div>
+                <div className="pdp__shipping-item">🔒 Secure checkout via Stripe</div>
+              </>
+            )}
           </div>
 
           {/* Details */}
           <details className="pdp__details">
-            <summary>Product Details</summary>
+            <summary>{isRussia() ? 'Подробнее о товаре' : 'Product Details'}</summary>
             <ul className="pdp__details-list">
               {detailsList.map((d, i) => <li key={i}>{d}</li>)}
             </ul>
@@ -193,18 +205,19 @@ export default function ProductPage() {
       {/* Related Products */}
       {related.length > 0 && (
         <div className="pdp__related">
-          <h2 className="pdp__related-title">You May Also Like</h2>
+          <h2 className="pdp__related-title">
+            {isRussia() ? 'Вам может понравиться' : 'You May Also Like'}
+          </h2>
           <div className="pdp__related-grid">
             {related.map(rp => (
-              <Link href={`/product/svet-${rp.id}`} key={rp.id} className="pdp__related-card">
+              <Link href={`/product/${rp.id}`} key={rp.id} className="pdp__related-card">
                 <div className="pdp__related-img-wrap">
-                  <img src={rp.image_main} alt={rp.name} loading="lazy" />
+                  <img src={rp.image_main} alt={pName(rp)} loading="lazy" />
                 </div>
                 <div className="pdp__related-info">
-                  <h4>{rp.name}</h4>
+                  <h4>{pName(rp)}</h4>
                   <div className="pdp__related-price">
-                    <span className="pdp__related-preorder">${rp.price_preorder}</span>
-                    <span className="pdp__related-retail">${rp.price_retail}</span>
+                    <span className="pdp__related-preorder">{formatPrice(pPrice(rp))}</span>
                   </div>
                 </div>
               </Link>

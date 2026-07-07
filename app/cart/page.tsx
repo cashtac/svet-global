@@ -4,13 +4,18 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
-import { formatPrice } from '@/lib/api';
+import { formatPrice as formatPriceLocale, isRussia, getCurrency } from '@/lib/locale';
 import { trackBeginCheckout } from '@/components/Analytics';
 
 /* ════════════════════════════════════════════════
-   CART — Full checkout flow via /api/checkout
-   Works in both demo mode and with Stripe
+   CART — Locale-aware checkout flow
+   Works in both demo mode and with Stripe/Russian processor
    ════════════════════════════════════════════════ */
+
+const currency = getCurrency();
+function fmtPrice(amount: number): string {
+  return formatPriceLocale(amount);
+}
 
 const PLACEHOLDER_SVG = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" fill="#111"/><text x="40" y="42" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="900" fill="#333" letter-spacing="2">SVET</text></svg>')}`;
 
@@ -159,32 +164,31 @@ function CartPageInner() {
               </div>
               <button className="cart-item__remove" onClick={() => removeItem(item.productId, item.size)}>Remove</button>
             </div>
-            <div className="cart-item__price">{formatPrice(item.price * item.quantity)}</div>
+            <div className="cart-item__price">{fmtPrice(item.price * item.quantity)}</div>
           </div>
         ))}
 
         <div className="cart-summary">
           <div className="cart-summary__row">
-            <span>Subtotal</span>
-            <span>{formatPrice(total)}</span>
+            <span>{isRussia() ? 'Подытог' : 'Subtotal'}</span>
+            <span>{fmtPrice(total)}</span>
           </div>
           <div className="cart-summary__row">
-            <span>Shipping</span>
-            <span style={{ color: '#4CAF50', fontSize: 13 }}>Free in the US</span>
-          </div>
-          <div style={{ fontSize: 11, color: '#666', textAlign: 'right', marginTop: -4, marginBottom: 8 }}>
-            International orders — shipping calculated separately
+            <span>{isRussia() ? 'Доставка' : 'Shipping'}</span>
+            <span style={{ color: '#4CAF50', fontSize: 13 }}>
+              {isRussia() ? 'Бесплатно по России' : 'Free shipping'}
+            </span>
           </div>
           <div className="cart-summary__row total">
-            <span>Total</span>
-            <span>{formatPrice(total)}</span>
+            <span>{isRussia() ? 'Итого' : 'Total'}</span>
+            <span>{fmtPrice(total)}</span>
           </div>
         </div>
 
         <form className="cart-checkout-form" onSubmit={handleCheckout}>
           <input
             type="email"
-            placeholder="Email for order confirmation"
+            placeholder={isRussia() ? 'Email для подтверждения заказа' : 'Email for order confirmation'}
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
@@ -194,10 +198,13 @@ function CartPageInner() {
             <p style={{ color: 'var(--accent)', fontSize: 14, marginTop: 8 }}>{error}</p>
           )}
           <button type="submit" className="magic-submit-btn" disabled={loading || !email}>
-            {loading ? '⏳ PROCESSING...' : `💳 CHECKOUT · ${formatPrice(total)}`}
+            {loading
+              ? (isRussia() ? '⏳ ОБРАБОТКА...' : '⏳ PROCESSING...')
+              : `💳 ${isRussia() ? 'ОФОРМИТЬ' : 'CHECKOUT'} · ${fmtPrice(total)}`
+            }
           </button>
           <p style={{ textAlign: 'center', fontSize: 11, color: '#444', marginTop: 12, letterSpacing: '0.05em' }}>
-            🔒 Secure checkout via Stripe · Apple Pay · Google Pay
+            {isRussia() ? '🔒 Безопасная оплата' : '🔒 Secure checkout via Stripe'}
           </p>
         </form>
       </div>

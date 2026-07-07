@@ -159,11 +159,46 @@ export default function Home() {
               <div className="svet-timeline__content">
                 <div className="svet-timeline__year" style={{ color: 'var(--accent)' }}>Now — Pre-Order</div>
                 <p className="svet-timeline__text">
-                  The first collection is ready. 12 pieces. Hoodies, tees, pants, and accessories.
+                  The first drop is ready. 5 pieces. Hoodie, tees, long sleeve, sweatpants, and a beanie.
                   Pre-order now at exclusive launch prices before retail drop.
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SVET FUND — COMING SOON TEASER ═══ */}
+      <section className="section" style={{ background: 'linear-gradient(180deg, var(--bg) 0%, rgba(201,168,76,0.03) 50%, var(--bg) 100%)' }}>
+        <div className="section__container" style={{ textAlign: 'center', maxWidth: 640 }}>
+          <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.6 }}>🌱</div>
+          <span className="section-header__label" style={{ color: 'var(--accent)' }}>COMING SOON</span>
+          <h2 className="section-header__title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', marginTop: 12 }}>
+            Svet Fund
+          </h2>
+          <p style={{
+            color: 'var(--text-secondary)',
+            fontSize: 16,
+            lineHeight: 1.9,
+            maxWidth: 520,
+            margin: '16px auto 0',
+          }}>
+            A portion of every SVET purchase will go toward projects that bring light —
+            clean energy access, education, and community infrastructure.
+            The fund is being set up. Details soon.
+          </p>
+          <div style={{
+            marginTop: 24,
+            padding: '10px 24px',
+            display: 'inline-block',
+            border: '1px solid rgba(201,168,76,0.2)',
+            borderRadius: 20,
+            fontSize: 12,
+            letterSpacing: '0.15em',
+            color: 'var(--accent)',
+            fontWeight: 600,
+          }}>
+            LAUNCHING 2026
           </div>
         </div>
       </section>
@@ -176,8 +211,8 @@ export default function Home() {
             Wear the Light
           </h2>
           <p className="ecosystem-banner__desc" style={{ maxWidth: 500, fontSize: 16, lineHeight: 1.8 }}>
-            12 premium pieces. Pre-order prices.
-            Free shipping in the US.
+            5 premium pieces. Pre-order prices.
+            Free shipping.
           </p>
           <div style={{ marginTop: 32, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>

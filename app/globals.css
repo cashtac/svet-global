@@ -4715,3 +4715,48 @@ img {
    FOOTER LINKS — Clean (match nav)
    ========================================== */
 
+
+/* ==========================================
+   REGION SWITCHER
+   ========================================== */
+
+.region-switcher {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(20,20,20,0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.region-switcher:hover {
+  border-color: rgba(201,168,76,0.3);
+  color: #C9A84C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.region-switcher__flag { font-size: 16px; }
+.region-switcher__label { white-space: nowrap; }
+
+@media (max-width: 768px) {
+  .region-switcher {
+    bottom: 12px;
+    left: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}

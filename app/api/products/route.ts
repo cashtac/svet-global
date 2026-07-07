@@ -3,21 +3,34 @@ import catalogData from '@/data/products.json';
 
 /* ════════════════════════════════════════════════
    GET /api/products
-   Open product API — any agent or platform can read
+   Locale-aware product API
    
    Query params:
      ?category=clothing
      ?subcategory=hoodies
      ?sort=price_asc|price_desc|name_asc|newest
      ?search=hoodie
-     ?badge=NEW
      ?featured=true
-     ?limit=10
-     ?offset=0
+     ?limit=10&offset=0
+     ?locale=en (defaults to en)
    ════════════════════════════════════════════════ */
+
+type RawProduct = (typeof catalogData.products)[number];
+
+function getName(p: RawProduct, locale: string): string {
+  return locale === 'ru' ? p.ru.name : p.en.name;
+}
+function getDesc(p: RawProduct, locale: string): string {
+  return locale === 'ru' ? p.ru.description : p.en.description;
+}
+function getPrice(p: RawProduct, currency: string): number {
+  return currency === 'RUB' ? p.price.RUB : p.price.USD;
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const locale = searchParams.get('locale') || process.env.NEXT_PUBLIC_LOCALE || 'en';
+  const currency = locale === 'ru' ? 'RUB' : 'USD';
 
   let products = [...catalogData.products];
 
@@ -42,18 +55,12 @@ export async function GET(request: NextRequest) {
     products = products.filter(p => p.featured);
   }
 
-  const inStock = searchParams.get('in_stock');
-  if (inStock === 'true') {
-    products = products.filter(p => p.in_stock);
-  }
-
   const search = searchParams.get('search');
   if (search) {
     const q = search.toLowerCase();
     products = products.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.tags.some(t => t.includes(q))
+      getName(p, locale).toLowerCase().includes(q) ||
+      getDesc(p, locale).toLowerCase().includes(q)
     );
   }
 
@@ -61,15 +68,14 @@ export async function GET(request: NextRequest) {
   const sort = searchParams.get('sort');
   switch (sort) {
     case 'price_asc':
-      products.sort((a, b) => a.price_preorder - b.price_preorder);
+      products.sort((a, b) => getPrice(a, currency) - getPrice(b, currency));
       break;
     case 'price_desc':
-      products.sort((a, b) => b.price_preorder - a.price_preorder);
+      products.sort((a, b) => getPrice(b, currency) - getPrice(a, currency));
       break;
     case 'name_asc':
-      products.sort((a, b) => a.name.localeCompare(b.name));
+      products.sort((a, b) => getName(a, locale).localeCompare(getName(b, locale)));
       break;
-    // 'newest' or default — keep original order (newest first in JSON)
   }
 
   // ── Pagination ───────────────────────────────
@@ -83,9 +89,30 @@ export async function GET(request: NextRequest) {
     products = products.slice(o, o + l);
   }
 
-  // ── Response ─────────────────────────────────
+  // ── Serialize with locale-specific fields ────
+  const serialized = products.map(p => ({
+    id: p.id,
+    sku: p.sku,
+    name: getName(p, locale),
+    description: getDesc(p, locale),
+    details: locale === 'ru' ? p.ru.details : p.en.details,
+    category: p.category,
+    subcategory: p.subcategory,
+    price: getPrice(p, currency),
+    currency,
+    image_main: p.image_main,
+    images: p.images,
+    color: p.color,
+    material: p.material,
+    sizes: p.sizes,
+    in_stock: p.in_stock,
+    preorder: p.preorder,
+    featured: p.featured,
+    badge: p.badge,
+  }));
+
   return NextResponse.json(
-    { products, total, categories: catalogData.categories },
+    { products: serialized, total, categories: catalogData.categories },
     {
       headers: {
         'Access-Control-Allow-Origin': '*',

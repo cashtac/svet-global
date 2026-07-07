@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Analytics } from "@/components/Analytics";
+import { RegionSwitcher } from "@/components/RegionSwitcher";
 
 export const metadata: Metadata = {
   title: "SVET — One Sun. One Energy. One Planet.",
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />
             <main>{children}</main>
             <Footer />
+            <RegionSwitcher />
           </CartProvider>
         </I18nProvider>
       </body>

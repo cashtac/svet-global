@@ -3,38 +3,61 @@
 import { useCart } from '@/lib/cart';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useI18n } from '@/lib/i18n-provider';
 import catalogData from '@/data/products.json';
-import { getStripePriceId } from '@/lib/stripe-lookup';
+import { getLocale, getCurrency, formatPrice, isRussia } from '@/lib/locale';
 
 /* ════════════════════════════════════════════════
-   SVET SHOP — FULL CATALOG SYSTEM
-   Category sidebar · Filters · Scalable to 100+
+   SVET SHOP — Locale-aware catalog
+   Reads NEXT_PUBLIC_LOCALE for language + currency
    ════════════════════════════════════════════════ */
 
-type Product = (typeof catalogData.products)[number];
+type RawProduct = (typeof catalogData.products)[number];
 type Category = (typeof catalogData.categories)[number];
 
-const SORT_OPTIONS = [
+const locale = getLocale();
+const currency = getCurrency();
+
+/* Helper: get localized field from product */
+function pName(p: RawProduct): string {
+  return locale === 'ru' ? p.ru.name : p.en.name;
+}
+function pDesc(p: RawProduct): string {
+  return locale === 'ru' ? p.ru.description : p.en.description;
+}
+function pPrice(p: RawProduct): number {
+  return p.price[currency] || p.price.USD;
+}
+function catName(c: Category): string {
+  return locale === 'ru' ? (c.name_ru || c.name) : c.name;
+}
+
+const SORT_OPTIONS = locale === 'ru' ? [
+  { value: 'newest', label: 'Новинки' },
+  { value: 'price-asc', label: 'Цена: по возрастанию' },
+  { value: 'price-desc', label: 'Цена: по убыванию' },
+  { value: 'name-asc', label: 'А → Я' },
+] : [
   { value: 'newest', label: 'Newest' },
   { value: 'price-asc', label: 'Price: Low → High' },
   { value: 'price-desc', label: 'Price: High → Low' },
   { value: 'name-asc', label: 'A → Z' },
-] as const;
+];
 
 /* ── Product Card ────────────────────────────── */
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product }: { product: RawProduct }) {
   const { addItem } = useCart();
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || '');
   const [added, setAdded] = useState(false);
+  const name = pName(product);
+  const price = pPrice(product);
 
   const handleAdd = () => {
     if (!selectedSize && product.sizes.length > 1) return;
     addItem({
       productId: product.id,
-      stripePriceId: getStripePriceId(product.name),
-      name: product.name,
-      price: product.price_preorder * 100,
+      stripePriceId: '',
+      name,
+      price: currency === 'RUB' ? price : price, // stored as-is for both
       size: selectedSize || product.sizes[0],
       image: product.image_main,
       slug: product.id,
@@ -43,41 +66,40 @@ function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const slug = `svet-${product.id}`;
-
   return (
     <div className="shop-card">
       {product.badge && <span className={`shop-card__badge ${product.badge === 'NEW' ? 'shop-card__badge--new' : ''}`}>{product.badge}</span>}
-      {product.preorder && <span className="shop-card__preorder-label">PRE-ORDER</span>}
+      {product.preorder && <span className="shop-card__preorder-label">{locale === 'ru' ? 'ПРЕДЗАКАЗ' : 'PRE-ORDER'}</span>}
 
-      <Link href={`/product/${slug}`} className="shop-card__image-wrap">
+      <Link href={`/product/${product.id}`} className="shop-card__image-wrap">
         <img
           src={product.image_main}
-          alt={product.name}
+          alt={name}
           loading="lazy"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.onerror = null;
-            target.src = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="400" height="500" fill="#111"/><rect x="20" y="20" width="360" height="460" rx="16" fill="none" stroke="#222" stroke-width="1"/><text x="200" y="220" text-anchor="middle" font-family="sans-serif" font-size="48" font-weight="900" fill="#333" letter-spacing="8">SVET</text><text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#444" letter-spacing="4">COMING SOON</text><circle cx="200" cy="340" r="24" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.3"/><text x="200" y="345" text-anchor="middle" font-size="16" fill="#C9A84C" opacity="0.4">☀</text></svg>`)}`;
+            target.src = `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"><rect width="400" height="500" fill="#111"/><text x="200" y="250" text-anchor="middle" font-family="sans-serif" font-size="48" font-weight="900" fill="#333" letter-spacing="8">SVET</text></svg>`)}`;
           }}
         />
       </Link>
 
       <div className="shop-card__info">
-        <Link href={`/product/${slug}`} className="shop-card__name-link">
-          <h3 className="shop-card__name">{product.name}</h3>
+        <Link href={`/product/${product.id}`} className="shop-card__name-link">
+          <h3 className="shop-card__name">{name}</h3>
         </Link>
-        <p className="shop-card__desc">{product.description}</p>
+        <p className="shop-card__desc">{pDesc(product)}</p>
 
         <div className="shop-card__pricing">
-          <span className="shop-card__price">${product.price_preorder}</span>
-          <span className="shop-card__retail-price">${product.price_retail}</span>
+          <span className="shop-card__price">{formatPrice(price)}</span>
         </div>
 
-        <div className="shop-card__shipping">🇺🇸 FREE US SHIPPING</div>
+        <div className="shop-card__shipping">
+          {isRussia() ? '🇷🇺 БЕСПЛАТНАЯ ДОСТАВКА ПО РОССИИ' : '🌍 FREE SHIPPING'}
+        </div>
 
         <div className="shop-card__sizes">
-          <div className="shop-card__sizes-label">SIZE</div>
+          <div className="shop-card__sizes-label">{locale === 'ru' ? 'РАЗМЕР' : 'SIZE'}</div>
           <div className="shop-card__sizes-options">
             {product.sizes.map(size => (
               <button
@@ -96,7 +118,10 @@ function ProductCard({ product }: { product: Product }) {
           onClick={handleAdd}
           disabled={!selectedSize && product.sizes.length > 1}
         >
-          {added ? '✓ ADDED' : 'ADD TO CART'}
+          {added
+            ? (locale === 'ru' ? '✓ ДОБАВЛЕНО' : '✓ ADDED')
+            : (locale === 'ru' ? 'В КОРЗИНУ' : 'ADD TO CART')
+          }
         </button>
       </div>
     </div>
@@ -107,94 +132,46 @@ function ProductCard({ product }: { product: Product }) {
 function CategorySidebar({
   categories,
   activeCategory,
-  activeSubcategory,
   productCounts,
   onCategoryChange,
-  onSubcategoryChange,
   mobileSidebarOpen,
   setMobileSidebarOpen,
 }: {
   categories: Category[];
   activeCategory: string;
-  activeSubcategory: string;
   productCounts: Record<string, number>;
   onCategoryChange: (cat: string) => void;
-  onSubcategoryChange: (sub: string) => void;
   mobileSidebarOpen: boolean;
   setMobileSidebarOpen: (v: boolean) => void;
 }) {
   return (
     <>
-      {/* Mobile overlay */}
       {mobileSidebarOpen && <div className="catalog-overlay" onClick={() => setMobileSidebarOpen(false)} />}
 
       <aside className={`catalog-sidebar ${mobileSidebarOpen ? 'catalog-sidebar--open' : ''}`}>
         <div className="catalog-sidebar__header">
-          <h3>Categories</h3>
+          <h3>{locale === 'ru' ? 'Категории' : 'Categories'}</h3>
           <button className="catalog-sidebar__close" onClick={() => setMobileSidebarOpen(false)}>✕</button>
         </div>
 
         <button
           className={`catalog-sidebar__item ${activeCategory === 'all' ? 'active' : ''}`}
-          onClick={() => { onCategoryChange('all'); onSubcategoryChange('all'); setMobileSidebarOpen(false); }}
+          onClick={() => { onCategoryChange('all'); setMobileSidebarOpen(false); }}
         >
-          <span>🏷️ All Products</span>
+          <span>🏷️ {locale === 'ru' ? 'Все товары' : 'All Products'}</span>
           <span className="catalog-sidebar__count">{catalogData.products.length}</span>
         </button>
 
-        {categories.map(cat => {
-          const count = productCounts[cat.id] || 0;
-          const isActive = activeCategory === cat.id;
-          const isComingSoon = 'comingSoon' in cat && cat.comingSoon;
-
-          return (
-            <div key={cat.id} className="catalog-sidebar__group">
-              <button
-                className={`catalog-sidebar__item ${isActive ? 'active' : ''} ${isComingSoon ? 'catalog-sidebar__item--soon' : ''}`}
-                onClick={() => {
-                  if (isComingSoon) return;
-                  onCategoryChange(cat.id);
-                  onSubcategoryChange('all');
-                  setMobileSidebarOpen(false);
-                }}
-                disabled={isComingSoon}
-              >
-                <span>{cat.icon} {cat.name}</span>
-                {isComingSoon ? (
-                  <span className="catalog-sidebar__soon">SOON</span>
-                ) : (
-                  <span className="catalog-sidebar__count">{count}</span>
-                )}
-              </button>
-
-              {/* Subcategories */}
-              {isActive && !isComingSoon && cat.subcategories.length > 0 && (
-                <div className="catalog-sidebar__subs">
-                  <button
-                    className={`catalog-sidebar__sub ${activeSubcategory === 'all' ? 'active' : ''}`}
-                    onClick={() => { onSubcategoryChange('all'); setMobileSidebarOpen(false); }}
-                  >
-                    All {cat.name}
-                  </button>
-                  {cat.subcategories.map(sub => {
-                    const subCount = catalogData.products.filter(p => p.subcategory === sub).length;
-                    if (subCount === 0) return null;
-                    return (
-                      <button
-                        key={sub}
-                        className={`catalog-sidebar__sub ${activeSubcategory === sub ? 'active' : ''}`}
-                        onClick={() => { onSubcategoryChange(sub); setMobileSidebarOpen(false); }}
-                      >
-                        {sub.charAt(0).toUpperCase() + sub.slice(1)}
-                        <span className="catalog-sidebar__count">{subCount}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {categories.map(cat => (
+          <button
+            key={cat.id}
+            className={`catalog-sidebar__item ${activeCategory === cat.id ? 'active' : ''}`}
+            onClick={() => { onCategoryChange(cat.id); setMobileSidebarOpen(false); }}
+          >
+            <span>{cat.icon} {catName(cat)}</span>
+            <span className="catalog-sidebar__count">{productCounts[cat.id] || 0}</span>
+          </button>
+        ))}
       </aside>
     </>
   );
@@ -202,14 +179,11 @@ function CategorySidebar({
 
 /* ── Main Shop Page ──────────────────────────── */
 export default function ShopPage() {
-  const { t } = useI18n();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeSubcategory, setActiveSubcategory] = useState('all');
   const [sortBy, setSortBy] = useState<string>('newest');
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Product counts per category
   const productCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     catalogData.products.forEach(p => {
@@ -218,84 +192,71 @@ export default function ShopPage() {
     return counts;
   }, []);
 
-  // Filter products
   const filtered = useMemo(() => {
     let result = [...catalogData.products];
 
-    // Category filter
     if (activeCategory !== 'all') {
       result = result.filter(p => p.category === activeCategory);
     }
 
-    // Subcategory filter
-    if (activeSubcategory !== 'all') {
-      result = result.filter(p => p.subcategory === activeSubcategory);
-    }
-
-    // Search
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.tags.some(tag => tag.includes(q))
+        pName(p).toLowerCase().includes(q) ||
+        pDesc(p).toLowerCase().includes(q)
       );
     }
 
-    // Sort
     switch (sortBy) {
       case 'price-asc':
-        result.sort((a, b) => a.price_preorder - b.price_preorder);
+        result.sort((a, b) => pPrice(a) - pPrice(b));
         break;
       case 'price-desc':
-        result.sort((a, b) => b.price_preorder - a.price_preorder);
+        result.sort((a, b) => pPrice(b) - pPrice(a));
         break;
       case 'name-asc':
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      default: // newest — keep original order
+        result.sort((a, b) => pName(a).localeCompare(pName(b)));
         break;
     }
 
     return result;
-  }, [activeCategory, activeSubcategory, sortBy, searchQuery]);
-
-  const activeLabel = activeCategory === 'all'
-    ? 'All Products'
-    : activeSubcategory !== 'all'
-      ? `${activeSubcategory.charAt(0).toUpperCase() + activeSubcategory.slice(1)}`
-      : catalogData.categories.find(c => c.id === activeCategory)?.name || 'Products';
+  }, [activeCategory, sortBy, searchQuery]);
 
   return (
     <>
       <div className="preorder-banner">
-        {t('shop.banner')}
+        {isRussia()
+          ? '☀ ПРЕДЗАКАЗ ОТКРЫТ — ПЕРВАЯ КОЛЛЕКЦИЯ — БЕСПЛАТНАЯ ДОСТАВКА ПО РОССИИ'
+          : '☀ PRE-ORDER OPEN — FIRST DROP — FREE SHIPPING'
+        }
       </div>
 
       <section className="section" style={{ paddingTop: 120 }}>
         <div className="section__container">
-          {/* Header */}
           <div className="section-header" style={{ marginBottom: 32 }}>
-            <span className="section-header__label">CATALOG</span>
-            <h1 className="section-header__title">SHOP</h1>
+            <span className="section-header__label">{locale === 'ru' ? 'КАТАЛОГ' : 'CATALOG'}</span>
+            <h1 className="section-header__title">{locale === 'ru' ? 'МАГАЗИН' : 'SHOP'}</h1>
             <p className="section-header__desc">
-              Every piece carries a message. Pre-order now at exclusive prices.
+              {isRussia()
+                ? 'Каждая вещь несёт смысл. Предзаказ по эксклюзивным ценам.'
+                : 'Every piece carries a message. Pre-order now at exclusive prices.'
+              }
             </p>
           </div>
 
-          {/* Toolbar: search + sort + mobile filter btn */}
+          {/* Toolbar */}
           <div className="catalog-toolbar">
             <button
               className="catalog-toolbar__filter-btn"
               onClick={() => setMobileSidebarOpen(true)}
             >
-              ☰ Filters
+              ☰ {locale === 'ru' ? 'Фильтры' : 'Filters'}
             </button>
 
             <div className="catalog-toolbar__search">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={locale === 'ru' ? 'Поиск товаров...' : 'Search products...'}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="catalog-toolbar__search-input"
@@ -318,67 +279,44 @@ export default function ShopPage() {
             </div>
 
             <div className="catalog-toolbar__count">
-              {filtered.length} product{filtered.length !== 1 ? 's' : ''}
+              {filtered.length} {locale === 'ru'
+                ? (filtered.length === 1 ? 'товар' : 'товаров')
+                : (filtered.length === 1 ? 'product' : 'products')
+              }
             </div>
           </div>
 
-          {/* Quick category pills (top filter) */}
+          {/* Category pills */}
           <div className="catalog-pills">
             <button
               className={`catalog-pill ${activeCategory === 'all' ? 'active' : ''}`}
-              onClick={() => { setActiveCategory('all'); setActiveSubcategory('all'); }}
+              onClick={() => setActiveCategory('all')}
             >
-              All
+              {locale === 'ru' ? 'Все' : 'All'}
             </button>
-            {catalogData.categories.map(cat => {
-              const isComingSoon = 'comingSoon' in cat && cat.comingSoon;
-              return (
-                <button
-                  key={cat.id}
-                  className={`catalog-pill ${activeCategory === cat.id ? 'active' : ''} ${isComingSoon ? 'catalog-pill--soon' : ''}`}
-                  onClick={() => {
-                    if (isComingSoon) return;
-                    setActiveCategory(cat.id);
-                    setActiveSubcategory('all');
-                  }}
-                  disabled={isComingSoon}
-                >
-                  {cat.icon} {cat.name}
-                  {isComingSoon && <span className="catalog-pill__soon">Soon</span>}
-                </button>
-              );
-            })}
+            {catalogData.categories.map(cat => (
+              <button
+                key={cat.id}
+                className={`catalog-pill ${activeCategory === cat.id ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat.id)}
+              >
+                {cat.icon} {catName(cat)}
+              </button>
+            ))}
           </div>
 
-          {/* Layout: Sidebar + Grid */}
+          {/* Layout */}
           <div className="catalog-layout">
             <CategorySidebar
               categories={catalogData.categories}
               activeCategory={activeCategory}
-              activeSubcategory={activeSubcategory}
               productCounts={productCounts}
               onCategoryChange={setActiveCategory}
-              onSubcategoryChange={setActiveSubcategory}
               mobileSidebarOpen={mobileSidebarOpen}
               setMobileSidebarOpen={setMobileSidebarOpen}
             />
 
             <div className="catalog-main">
-              {/* Active filter label */}
-              {(activeCategory !== 'all' || searchQuery) && (
-                <div className="catalog-active-filter">
-                  <span>{activeLabel}</span>
-                  {searchQuery && <span className="catalog-active-filter__query"> — "{searchQuery}"</span>}
-                  <button
-                    className="catalog-active-filter__clear"
-                    onClick={() => { setActiveCategory('all'); setActiveSubcategory('all'); setSearchQuery(''); }}
-                  >
-                    Clear all ✕
-                  </button>
-                </div>
-              )}
-
-              {/* Product Grid */}
               {filtered.length > 0 ? (
                 <div className="shop-grid">
                   {filtered.map(product => (
@@ -388,13 +326,13 @@ export default function ShopPage() {
               ) : (
                 <div className="catalog-empty">
                   <div className="catalog-empty__icon">🔍</div>
-                  <h3>No products found</h3>
-                  <p>Try adjusting your filters or search query.</p>
+                  <h3>{locale === 'ru' ? 'Ничего не найдено' : 'No products found'}</h3>
+                  <p>{locale === 'ru' ? 'Попробуйте изменить фильтры.' : 'Try adjusting your filters.'}</p>
                   <button
                     className="catalog-empty__reset"
-                    onClick={() => { setActiveCategory('all'); setActiveSubcategory('all'); setSearchQuery(''); }}
+                    onClick={() => { setActiveCategory('all'); setSearchQuery(''); }}
                   >
-                    Reset Filters
+                    {locale === 'ru' ? 'Сбросить фильтры' : 'Reset Filters'}
                   </button>
                 </div>
               )}
