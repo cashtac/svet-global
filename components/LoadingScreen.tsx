@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { isRussia } from '@/lib/locale';
+
+const ru = isRussia();
 
 /* ════════════════════════════════════════════════
    SVET Loading Screen — Cinematic Brand Intro
@@ -61,7 +64,7 @@ export function LoadingScreen() {
         <div className="loading-screen__sun">☀</div>
         <h1 className="loading-screen__logo">SVET</h1>
         <div className="loading-screen__line" />
-        <p className="loading-screen__tagline">One Sun. One Energy. One Planet.</p>
+        <p className="loading-screen__tagline">{ru ? 'Одно Солнце. Одна Энергия. Одна Планета.' : 'One Sun. One Energy. One Planet.'}</p>
       </div>
     </div>
   );
