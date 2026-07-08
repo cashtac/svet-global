@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n-provider';
+import { isRussia } from '@/lib/locale';
+
+const ru = isRussia();
 
 export default function AboutPage() {
   const { t } = useI18n();
@@ -103,7 +106,7 @@ export default function AboutPage() {
         </div>
         <div className="about-stats__divider" />
         <div className="about-stats__item">
-          <span className="about-stats__number">ALL</span>
+          <span className="about-stats__number">{ru ? 'ВСЕ' : 'ALL'}</span>
           <span className="about-stats__label">{t('home.forEveryone')}</span>
         </div>
       </section>
@@ -112,10 +115,13 @@ export default function AboutPage() {
       <section className="section" style={{ background: 'var(--bg-secondary)' }}>
         <div className="section__container">
           <div className="section-header">
-            <span className="section-header__label">CRAFTED WITH</span>
-            <h2 className="section-header__title">World-Class Partners</h2>
+            <span className="section-header__label">{ru ? 'СОЗДАНО С' : 'CRAFTED WITH'}</span>
+            <h2 className="section-header__title">{ru ? 'Партнёры мирового уровня' : 'World-Class Partners'}</h2>
             <p className="section-header__desc" style={{ maxWidth: 560 }}>
-              Every SVET piece is manufactured by industry leaders and powered by world-class technology.
+              {ru
+                ? 'Каждая вещь SVET производится лидерами отрасли и работает на технологиях мирового класса.'
+                : 'Every SVET piece is manufactured by industry leaders and powered by world-class technology.'
+              }
             </p>
           </div>
 
@@ -130,15 +136,16 @@ export default function AboutPage() {
             textAlign: 'center',
           }}>
             <div style={{ fontSize: 11, letterSpacing: '0.2em', color: '#C9A84C', marginBottom: 8, fontWeight: 700 }}>
-              MANUFACTURING PARTNER
+              {ru ? 'ПАРТНЁР ПО ПРОИЗВОДСТВУ' : 'MANUFACTURING PARTNER'}
             </div>
             <h3 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', margin: '8px 0' }}>
               Sinerji Textile
             </h3>
             <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.7, margin: '12px 0' }}>
-              20+ years of premium textile manufacturing in Istanbul, Turkey.
-              Full production control from design to quality check.
-              Serving leading European brands with sustainable practices.
+              {ru
+                ? '20+ лет производства текстиля премиум-класса в Стамбуле, Турция. Полный контроль от дизайна до проверки качества.'
+                : '20+ years of premium textile manufacturing in Istanbul, Turkey. Full production control from design to quality check. Serving leading European brands with sustainable practices.'
+              }
             </p>
             <a
               href="https://www.sinerjitextile.com"
@@ -159,12 +166,11 @@ export default function AboutPage() {
             margin: '0 auto',
           }}>
             {[
-              { name: 'Stripe', role: 'Payments' },
+              { name: 'Stripe', role: ru ? 'Платежи' : 'Payments' },
               { name: 'Apple', role: 'Apple Pay' },
-              { name: 'Railway', role: 'Infrastructure' },
-              { name: 'Anthropic', role: 'AI Partner' },
-              { name: 'Red Bull', role: 'Brand Partner' },
-              { name: 'Raiffeisen', role: 'Banking' },
+              { name: 'Vercel', role: ru ? 'Инфраструктура' : 'Infrastructure' },
+              { name: 'Anthropic', role: ru ? 'ИИ-партнёр' : 'AI Partner' },
+              { name: 'Sinerji', role: ru ? 'Производство' : 'Manufacturing' },
             ].map(p => (
               <div key={p.name} style={{
                 background: 'rgba(255,255,255,0.03)',
@@ -192,7 +198,7 @@ export default function AboutPage() {
           <p className="about-closing__desc">{t('about.forEveryoneDesc')}</p>
           <div className="about-closing__cta-row">
             <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
-              SHOP THE COLLECTION
+              {ru ? 'СМОТРЕТЬ КОЛЛЕКЦИЮ' : 'SHOP THE COLLECTION'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>
