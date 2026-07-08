@@ -4,7 +4,7 @@ import { CartProvider } from "@/lib/cart";
 import { I18nProvider } from "@/lib/i18n-provider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { LanguageSelector } from "@/components/LanguageSelector";
+
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { Analytics } from "@/components/Analytics";
 import { RegionSwitcher } from "@/components/RegionSwitcher";
@@ -94,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <I18nProvider>
           <CartProvider>
             <LoadingScreen />
-            {!isRu && <LanguageSelector />}
+
             <Navbar />
             <main>{children}</main>
             <Footer />

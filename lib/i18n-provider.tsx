@@ -38,7 +38,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const rtl = isRTL(locale);
     document.documentElement.dir = rtl ? 'rtl' : 'ltr';
-    document.documentElement.lang = locale === 'ar' ? 'ar-EG' : locale;
+    document.documentElement.lang = locale;
   }, [locale]);
 
   const setLocale = (l: Locale) => {

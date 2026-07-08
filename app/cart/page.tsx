@@ -12,6 +12,7 @@ import { trackBeginCheckout } from '@/components/Analytics';
    Works in both demo mode and with Stripe/Russian processor
    ════════════════════════════════════════════════ */
 
+const ru = isRussia();
 const currency = getCurrency();
 function fmtPrice(amount: number): string {
   return formatPriceLocale(amount);
@@ -92,10 +93,10 @@ function CartPageInner() {
         <div className="cart-page__container">
           <div className="cart-success">
             <div className="cart-success__icon">☀</div>
-            <h2 className="cart-success__title">Order Placed</h2>
+            <h2 className="cart-success__title">{ru ? 'Заказ оформлен' : 'Order Placed'}</h2>
             <p className="cart-success__msg">{success}</p>
             <Link href="/shop" className="hero__cta" style={{ marginTop: 24 }}>
-              CONTINUE SHOPPING
+              {ru ? 'ПРОДОЛЖИТЬ ПОКУПКИ' : 'CONTINUE SHOPPING'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>
@@ -108,11 +109,11 @@ function CartPageInner() {
     return (
       <section className="cart-page">
         <div className="cart-page__container">
-          <h1 className="cart-page__title">CART</h1>
+          <h1 className="cart-page__title">{ru ? 'КОРЗИНА' : 'CART'}</h1>
           <div className="cart-empty">
             <div className="cart-empty__icon">🛒</div>
-            <p className="cart-empty__text">Empty</p>
-            <Link href="/shop" className="btn-primary">Shop</Link>
+            <p className="cart-empty__text">{ru ? 'Корзина пуста' : 'Empty'}</p>
+            <Link href="/shop" className="btn-primary">{ru ? 'В магазин' : 'Shop'}</Link>
           </div>
         </div>
       </section>
@@ -122,7 +123,7 @@ function CartPageInner() {
   return (
     <section className="cart-page">
       <div className="cart-page__container">
-        <h1 className="cart-page__title">CART</h1>
+        <h1 className="cart-page__title">{ru ? 'КОРЗИНА' : 'CART'}</h1>
 
         {/* Cancel banner */}
         {showCancelBanner && (
@@ -137,7 +138,7 @@ function CartPageInner() {
             alignItems: 'center',
           }}>
             <span style={{ color: '#C9A84C', fontSize: 13, fontWeight: 500 }}>
-              Payment was cancelled. Your items are still here — pick up where you left off.
+              {ru ? 'Оплата была отменена. Ваши товары сохранены — продолжайте оформление.' : 'Payment was cancelled. Your items are still here — pick up where you left off.'}
             </span>
             <button
               onClick={() => setShowCancelBanner(false)}
@@ -156,13 +157,13 @@ function CartPageInner() {
             />
             <div>
               <div className="cart-item__name">{item.name}</div>
-              <div className="cart-item__size">Size: {item.size}</div>
+              <div className="cart-item__size">{ru ? 'Размер' : 'Size'}: {item.size}</div>
               <div className="cart-item__qty">
                 <button onClick={() => updateQuantity(item.productId, item.size, item.quantity - 1)}>−</button>
                 <span>{item.quantity}</span>
                 <button onClick={() => updateQuantity(item.productId, item.size, item.quantity + 1)}>+</button>
               </div>
-              <button className="cart-item__remove" onClick={() => removeItem(item.productId, item.size)}>Remove</button>
+              <button className="cart-item__remove" onClick={() => removeItem(item.productId, item.size)}>{ru ? 'Удалить' : 'Remove'}</button>
             </div>
             <div className="cart-item__price">{fmtPrice(item.price * item.quantity)}</div>
           </div>
