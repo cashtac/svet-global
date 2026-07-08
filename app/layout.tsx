@@ -9,30 +9,44 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { Analytics } from "@/components/Analytics";
 import { RegionSwitcher } from "@/components/RegionSwitcher";
 
+const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en';
+const SITE_URL = process.env.NEXT_PUBLIC_URL || 'https://svet.global';
+const isRu = LOCALE === 'ru';
+
+const title = isRu
+  ? "SVET — Одно Солнце. Одна Энергия. Одна Планета."
+  : "SVET — One Sun. One Energy. One Planet.";
+
+const description = isRu
+  ? "Одежда, которая объединяет. SVET (СВЕТ) — философия в каждой вещи. Предзаказ худи, футболок и аксессуаров."
+  : "Clothing that connects us all. SVET means light — philosophy-driven fashion for a connected world. Pre-order hoodies, tees, and accessories now.";
+
 export const metadata: Metadata = {
-  title: "SVET — One Sun. One Energy. One Planet.",
-  description: "Clothing that connects us all. SVET means light — philosophy-driven fashion for a connected world. Pre-order hoodies, tees, and accessories now.",
+  title,
+  description,
   manifest: "/manifest.json",
-  keywords: ["SVET", "clothing", "fashion", "sustainable", "one sun", "one energy", "one planet", "streetwear", "philosophy"],
+  keywords: isRu
+    ? ["SVET", "СВЕТ", "одежда", "мода", "уличная одежда", "философия", "стиль", "худи", "предзаказ"]
+    : ["SVET", "clothing", "fashion", "sustainable", "one sun", "one energy", "one planet", "streetwear", "philosophy"],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "SVET",
   },
-  formatDetection: {
-    telephone: false,
-  },
+  formatDetection: { telephone: false },
   openGraph: {
-    title: "SVET — One Sun. One Energy. One Planet.",
-    description: "Clothing that connects us all. SVET means light — philosophy-driven fashion for a connected world.",
+    title,
+    description,
     siteName: "SVET",
     type: "website",
-    url: "https://svet.global",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "SVET — One Sun. One Energy. One Planet.",
-    description: "Clothing that connects us all. Pre-order now at exclusive prices.",
+    title,
+    description: isRu
+      ? "Одежда, которая объединяет. Предзаказ по эксклюзивным ценам."
+      : "Clothing that connects us all. Pre-order now at exclusive prices.",
   },
   robots: {
     index: true,
@@ -43,6 +57,12 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
+    },
+  },
+  alternates: {
+    languages: {
+      'en': 'https://svet.global',
+      'ru': 'https://ru.svet.global',
     },
   },
   other: {
@@ -61,7 +81,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang={isRu ? 'ru' : 'en'}>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
@@ -74,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <I18nProvider>
           <CartProvider>
             <LoadingScreen />
-            <LanguageSelector />
+            {!isRu && <LanguageSelector />}
             <Navbar />
             <main>{children}</main>
             <Footer />

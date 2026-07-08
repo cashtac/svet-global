@@ -28,8 +28,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    // Force English — no language detection
-    setLocaleState('en');
+    // Use env var locale, fallback to 'en'
+    const envLocale = (process.env.NEXT_PUBLIC_LOCALE || 'en') as Locale;
+    setLocaleState(envLocale);
     setIsFirstVisit(false);
   }, []);
 

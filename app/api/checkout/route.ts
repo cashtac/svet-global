@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { createYooKassaPayment, isYooKassaConfigured } from '@/lib/payments/yookassa';
 
 /* ════════════════════════════════════════════════
-   Checkout — Creates Stripe Checkout Session
-   Collects shipping address for ALL countries
+   Checkout — Routes to Stripe or YooKassa
+   based on PAYMENT_PROVIDER env var
    POST /api/checkout
    ════════════════════════════════════════════════ */
+
+const PAYMENT_PROVIDER = process.env.PAYMENT_PROVIDER || 'stripe';
 
 const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL || 'https://svet.global';
+const CURRENCY = process.env.NEXT_PUBLIC_CURRENCY || 'USD';
 
-// Stripe-supported shipping countries (comprehensive list)
+// Stripe-supported shipping countries
 const ALL_COUNTRIES: Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[] = [
   'AC','AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AT','AU','AW','AX','AZ',
   'BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS','BT','BV','BW','BY','BZ',
@@ -55,16 +59,58 @@ export async function POST(req: NextRequest) {
     const orderNumber = `SVET-${Date.now().toString(36).toUpperCase()}`;
     const total = items.reduce((sum: number, item: any) => sum + (item.price * (item.quantity || 1)), 0);
 
-    if (!stripe) {
-      // Demo mode
-      console.log(`[Checkout DEMO] ${orderNumber} — ${email} — $${(total / 100).toFixed(2)}`);
+    // ═══ YooKassa (Russia) ═══
+    if (PAYMENT_PROVIDER === 'yookassa') {
+      if (!isYooKassaConfigured()) {
+        // Demo mode for YooKassa
+        console.log(`[YooKassa DEMO] ${orderNumber} — ${email} — ${total} RUB`);
+        return NextResponse.json({
+          ok: true,
+          data: {
+            orderNumber,
+            demo: true,
+            message: 'Демо-режим. Настройте YOOKASSA_SHOP_ID и YOOKASSA_SECRET_KEY для реальных платежей.',
+          },
+        });
+      }
+
+      const payment = await createYooKassaPayment({
+        amount: total,
+        description: `Заказ ${orderNumber} — svet.global`,
+        email,
+        orderNumber,
+        items: items.map((item: any) => ({
+          name: item.name || `SVET ${item.productId}`,
+          price: item.price,
+          quantity: item.quantity || 1,
+          size: item.size,
+        })),
+      });
+
       return NextResponse.json({
         ok: true,
-        data: { orderNumber, demo: true, message: 'Demo mode. Set STRIPE_SECRET_KEY for real payments.' },
+        data: {
+          orderNumber,
+          checkoutUrl: payment.confirmation?.confirmation_url,
+          paymentId: payment.id,
+        },
       });
     }
 
-    // Build Stripe line items
+    // ═══ Stripe (International) ═══
+    if (!stripe) {
+      // Demo mode for Stripe
+      console.log(`[Stripe DEMO] ${orderNumber} — ${email} — $${(total / 100).toFixed(2)}`);
+      return NextResponse.json({
+        ok: true,
+        data: {
+          orderNumber,
+          demo: true,
+          message: 'Demo mode. Set STRIPE_SECRET_KEY for real payments.',
+        },
+      });
+    }
+
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => ({
       price_data: {
         currency: 'usd',
@@ -78,7 +124,6 @@ export async function POST(req: NextRequest) {
       quantity: item.quantity || 1,
     }));
 
-    // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
@@ -97,6 +142,7 @@ export async function POST(req: NextRequest) {
       ok: true,
       data: { orderNumber, checkoutUrl: session.url },
     });
+
   } catch (err: any) {
     console.error('[Checkout Error]', err.message);
     return NextResponse.json({ error: err.message }, { status: 500 });

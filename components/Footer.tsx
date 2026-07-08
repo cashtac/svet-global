@@ -1,6 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { isRussia } from '@/lib/locale';
+
+const ru = isRussia();
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,35 +13,39 @@ export function Footer() {
       <div className="footer__container">
         {/* Brand */}
         <div className="footer__brand">SVET</div>
-        <p className="footer__tagline">One Sun · One Energy · One Planet · For Everyone</p>
+        <p className="footer__tagline">
+          {ru
+            ? 'Одно Солнце · Одна Энергия · Одна Планета · Для Всех'
+            : 'One Sun · One Energy · One Planet · For Everyone'
+          }
+        </p>
 
         {/* Store links */}
         <div className="footer__links">
-          <Link href="/shop" className="footer__link">Shop</Link>
-          <Link href="/about" className="footer__link">About</Link>
-          <Link href="/support" className="footer__link">Support</Link>
-          <Link href="/cart" className="footer__link">Cart</Link>
+          <Link href="/shop" className="footer__link">{ru ? 'Магазин' : 'Shop'}</Link>
+          <Link href="/about" className="footer__link">{ru ? 'О нас' : 'About'}</Link>
+          <Link href="/support" className="footer__link">{ru ? 'Помощь' : 'Support'}</Link>
+          <Link href="/cart" className="footer__link">{ru ? 'Корзина' : 'Cart'}</Link>
         </div>
 
-        {/* Socials — Instagram, X, Discord */}
+        {/* Socials */}
         <div className="footer__socials">
-          <span className="footer__social" aria-label="Discord" style={{ cursor: 'default' }}>
-            <svg width="20" height="20" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9C55.6 2.8 50.7 1.3 45.7.4c-.1 0-.2 0-.2.1-.6 1.1-1.3 2.6-1.8 3.7-5.5-.8-10.9-.8-16.3 0-.5-1.2-1.2-2.6-1.8-3.7 0-.1-.1-.1-.2-.1C20.3 1.3 15.4 2.8 10.9 4.9c0 0-.1 0-.1.1C1.6 18.7-.9 32.1.3 45.4v.2c6.1 4.5 12 7.2 17.7 9 .1 0 .2 0 .2-.1 1.4-1.9 2.6-3.8 3.6-5.9.1-.1 0-.3-.1-.3-2-.8-3.8-1.7-5.6-2.7-.1-.1-.1-.3 0-.4.4-.3.8-.6 1.1-.9.1-.1.1-.1.2 0 11.6 5.3 24.2 5.3 35.7 0h.2c.4.3.7.6 1.1.9.1.1.1.3 0 .4-1.8 1-3.6 1.9-5.6 2.7-.1.1-.2.2-.1.3 1.1 2.1 2.3 4 3.6 5.9.1.1.1.1.2.1 5.8-1.8 11.7-4.5 17.8-9 0 0 .1-.1.1-.2 1.5-15.3-2.5-28.6-10.5-40.4 0 0 0-.1-.1-.1z"/></svg>
-          </span>
           <a href="https://instagram.com/svet.global" target="_blank" rel="noopener noreferrer" className="footer__social" aria-label="Instagram">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
-          <a href="https://x.com/svetglobal" target="_blank" rel="noopener noreferrer" className="footer__social" aria-label="X / Twitter">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>
+          <a href="https://t.me/svetglobal" target="_blank" rel="noopener noreferrer" className="footer__social" aria-label="Telegram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13" /><path d="M22 2L15 22L11 13L2 9L22 2Z" /></svg>
           </a>
         </div>
 
         {/* Contact */}
         <div className="footer__account">
           <a href="https://t.me/svetrixhello" target="_blank" rel="noopener noreferrer" className="footer__signin">
-            Contact Us
+            {ru ? 'Связаться с нами' : 'Contact Us'}
           </a>
-          <span className="footer__account-desc">Questions? Reach out anytime.</span>
+          <span className="footer__account-desc">
+            {ru ? 'Вопросы? Пишите в любое время.' : 'Questions? Reach out anytime.'}
+          </span>
         </div>
 
         <div style={{ marginTop: 16 }}>
@@ -47,7 +54,9 @@ export function Footer() {
           </a>
         </div>
 
-        <p className="footer__copy">© {year} SVET. All rights reserved.</p>
+        <p className="footer__copy">
+          © {year} SVET. {ru ? 'Все права защищены.' : 'All rights reserved.'}
+        </p>
       </div>
     </footer>
   );

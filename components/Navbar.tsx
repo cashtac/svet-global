@@ -3,10 +3,20 @@
 import Link from 'next/link';
 import { useCart } from '@/lib/cart';
 import { useState } from 'react';
+import { isRussia } from '@/lib/locale';
 
 /* ════════════════════════════════════════════════
-   SVET Navbar — English only, no lang switcher
+   SVET Navbar — Locale-aware (RU / EN)
    ════════════════════════════════════════════════ */
+
+const ru = isRussia();
+
+const NAV = {
+  shop:    ru ? 'Магазин' : 'Shop',
+  about:   ru ? 'О нас' : 'About',
+  support: ru ? 'Помощь' : 'Support',
+  cart:    ru ? 'Корзина' : 'Cart',
+};
 
 export function Navbar() {
   const { count } = useCart();
@@ -16,36 +26,32 @@ export function Navbar() {
     <>
       <nav className="nav">
         <div className="nav__container">
-          {/* Brand */}
           <Link href="/" className="nav__logo">SVET</Link>
 
-          {/* Desktop links */}
           <div className="nav__links">
-            <Link href="/shop" className="nav__link">Shop</Link>
-            <Link href="/about" className="nav__link">About</Link>
-            <Link href="/support" className="nav__link">Support</Link>
+            <Link href="/shop" className="nav__link">{NAV.shop}</Link>
+            <Link href="/about" className="nav__link">{NAV.about}</Link>
+            <Link href="/support" className="nav__link">{NAV.support}</Link>
             <Link href="/cart" className="nav__cart">
-              Cart
+              {NAV.cart}
               {count > 0 && <span className="nav__cart-count">{count}</span>}
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
           <button className={`nav__hamburger ${menuOpen ? 'active' : ''}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
             <span /><span /><span />
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
           <div className="mobile-menu__inner" onClick={e => e.stopPropagation()}>
-            <Link href="/shop" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>SHOP</Link>
-            <Link href="/about" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>ABOUT</Link>
-            <Link href="/support" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>SUPPORT</Link>
+            <Link href="/shop" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{NAV.shop.toUpperCase()}</Link>
+            <Link href="/about" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{NAV.about.toUpperCase()}</Link>
+            <Link href="/support" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>{NAV.support.toUpperCase()}</Link>
             <Link href="/cart" className="mobile-menu__link" onClick={() => setMenuOpen(false)}>
-              CART {count > 0 && `(${count})`}
+              {NAV.cart.toUpperCase()} {count > 0 && `(${count})`}
             </Link>
           </div>
         </div>

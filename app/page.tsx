@@ -2,19 +2,20 @@
 
 import Link from 'next/link';
 import { useI18n } from '@/lib/i18n-provider';
+import { isRussia } from '@/lib/locale';
 
 /* ════════════════════════════════════════════════
-   SVET — BRAND LANDING PAGE
-   Pure story. Pure philosophy. Pure energy.
-   No product cards. No noise. Just the message.
+   SVET — BRAND LANDING PAGE (Locale-aware)
    ════════════════════════════════════════════════ */
+
+const ru = isRussia();
 
 export default function Home() {
   const { t } = useI18n();
 
   return (
     <>
-      {/* ═══ HERO — Full screen brand statement ═══ */}
+      {/* ═══ HERO ═══ */}
       <section className="hero">
         <div className="hero__bg-grid" />
         <div className="hero__content">
@@ -35,7 +36,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ MARQUEE — Running text ═══ */}
+      {/* ═══ MARQUEE ═══ */}
       <div className="marquee">
         <div className="marquee__track">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -57,13 +58,15 @@ export default function Home() {
       <section className="section">
         <div className="section__container">
           <div className="section-header">
-            <span className="section-header__label">THE MEANING</span>
+            <span className="section-header__label">{ru ? 'ЗНАЧЕНИЕ' : 'THE MEANING'}</span>
             <h2 className="section-header__title" style={{ fontSize: 'clamp(32px, 5vw, 56px)' }}>
-              SVET means <em style={{ color: 'var(--cream)', fontStyle: 'normal' }}>Light</em>
+              SVET {ru ? 'значит' : 'means'} <em style={{ color: 'var(--cream)', fontStyle: 'normal' }}>{ru ? 'Свет' : 'Light'}</em>
             </h2>
             <p className="section-header__desc" style={{ maxWidth: 640, fontSize: 16, lineHeight: 1.9 }}>
-              In Slavic languages, SVET (СВЕТ) means light — the kind of light that reveals truth,
-              connects people, and illuminates what matters. We took that word and built a world around it.
+              {ru
+                ? 'В славянских языках СВЕТ — это не просто слово. Это свет, который открывает истину, объединяет людей и освещает то, что важно. Мы взяли это слово и построили вокруг него целый мир.'
+                : 'In Slavic languages, SVET (СВЕТ) means light — the kind of light that reveals truth, connects people, and illuminates what matters. We took that word and built a world around it.'
+              }
             </p>
           </div>
         </div>
@@ -90,7 +93,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ THE PHILOSOPHY — Full width storytelling ═══ */}
+      {/* ═══ PHILOSOPHY ═══ */}
       <section className="philosophy">
         <div className="philosophy__container">
           <div>
@@ -107,7 +110,7 @@ export default function Home() {
                 <span className="philosophy__stat-label">{t('home.planet')}</span>
               </div>
               <div className="philosophy__stat">
-                <span className="philosophy__stat-number">ALL</span>
+                <span className="philosophy__stat-number">{ru ? 'ВСЕ' : 'ALL'}</span>
                 <span className="philosophy__stat-label">{t('home.forEveryone')}</span>
               </div>
             </div>
@@ -120,47 +123,57 @@ export default function Home() {
       <section className="section" style={{ background: 'var(--bg-secondary)' }}>
         <div className="section__container">
           <div className="section-header">
-            <span className="section-header__label">OUR JOURNEY</span>
-            <h2 className="section-header__title">The SVET Story</h2>
+            <span className="section-header__label">{ru ? 'НАШ ПУТЬ' : 'OUR JOURNEY'}</span>
+            <h2 className="section-header__title">{ru ? 'История SVET' : 'The SVET Story'}</h2>
           </div>
           <div className="svet-timeline">
             <div className="svet-timeline__item">
               <div className="svet-timeline__dot" />
               <div className="svet-timeline__content">
-                <div className="svet-timeline__year">The Idea</div>
+                <div className="svet-timeline__year">{ru ? 'Идея' : 'The Idea'}</div>
                 <p className="svet-timeline__text">
-                  Born from a simple belief: clothing should carry meaning, not just style.
-                  Every thread should connect the person wearing it to something bigger.
+                  {ru
+                    ? 'Родилась из простого убеждения: одежда должна нести смысл, а не просто стиль. Каждая нить должна связывать человека с чем-то большим.'
+                    : 'Born from a simple belief: clothing should carry meaning, not just style. Every thread should connect the person wearing it to something bigger.'
+                  }
                 </p>
               </div>
             </div>
             <div className="svet-timeline__item">
               <div className="svet-timeline__dot" />
               <div className="svet-timeline__content">
-                <div className="svet-timeline__year">The Philosophy</div>
+                <div className="svet-timeline__year">{ru ? 'Философия' : 'The Philosophy'}</div>
                 <p className="svet-timeline__text">
-                  One Sun. One Energy. One Planet. For Everyone. —
-                  Four truths that became our compass. Not a tagline. A way of living.
+                  {ru
+                    ? 'Одно Солнце. Одна Энергия. Одна Планета. Для Всех. — Четыре истины, ставшие нашим компасом. Не слоган. Образ жизни.'
+                    : 'One Sun. One Energy. One Planet. For Everyone. — Four truths that became our compass. Not a tagline. A way of living.'
+                  }
                 </p>
               </div>
             </div>
             <div className="svet-timeline__item">
               <div className="svet-timeline__dot" />
               <div className="svet-timeline__content">
-                <div className="svet-timeline__year">The Design</div>
+                <div className="svet-timeline__year">{ru ? 'Дизайн' : 'The Design'}</div>
                 <p className="svet-timeline__text">
-                  Premium heavyweight fabrics. Bubble embroidery. Vintage washes.
-                  Every piece designed to feel like a statement, not just a garment.
+                  {ru
+                    ? 'Плотные ткани премиум-качества. Объёмная вышивка. Винтажные стирки. Каждая вещь создана быть высказыванием, а не просто одеждой.'
+                    : 'Premium heavyweight fabrics. Bubble embroidery. Vintage washes. Every piece designed to feel like a statement, not just a garment.'
+                  }
                 </p>
               </div>
             </div>
             <div className="svet-timeline__item">
               <div className="svet-timeline__dot svet-timeline__dot--active" />
               <div className="svet-timeline__content">
-                <div className="svet-timeline__year" style={{ color: 'var(--accent)' }}>Now — Pre-Order</div>
+                <div className="svet-timeline__year" style={{ color: 'var(--accent)' }}>
+                  {ru ? 'Сейчас — Предзаказ' : 'Now — Pre-Order'}
+                </div>
                 <p className="svet-timeline__text">
-                  The first drop is ready. 5 pieces. Hoodie, tees, long sleeve, sweatpants, and a beanie.
-                  Pre-order now at exclusive launch prices before retail drop.
+                  {ru
+                    ? 'Первый дроп готов. 5 вещей. Худи, футболка, лонгслив, джоггеры и шапка. Закажите сейчас по эксклюзивным ценам предзаказа.'
+                    : 'The first drop is ready. 5 pieces. Hoodie, tees, long sleeve, sweatpants, and a beanie. Pre-order now at exclusive launch prices before retail drop.'
+                  }
                 </p>
               </div>
             </div>
@@ -172,7 +185,9 @@ export default function Home() {
       <section className="section" style={{ background: 'linear-gradient(180deg, var(--bg) 0%, rgba(201,168,76,0.03) 50%, var(--bg) 100%)' }}>
         <div className="section__container" style={{ textAlign: 'center', maxWidth: 640 }}>
           <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.6 }}>🌱</div>
-          <span className="section-header__label" style={{ color: 'var(--accent)' }}>COMING SOON</span>
+          <span className="section-header__label" style={{ color: 'var(--accent)' }}>
+            {ru ? 'СКОРО' : 'COMING SOON'}
+          </span>
           <h2 className="section-header__title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', marginTop: 12 }}>
             Svet Fund
           </h2>
@@ -183,9 +198,10 @@ export default function Home() {
             maxWidth: 520,
             margin: '16px auto 0',
           }}>
-            A portion of every SVET purchase will go toward projects that bring light —
-            clean energy access, education, and community infrastructure.
-            The fund is being set up. Details soon.
+            {ru
+              ? 'Часть от каждой покупки SVET пойдёт на проекты, которые несут свет — доступ к чистой энергии, образование и развитие сообществ. Фонд создаётся. Подробности скоро.'
+              : 'A portion of every SVET purchase will go toward projects that bring light — clean energy access, education, and community infrastructure. The fund is being set up. Details soon.'
+            }
           </p>
           <div style={{
             marginTop: 24,
@@ -198,7 +214,7 @@ export default function Home() {
             color: 'var(--accent)',
             fontWeight: 600,
           }}>
-            LAUNCHING 2026
+            {ru ? 'ЗАПУСК 2026' : 'LAUNCHING 2026'}
           </div>
         </div>
       </section>
@@ -208,19 +224,21 @@ export default function Home() {
         <div className="ecosystem-banner__container">
           <div style={{ fontSize: 48, marginBottom: 16 }}>☀</div>
           <h2 className="ecosystem-banner__title" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
-            Wear the Light
+            {ru ? 'Носи Свет' : 'Wear the Light'}
           </h2>
           <p className="ecosystem-banner__desc" style={{ maxWidth: 500, fontSize: 16, lineHeight: 1.8 }}>
-            5 premium pieces. Pre-order prices.
-            Free shipping.
+            {ru
+              ? '5 вещей премиум-качества. Цены предзаказа. Бесплатная доставка.'
+              : '5 premium pieces. Pre-order prices. Free shipping.'
+            }
           </p>
           <div style={{ marginTop: 32, display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/shop" className="hero__cta" style={{ marginTop: 0 }}>
-              EXPLORE COLLECTION
+              {ru ? 'КОЛЛЕКЦИЯ' : 'EXPLORE COLLECTION'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
             <Link href="/about" className="hero__cta hero__cta--outline" style={{ marginTop: 0 }}>
-              OUR STORY
+              {ru ? 'НАША ИСТОРИЯ' : 'OUR STORY'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
             </Link>
           </div>
